@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android" >
+    <PreferenceCategory android:title="categoryTitle"></PreferenceCategory>
+    <PreferenceScreen android:title="actionPreference" android:summary="mykyesummary" android:key="mykey">
+        <intent
+            android:action="android.intent.action.VIEW"
+            android:targetPackage="org.tacademy.basic.authentication"
+            android:targetClass="org.tacademy.basic.authentication.AuthenticatorActivity" />
+    </PreferenceScreen>
+    
+
+</PreferenceScreen>

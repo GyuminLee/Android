@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+    <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:myspace="http://schemas.android.com/apk/res/org.tacademy.basic.graphics.region"
+        android:id="@+id/frameLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" android:orientation="vertical">
+
+        <org.tacademy.basic.graphics.region.DragNDropLayout
+            android:id="@+id/dndlayout"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_weight="1" >
+
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher"
+                android:layout_x="20dp"
+                android:layout_y="20dp"
+                myspace:layout_scalable="true" />
+
+            <ImageView
+                android:id="@+id/imageView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_launcher"
+                android:layout_x="100dp"
+                android:layout_y="100dp"
+                myspace:layout_scalable="false" />
+        </org.tacademy.basic.graphics.region.DragNDropLayout>
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Button" />
+
+            <Button
+                android:id="@+id/zoomin"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ZoomIn" />
+
+            <Button
+                android:id="@+id/zoomout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="ZoomOut" />
+
+            <Button
+                android:id="@+id/resetItemScale"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Reset" />
+
+        </LinearLayout>
+
+    </LinearLayout>
