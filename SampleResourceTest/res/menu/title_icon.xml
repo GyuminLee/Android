@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2008 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+
+          http://www.apache.org/licenses/LICENSE-2.0
+
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+<!-- 
+	menu layout은 getMenuInflater()로 MenuInflater를 가져와서 
+	onCreateOptionMenu에서 inflater.inflate(id,menu)로 메뉴를 생성.
+	MenuItem의 id는 android:id로 설정된 값이 사용됨.
+	group메뉴가 선택되는 경우, onGroupItemClick(MenuItem)이 호출됨.
+	Menu의 findItem(id) 또는 getItem(index)를 통해 menu를 얻어와서 setVisible을 설정하거나
+	Menu의 setGroupVisible(group,visible)을 이용하여 group을 화면에 보여줄 수 있음.
+	MenuItem의 setIntent를 통해 Menu선택시 실행할 Activity의 Intent를 등록할 수 있음.
+	MenuItem에 OnMenuItemClickListener를 등록하여 메뉴 선택여부를 알 수 있음.
+ -->
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:id="@+id/most_used_items">
+	    <item android:id="@+id/happy"
+	        android:title="@string/menu_first_one"
+	        android:titleCondensed="@string/menu_condensed_string"
+	        android:orderInCategory="10"
+	        android:alphabeticShortcut="c"
+	        android:icon="@drawable/stat_happy" />
+	
+	    <item android:id="@+id/neutral"
+	        android:title="@string/menu_first_two"
+	        android:orderInCategory="7"
+	        android:numericShortcut="1"
+	        android:icon="@drawable/stat_neutral" >
+	        <menu>
+	            <item android:id="@+id/sub_menu_1"
+	                android:title="@string/sub_menu_one"
+	                android:checkable="true"
+	                android:checked="true"
+	                 />
+	            <item android:id="@+id/sub_menu_2"
+	                android:title="@string/sub_menu_two" />
+	            <item android:id="@+id/sub_menu_3"
+	                android:title="@string/sub_menu_three" />
+	        </menu>
+	    </item>
+	
+	    <item android:id="@+id/sad"
+	        android:title="@string/menu_first_three"
+	        android:visible="false"
+	        android:enabled="true"
+	        android:orderInCategory="4"
+	        android:icon="@drawable/stat_sad" />
+	</group>
+	
+    <group android:id="@+id/least_used_items"
+        android:checkableBehavior="single"
+        android:visible="false"
+        android:menuCategory="secondary">
+        
+        <item android:id="@+id/last_least_item"
+            android:orderInCategory="3"
+            android:title="@string/menu_second_one" />
+    
+        <item android:id="@+id/middle_least_item"
+            android:orderInCategory="2"
+            android:title="@string/menu_second_two" />
+    
+        <item android:id="@+id/first_least_item"
+            android:orderInCategory="0"
+            android:title="@string/menu_second_three" />
+    
+    </group>
+    
+</menu>

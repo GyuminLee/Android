@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+	위치, 크기 등은 여기에서 값을 정의해 놓고 dimen값을 가져와서 사용함.
+	Resources.getDimension(id)를 이용해 값을 가져옴. 
+ -->
+<resources>
+    <dimen name="startX">10dp</dimen>
+    
+</resources>

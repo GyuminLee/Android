@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">헬로 월드, 리소스 테스트</string>
+    <string name="app_name">리소스테스트</string>
+    <string name="format_string">헬로, %3$s %1$s %2$s</string>
+    <string name="confirm_button">스트링 보기</string>
+    <string name="change">변환</string>
+
+</resources>

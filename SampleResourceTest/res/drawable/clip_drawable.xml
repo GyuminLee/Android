@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 
+	ImageView에서 ClipDrawable drawable = iv.getDrawable();로 가져와서
+	drawable.setLevel(level)로 cliping 적용.
+	level은 0 ~ 10000 값.
+ -->
+<clip xmlns:android="http://schemas.android.com/apk/res/android"
+    android:drawable="@drawable/android"
+    android:clipOrientation="horizontal"
+    android:gravity="left" />
