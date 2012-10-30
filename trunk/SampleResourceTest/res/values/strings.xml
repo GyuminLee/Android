@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="hello">Hello World, SampleResourceTestActivity!</string>
+    <string name="app_name">SampleResourceTest</string>
+    <string name="format_string">hello, %3$s %1$s %2$s</string>
+    <string name="confirm_button">Show String</string>
+    <string name="change">change</string>
+    <string name="menu_first_one">first_one</string>
+    <string name="menu_first_two">sub_menu</string>
+    <string name="menu_first_three">first_three</string>
+    <string name="menu_second_one">second_one</string>
+    <string name="menu_second_two">second_two</string>
+    <string name="menu_second_three">second_three</string>
+    <string name="sub_menu_one">sub_one</string>
+    <string name="sub_menu_two">sub_two</string>
+    <string name="sub_menu_three">sub_three</string>
+    <string name="menu_condensed_string">explain menu...</string>
+
+</resources>

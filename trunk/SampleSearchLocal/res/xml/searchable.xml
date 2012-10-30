@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2008 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<!-- The attributes in this XML file provide configuration information -->
+<!-- for the Search Manager. -->
+
+<!--
+    android:label은 반드시 app의 이름이어야 함. 
+-->
+<!-- 
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/app_name"
+    android:hint="search hint"     
+    android:searchMode="showSearchLabelAsBadge"
+    
+    android:voiceSearchMode="showVoiceSearchButton|launchRecognizer"
+    android:voiceLanguageModel="free_form"
+    android:voicePromptText="search invoke"
+
+    android:searchSuggestAuthority="org.tacademy.basic.searchlocal.searchprovider"
+    android:searchSuggestSelection=" ? "
+/>
+-->
+<!-- 
+전화번호 검색을 위해 아래와 같이 contacts을 SuggestAuthority로 설정해 주면, 전화번호부 검색이 됨.
+ -->
+<!--  
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/app_name"
+    android:hint="search hint"     
+    android:searchMode="queryRewriteFromText"
+
+	android:searchButtonText="검색"
+	android:voiceSearchMode="showVoiceSearchButton"
+	android:includeInGlobalSearch="true"
+    android:searchSuggestAuthority="com.android.contacts"
+    android:searchSuggestIntentAction="android.provider.Contacts.SEARCH_SUGGESTION_CLICKED"
+    android:searchSuggestIntentData="content://com.android.contacts/contacts/lookup"
+    android:searchSettingsDescription="setting"
+>
+    <actionkey
+        android:keycode="KEYCODE_CALL"
+        android:queryActionMsg="call"
+        android:suggestActionMsg="call"
+    />
+</searchable>
+ -->
+
+<!-- 
+App을 검색하는 searchable
+ --> 
+<!--  
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/app_name"
+    android:hint="search hint"     
+	android:includeInGlobalSearch="true"
+	android:searchSuggestAuthority="applications"
+    android:searchSuggestIntentAction="android.intent.action.MAIN"
+    android:searchSettingsDescription="setting"
+/>
+ -->
+
+<!-- 
+audio file 검색
+ --> 
+<!--  
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/app_name"
+    android:hint="search hint"     
+	android:includeInGlobalSearch="true"
+	android:searchSuggestAuthority="media"
+    android:searchSuggestPath="external/audio/search"
+    android:searchSuggestThreshold="1"
+    android:searchSuggestIntentAction="android.intent.action.VIEW"
+    android:searchSettingsDescription="setting"
+/>
+ -->
+ 
+<!-- MMS 검색에 대한 Provider인데, 단말에 따라 찾지 못하는 경우가 있음. 해당 Provider의 경우 
+	System App인 MMS에서 구현해 주고 있는 것이기 때문에 MMS를 변경하는 경우 호출할 수 없음.
+	참고로 갤럭시S2의 경우 해당 Provider가 없음.
+ -->
+<!-- 
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/app_name"
+    android:hint="search hint"     
+	android:includeInGlobalSearch="true"
+	android:searchSuggestAuthority="com.android.mms.SuggestionsProvider"
+    android:searchSuggestSelection="pattern"
+    android:searchSuggestIntentAction="android.intent.action.SEARCH"
+    android:searchSettingsDescription="setting"
+/>
+ -->
+
+<!-- 
+Browser의 검색 History에 대한 검색 결과를 보여줌.
+ -->
+
+<searchable xmlns:android="http://schemas.android.com/apk/res/android"
+    android:label="@string/app_name"
+    android:hint="search hint"     
+	android:includeInGlobalSearch="true"
+    android:searchButtonText="search"
+    android:searchMode="queryRewriteFromData"
+    android:voiceSearchMode="showVoiceSearchButton|launchWebSearch"
+    android:inputType="textUri"
+    android:imeOptions="actionGo"
+    
+    android:searchSuggestAuthority="browser"
+    android:searchSuggestSelection="url LIKE ?"
+    android:searchSuggestIntentAction="android.intent.action.VIEW"
+/>
+ 

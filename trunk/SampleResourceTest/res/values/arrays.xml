@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Copyright (C) 2007 The Android Open Source Project
+
+     Licensed under the Apache License, Version 2.0 (the "License");
+     you may not use this file except in compliance with the License.
+     You may obtain a copy of the License at
+  
+          http://www.apache.org/licenses/LICENSE-2.0
+  
+     Unless required by applicable law or agreed to in writing, software
+     distributed under the License is distributed on an "AS IS" BASIS,
+     WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+     See the License for the specific language governing permissions and
+     limitations under the License.
+-->
+
+<resources>
+    <!-- Resources.getStringArray(id)를 이용해 String[] 로 값을 가져옴. -->
+    <string-array name="colors">
+        <item>red</item>
+        <item>orange</item>
+        <item>yellow</item>
+        <item>green</item>
+        <item>blue</item>
+        <item>violet</item>
+    </string-array>
+    
+    <!-- Resources.getIntArray(id)로 int[] 값을 가져옴. -->
+    <integer-array name="interval">
+        <item >10</item>
+        <item >20</item>
+        <item >30</item>
+    </integer-array>
+    
+    <!-- Resources.obtainTypedArray(id)로 TypedArray를 얻어와서 getDrawable,getColor등으로 값을 가져옴. -->
+    <array name="drawablearray">
+        <item>@drawable/red</item>
+        <item>@drawable/blue</item>
+        <item>@drawable/green</item>
+        <item>@drawable/yellow</item>
+    </array>
+    
+    <array name="colorarray">
+        <item>#ff0000</item>
+        <item>#00ff00</item>
+        <item>#0000ff</item>
+        <item>#ffff00</item>
+    </array>
+</resources>
