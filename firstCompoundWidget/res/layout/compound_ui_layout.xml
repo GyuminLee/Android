@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+  android:id="@+id/myCompoundControl"
+  xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:orientation="vertical">
+  <RelativeLayout
+   android:layout_width="fill_parent"
+   android:layout_height="70px"
+   android:layout_gravity="center_horizontal"
+   android:orientation="horizontal">
+   
+   <EditText
+    android:id="@+id/edit01"
+    android:layout_width="150px"
+    android:layout_height="wrap_content"/>
+   <Button
+    android:id="@+id/btn01"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Compound UI"
+    android:layout_alignParentRight="true"
+    android:layout_toRightOf="@id/edit01">
+   </Button>
+   
+  </RelativeLayout>
+  <RelativeLayout
+   android:id="@+id/layout02"
+   android:layout_width="fill_parent"
+   android:layout_height="70px"
+   android:layout_gravity="center_horizontal"
+   android:orientation="horizontal">
+   <CheckBox
+    android:id="@+id/checkBoxBeach"
+    android:text="바다"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+   <CheckBox
+    android:id="@+id/checkBoxValley"
+    android:text="계곡"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@id/checkBoxBeach"/>
+ <Button
+  android:id="@+id/btn02"
+  android:layout_width="wrap_content"
+  android:layout_height="wrap_content"
+  android:text="눌러주세요"
+  android:layout_toRightOf="@id/checkBoxValley"
+  android:layout_alignParentRight="true">
+ </Button>
+  </RelativeLayout>
+</LinearLayout>

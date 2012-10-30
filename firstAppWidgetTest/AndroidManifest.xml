@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.tacademy.appwidget"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+        <activity android:name=".AppWidgetActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
+    <receiver android:name=".ExampleAppWidgetProvider"><intent-filter><action android:name="android.appwidget.action.APPWIDGET_UPDATE"></action>
+</intent-filter>
+<meta-data android:name="android.appwidget.provider" android:resource="@xml/widget_provider"></meta-data>
+
+
+</receiver>
+
+
+<service android:name="AppWidgetUpdateService"></service>
+
+
+
+</application>
+
+
+</manifest> 
