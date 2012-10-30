@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+      package="org.tacademy.data"
+      android:versionCode="1"
+      android:versionName="1.0">
+    <application android:icon="@drawable/icon" android:label="@string/app_name">
+        <activity android:name=".AppDataReceiveMainActivity"
+                  android:label="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+			</intent-filter>
+        </activity>
+
+    <activity android:name=".AppDataReceivePickActivity" android:launchMode="singleInstance"><intent-filter>
+    <action android:name="android.intent.action.PICK"></action>
+<category android:name="android.intent.category.DEFAULT"></category>
+<data android:mimeType="vnd.example.greeting/vnd.example.greeting-text"></data>
+
+</intent-filter>
+<intent-filter><action android:name="android.intent.action.VIEW"></action>
+<category android:name="android.intent.category.DEFAULT"></category>
+<category android:name="android.intent.category.BROWSABLE"></category>
+<data android:host="www.naver.com" android:scheme="http"></data>
+
+</intent-filter>
+</activity>
+</application>
+
+
+</manifest> 
