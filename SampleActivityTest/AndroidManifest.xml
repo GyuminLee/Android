@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="org.tacademy.basic.contentview"
+    android:versionCode="1"
+    android:versionName="1.0" >
+
+    <uses-sdk android:minSdkVersion="10" />
+
+    <application
+        android:icon="@drawable/ic_launcher"
+        android:label="@string/app_name">
+        <activity
+            android:name=".SampleContentViewActivity"
+            android:label="@string/app_name" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name="AddContentViewActivity"></activity>
+        <service android:name="MyService"></service>
+        <activity android:name="FinishTestActivity" android:taskAffinity="org.tacademy.basic.contentview.a">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <activity android:name="LaunchModeStandardActivity" android:launchMode="standard"></activity>
+        <activity android:name="LaunchModeSingleTopActivity" android:launchMode="singleTop"></activity>
+        <activity android:name="LaunchModeBActivity"></activity>
+        <activity android:launchMode="singleTask" android:name="LaunchModeSingleTask"></activity>
+        <activity android:name="LaunchModeSingleInstance" android:launchMode="singleInstance"></activity>
+        <activity android:name="ActivityA" android:noHistory="true"></activity>
+        <activity android:name="ActivityB"></activity>
+        <activity android:name="ActivityC"></activity>
+        <activity android:name="ActivityD" android:clearTaskOnLaunch="true" android:exported="true"></activity>
+        <activity android:name="ForwardResultAActivity"></activity>
+        <activity android:name="ForwardResultBActivity"></activity>
+        <activity android:name="OnMethodActivity" android:configChanges="orientation">
+            <meta-data android:value=".SearchResultActivity" android:name="android.app.default_searchable"/>
+        </activity>
+        <activity android:name="TransitionActivity"></activity>
+        <activity android:name="RunOnUIThreadActivity"></activity>
+        <activity android:name="DefaultKeyActivity">
+            <meta-data android:name="android.app.default_searchable" android:value=".SearchResultActivity"/>
+        </activity>
+        <activity android:name="SearchResultActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.SEARCH"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+            </intent-filter>
+            <meta-data android:name="android.app.searchable" android:resource="@xml/searchable"/>
+        </activity>
+        <activity android:name="WindowFeatureActivity"></activity>
+        <activity android:name="LeftRightIconActivity"></activity>
+        <activity android:name="CustomTitleActivity"></activity>
+        <activity android:name="TitleProgressActivity"></activity>
+    </application>
+
+</manifest>

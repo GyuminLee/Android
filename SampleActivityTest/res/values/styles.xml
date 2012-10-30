@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme" parent="android:Theme">
+    </style>
+
+    <!-- Variation on our application theme that forces a plain
+        text style. -->
+    <style name="Theme.PlainText">
+        <item name="android:textAppearance">@style/TextAppearance.Theme.PlainText</item>
+    </style>
+
+    <style name="TextAppearance.Theme.PlainText" parent="android:TextAppearance.Theme">
+        <item name="android:textStyle">normal</item>
+    </style>
+    
+</resources>

@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <TextView
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/hello" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/contentview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="addContentView" />
+
+        <Button
+            android:id="@+id/dialog"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="showDialog" />
+
+        <Button
+            android:id="@+id/transition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="transition" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/pendingresult"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="createPandingResult" />
+
+        <Button
+            android:id="@+id/resultforward"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Result Forwarding" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/invokecurrenttask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invoke Current Task" />
+
+        <Button
+            android:id="@+id/invokenewtask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Invoke New Task" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/standard"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Standard" />
+
+        <Button
+            android:id="@+id/singletop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="SingleTop" />
+
+        <Button
+            android:id="@+id/singletask"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Task" />
+
+        <Button
+            android:id="@+id/singleinstance"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Instance" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout5"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/intentflag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Flag Test" />
+
+        <Button
+            android:id="@+id/tasktoback"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="MoveTaskToBack" />
+
+        <Button
+            android:id="@+id/runonuithread"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RunOnUI" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/onmethod"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="onMethod" />
+
+        <Button
+            android:id="@+id/keymode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="KeyMode" />
+
+        <Button
+            android:id="@+id/windowfeature"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="WindowFeature" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout7"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/intentAndActivity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Intent &amp; Activity" />
+
+    </LinearLayout>
+
+</LinearLayout>

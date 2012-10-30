@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="DragNDrapLayout">
+        <attr name="android:layout_x" />
+        <attr name="android:layout_y" />
+    	<attr name="layout_scalable" format="boolean" />
+    	<attr name="layout_scale" format="float" />
+    </declare-styleable>
+</resources>
