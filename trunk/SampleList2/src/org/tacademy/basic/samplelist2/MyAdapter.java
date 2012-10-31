@@ -1,5 +1,7 @@
 package org.tacademy.basic.samplelist2;
 
+import java.util.ArrayList;
+
 import android.content.Context;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +10,7 @@ import android.widget.BaseAdapter;
 public class MyAdapter extends BaseAdapter implements MyListItem.OnMyItemClickListener {
 
 	Context mContext;
-	MyData[] mData;
+	ArrayList<MyData> mData = new ArrayList<MyData>();
 	
 	public interface OnMyAdapterListener {
 		public void onItemClick(MyData data);
@@ -20,17 +22,39 @@ public class MyAdapter extends BaseAdapter implements MyListItem.OnMyItemClickLi
 		mListener = listener;
 	}	
 	
-	public MyAdapter(Context context,MyData[] data) {
+	public MyAdapter(Context context) {
 		mContext = context;
-		mData = data;
+	}
+	public MyAdapter(Context context,MyData[] items) {
+		mContext = context;
+		for (MyData item : items) {
+			mData.add(item);
+		}
+	}
+	
+	public void add(MyData item) {
+		mData.add(item);
+		notifyDataSetChanged();
+	}
+	
+	public void add(ArrayList<MyData> items) {
+		mData.addAll(items);
+		notifyDataSetChanged();
+	}
+	
+	public void add(MyData[] items) {
+		for (MyData item : items) {
+			mData.add(item);
+		}
+		notifyDataSetChanged();
 	}
 	
 	public int getCount() {
-		return mData.length;
+		return mData.size();
 	}
 
 	public Object getItem(int position) {
-		return mData[position];
+		return mData.get(position);
 	}
 
 	public long getItemId(int position) {
@@ -38,14 +62,14 @@ public class MyAdapter extends BaseAdapter implements MyListItem.OnMyItemClickLi
 	}
 
 	public View getView(int position, View convertView, ViewGroup parent) {
-		MyListItem item = (MyListItem)convertView;
-		if (item == null) {
-			item = new MyListItem(mContext);
-			item.setOnMyItemClickListener(this);
+		MyListItem itemView = (MyListItem)convertView;
+		if (itemView == null) {
+			itemView = new MyListItem(mContext);
+			itemView.setOnMyItemClickListener(this);
 		}
-		item.setData((MyData)getItem(position));
+		itemView.setData((MyData)getItem(position));
 		
-		return item;
+		return itemView;
 	}
 
 	public void onItemClick(MyData data) {
