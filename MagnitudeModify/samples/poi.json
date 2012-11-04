@@ -1,0 +1,23 @@
+{
+  "pois":
+    [
+      {
+        "name" : "Terrain de foot",
+		"altitude" : 1.0,
+		"latitude" : 43.569684,
+		"longitude" : 1.469775
+      },
+      {
+        "name" : "Restaurant Universitaire",
+		"altitude" : 1.0,
+		"latitude" : 43.570042,
+		"longitude" : 1.468776
+      },
+	  {
+        "name" : "Génie méca",
+		"altitude" : 1.0,
+		"latitude" : 43.570522,
+		"longitude" : 1.466833
+      }
+    ]
+}

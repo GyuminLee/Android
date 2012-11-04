@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+android:id="@+id/widget28"
+xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_height="fill_parent" android:layout_width="fill_parent">
+<RelativeLayout android:id="@+id/rl1" android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+<TextView android:id="@+id/name" android:text="Plugin name" android:textColor="#FFFFFF" android:layout_width="fill_parent" android:textSize="30px" android:background="#9c949c" android:layout_height="wrap_content"></TextView>
+<TextView android:layout_height="wrap_content" android:layout_width="fill_parent" android:layout_below="@+id/name" android:text="Plugin details" android:textSize="16px" android:background="#b5d642" android:textColor="#ffffff" android:id="@+id/details"></TextView>
+<TextView android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/desc" android:text="Description : Le plugin Layout plugin ne sert a rien, il n'existe pas, c'est un plugin que je décris pour la création du layout de détail des vrais plugins" android:padding="10px" android:textColor="#ffffff" android:layout_below="@+id/magnibar"></TextView>
+
+
+<TextView android:layout_height="wrap_content" android:layout_below="@+id/desc" android:layout_width="wrap_content" android:id="@+id/curr_version" android:text="Current version : v0.23"></TextView>
+<TextView android:layout_height="wrap_content" android:layout_toRightOf="@+id/uninstall" android:layout_width="wrap_content" android:id="@+id/last_version" android:text="Last version : 1.2.2" android:layout_below="@+id/curr_version"></TextView>
+
+
+
+ 
+        
+<ImageView android:layout_height="wrap_content" android:layout_toRightOf="@+id/uninstall" android:id="@+id/magnibar" android:background="@drawable/titlebar" android:layout_width="wrap_content" android:layout_below="@+id/details" android:layout_alignParentRight="true"></ImageView><RelativeLayout android:id="@+id/rl2" android:layout_width="fill_parent" android:background="#9c949c" android:layout_height="wrap_content" android:layout_alignParentBottom="true">
+<Button android:layout_width="wrap_content" android:layout_height="wrap_content" android:id="@+id/install" android:text="Install" android:layout_alignParentLeft="true"></Button>
+<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:text="Uninstall" android:id="@+id/uninstall" android:layout_toRightOf="@+id/install"></Button>
+<Button android:layout_height="wrap_content" android:layout_width="wrap_content" android:id="@+id/cancel" android:text="Cancel" android:layout_alignParentRight="true"></Button>
+
+
+</RelativeLayout>
+</RelativeLayout>
+
+
+
+
+
+
+
+
+
+</LinearLayout>

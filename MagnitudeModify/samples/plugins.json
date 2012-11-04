@@ -1,0 +1,31 @@
+{
+  "plugins":
+    [
+      {
+        "name" : "HelloPlugin",
+		"id" : "hello",
+        "version" : "1.0",
+        "description" : "Le plugin Hello est un plugin vide de test pour le core",
+        "intent" : "com.magnitude.plugin.hello",
+        "apk_URL" : "http://your-magnitude-server.com/plugins/HelloPlugin/HelloPlugin.apk"
+      },
+      {
+        "name" : "HelloPlugin2",
+		"id" : "hello2",
+        "version" : "1.0",
+        "description" : "Le plugin Hello2 est un plugin de test qui modifie la vue ARVIEW",
+        "intent" : "com.magnitude.plugin.hello",
+        "apk_URL" : "http://your-magnitude-server.com/plugins/HelloPlugin2/HelloPlugin2.apk"
+      },
+
+	  {
+        "name" : "Localisation de batiments",
+		"id" : "loc_batiments",
+        "version" : "1.2",
+        "description" : "Le plugin de Localisation de batiments permet de récuperer des POI pour les localiser grace à la caméra",
+        "intent" : "com.magnitude.plugin.locate",
+        "apk_URL" : "http://your-magnitude-server.com/plugins/LocatePlugin/LocatePlugin.apk",
+		"status" : "not released"
+      }
+    ]
+}
