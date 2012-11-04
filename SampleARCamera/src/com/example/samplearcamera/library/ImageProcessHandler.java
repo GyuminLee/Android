@@ -1,4 +1,4 @@
-package com.example.samplearcamera;
+package com.example.samplearcamera.library;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

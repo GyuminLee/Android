@@ -1,4 +1,4 @@
-package com.example.samplearcamera;
+package com.example.samplearcamera.library;
 
 public class ImageConvert {
 	/**
