@@ -1,4 +1,4 @@
-package com.example.samplearcamera;
+package com.example.samplearcamera.library;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,7 +31,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		VIEW_STATE_PREVIEW
 	};
 	
-	ViewState mViewState = ViewState.VIEW_STATE_NOT_PREVIEW;
+	ViewState mViewState = ViewState.VIEW_STATE_PREVIEW;
 	
 	public static final int IMAGE_FORMAT_RGB_565 = ImageFormat.RGB_565;
 	public static final int IMAGE_FORMAT_DEFAULT = ImageFormat.NV21;
@@ -74,7 +74,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 
 	public CameraView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
-		if (checkCameraHardware(context)) {
+		if (!checkCameraHardware(context)) {
 			Log.i(TAG,"Not Support Carmera Hardware");
 			return;
 		}
@@ -86,6 +86,10 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 			return;
 		}
 		
+		Camera.Parameters p = mCamera.getParameters();
+		float angleX = p.getHorizontalViewAngle();
+		float angleY = p.getVerticalViewAngle();
+		ARCamera.getInstance().setAngle(angleX, angleY);
 		mHolder = getHolder();
 		mHolder.addCallback(this);
 		
@@ -98,6 +102,15 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		this(context, attrs,0);
 	}
 
+	public void releaseCamera() {
+		if (mCamera != null) {
+			if (isPreview) {
+				mCamera.stopPreview();
+			}
+			mCamera.release();
+			mCamera = null;
+		}
+	}
 	public boolean checkCameraHardware(Context context) {
 		return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
 	}
@@ -262,6 +275,7 @@ public class CameraView extends SurfaceView implements SurfaceHolder.Callback {
 		
 		try {
 			mCamera.setPreviewDisplay(holder);
+			mCamera.startPreview();
 			isPreview = true;
 			if (isFaceDetection) {
 				startFaceDetection();
