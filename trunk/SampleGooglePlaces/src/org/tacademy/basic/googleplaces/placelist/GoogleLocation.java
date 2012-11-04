@@ -39,7 +39,7 @@ public class GoogleLocation implements Parcelable, SaxParserHandler {
 			String namespaceUri, String qualifiedName, SaxResultParser parser)
 			throws SAXException {
 		// TODO Auto-generated method stub
-		if (tagName.equalsIgnoreCase("lag")) {
+		if (tagName.equalsIgnoreCase("lat")) {
 			lat = Double.parseDouble((String)content);
 		} else if (tagName.equalsIgnoreCase("lng")) {
 			lng = Double.parseDouble((String)content);
