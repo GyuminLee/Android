@@ -46,7 +46,7 @@ public class DataSource extends Activity {
 	private String url;
 
 	public enum TYPE {
-		WIKIPEDIA, BUZZ, TWITTER, OSM, MIXARE, ARENA
+		WIKIPEDIA, BUZZ, TWITTER, OSM, MIXARE, ARENA, GOOGLE
 	};
 
 	public enum DISPLAY {
@@ -214,6 +214,11 @@ public class DataSource extends Activity {
 
 			case OSM:
 				ret += DataConvertor.getOSMBoundingBox(lat, lon, radius);
+				break;
+				
+			case GOOGLE:
+				ret += "?key=AIzaSyCe72iAyKd1mZ40jpa8v4vnFEG_Z-V6hFY&location="+Double.toString(lat)+","+Double.toString(lon)
+					+ "&radius="+(int)(radius * 1000) + "&sensor=false"; 
 				break;
 			}
 
