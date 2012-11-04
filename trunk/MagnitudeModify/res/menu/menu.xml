@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+  xmlns:android="http://schemas.android.com/apk/res/android">
+	<item android:id="@+id/settings"
+        android:title="Settings" android:icon="@drawable/ic_menu_preferences"/> 
+    <item android:id="@+id/enable" 
+    	android:title="Enable Plugins" android:icon="@drawable/ic_menu_view"/>
+    <item android:id="@+id/plugins"
+        android:title="Manage Plugins" android:icon="@drawable/ic_menu_add"/>
+    <item android:id="@+id/poi"
+        android:title="Poi Add" android:icon="@drawable/ic_menu_add"/>
+    <item android:id="@+id/google"
+        android:title="Add Google POI" android:icon="@drawable/ic_menu_add"/>
+</menu>

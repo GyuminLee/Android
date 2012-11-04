@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout android:layout_width="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android" android:id="@+id/row" android:layout_height="90px">
+<TextView android:id="@+id/name" android:layout_width="wrap_content" android:layout_height="wrap_content" android:textStyle="bold" android:textSize="30px" android:textColor="#fff" android:text="Plugin name" android:phoneNumber="false"></TextView>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_below="@+id/name" android:layout_marginTop="0px" android:layout_marginLeft="0px" android:textSize="20px" android:text="version" android:id="@+id/version"></TextView>
+<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_alignParentRight="true" android:textSize="20px" android:text="status" android:id="@+id/status" android:layout_alignBottom="@+id/version"></TextView>
+
+</RelativeLayout>

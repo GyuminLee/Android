@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen
+  xmlns:android="http://schemas.android.com/apk/res/android">
+<CheckBoxPreference android:summaryOff="&quot;Magnitude&quot; topbar won't be shown" android:summaryOn='"Magnitude" topbar will be shown' android:title="Top bar" android:key="bar" android:defaultValue="true"></CheckBoxPreference><CheckBoxPreference android:defaultValue="true" android:summaryOff="show splash if gps signal is low" android:title="Splash Screen" android:summaryOn="show splash if gps signal is low" android:key="splash" android:persistent="true"></CheckBoxPreference><CheckBoxPreference android:title="GPS Signal" android:key="gps" android:summaryOn="GPS view will be shown" android:summaryOff="GPS view won't be shown" android:persistent="true"></CheckBoxPreference>
+<CheckBoxPreference android:title="Radar" android:key="radar" android:summaryOn="Radar view will be shown" android:summaryOff="Radar view won't be shown" android:persistent="true" android:defaultValue="true"></CheckBoxPreference>
+<CheckBoxPreference android:title="Zoom Roulette" android:summaryOn="Zoom will be shown" android:summaryOff="Zoom won't be shown" android:key="scroll" android:persistent="true" android:defaultValue="true"></CheckBoxPreference>
+<CheckBoxPreference android:title="Debug Info" android:summaryOn="Debug info will be shown" android:summaryOff="Debug info won't be shown" android:key="debug" android:persistent="true" android:defaultValue="false"></CheckBoxPreference>
+<EditTextPreference android:key="server" android:title="Magnitude Server Address" android:summary="enter your Magnitude server Address" android:defaultValue="http://" android:persistent="true"></EditTextPreference>
+
+
+</PreferenceScreen>
