@@ -103,6 +103,7 @@ public class DataConvertor {
 		dataProcessors.add(new WikiDataProcessor());
 		dataProcessors.add(new TwitterDataProcessor());
 		dataProcessors.add(new OsmDataProcessor());
+		dataProcessors.add(new GoogleDataProcessor());
 	}
 	
 	public static String getOSMBoundingBox(double lat, double lon, double radius) {
