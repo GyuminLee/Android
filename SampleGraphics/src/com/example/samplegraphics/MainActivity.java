@@ -8,6 +8,7 @@ import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.RectF;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.widget.LinearLayout;
@@ -40,6 +41,7 @@ public class MainActivity extends Activity {
 			mPath.moveTo(10.0f, 10.0f);
 			mPath.lineTo(110.0f, 110.0f);
 			mPath.lineTo(210.0f, 10.0f);
+			Log.i("test","test");
 		}
 		
 		@Override
