@@ -11,6 +11,7 @@ public class MyActivity extends Activity {
 
 	public static final String PARAM_NAME = "name";
 	public static final String PARAM_AGE = "age";
+	public static final String PARAM_PROFILE = "profile";
 	public static final String RESULT_PARAM_NAME = "resultName";
 	public static final String RESULT_PARAM_AGE = "resultAge";
 	
@@ -21,10 +22,11 @@ public class MyActivity extends Activity {
 	
 	    setContentView(R.layout.my_activity_layout);
 	    Intent i = getIntent();
-	    String name = i.getStringExtra(PARAM_NAME);
-	    int age = i.getIntExtra(PARAM_AGE, -1);
+//	    String name = i.getStringExtra(PARAM_NAME);
+//	    int age = i.getIntExtra(PARAM_AGE, -1);
+	    Profile p = (Profile)i.getParcelableExtra(PARAM_PROFILE);
 	    
-	    ((TextView)findViewById(R.id.textView1)).setText("name : " + name + ",age : " + age);
+	    ((TextView)findViewById(R.id.textView1)).setText("name : " + p.name + ",age : " + p.age);
 	    
 	    Button btn = (Button)findViewById(R.id.result);
 	    btn.setOnClickListener(new View.OnClickListener() {
