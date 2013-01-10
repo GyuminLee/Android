@@ -26,9 +26,10 @@ public class MainActivity extends Activity {
 //				Intent i = new Intent(Intent.ACTION_DIAL, 
 //						Uri.parse("tel:0100000000"));
 				Intent i = new Intent(MainActivity.this,MyActivity.class);
-				i.putExtra(MyActivity.PARAM_NAME, "ysi");
-				i.putExtra(MyActivity.PARAM_AGE, 39);
-				i.putExtra("zzz", 10);
+//				i.putExtra(MyActivity.PARAM_NAME, "ysi");
+//				i.putExtra(MyActivity.PARAM_AGE, 39);
+				Profile p = new Profile("ysi",39);
+				i.putExtra(MyActivity.PARAM_PROFILE, p);
 				startActivityForResult(i,REQUEST_CODE_MYACTIVITY);
 			}
 		});
