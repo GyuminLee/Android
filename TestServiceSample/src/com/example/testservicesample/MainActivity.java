@@ -1,8 +1,8 @@
 package com.example.testservicesample;
 
 import android.app.Activity;
-import android.app.PendingIntent;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -11,6 +11,8 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+	EventReceiveReceiver receiver;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -23,11 +25,11 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(MainActivity.this, MyService.class);
-				Intent resultIntent = new Intent();
-				resultIntent.putExtra("test", "aaa");
-				PendingIntent pi = createPendingResult(0, resultIntent , PendingIntent.FLAG_ONE_SHOT);
-				i.putExtra("resultPI",pi);
-				i.putExtra("count", 10);
+//				Intent resultIntent = new Intent();
+//				resultIntent.putExtra("test", "aaa");
+//				PendingIntent pi = createPendingResult(0, resultIntent , PendingIntent.FLAG_ONE_SHOT);
+//				i.putExtra("resultPI",pi);
+//				i.putExtra("count", 10);
 				startService(i);
 			}
 		});
@@ -42,6 +44,27 @@ public class MainActivity extends Activity {
 				stopService(i);
 			}
 		});
+		
+		receiver = new EventReceiveReceiver();
+		receiver.setOnEventReceivedListener(new EventReceiveReceiver.OnEventReceivedListener() {
+			
+			@Override
+			public void onEventReceived(Intent i) {
+				// TODO Auto-generated method stub
+				int count = i.getIntExtra("count", -1);
+				Toast.makeText(MainActivity.this, "Service Count : " + count, Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		IntentFilter filter = new IntentFilter(MyService.EVENT_MODULAR_ZERO);
+		registerReceiver(receiver,filter);
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		super.onDestroy();
+		unregisterReceiver(receiver);
 	}
 	
 	@Override
