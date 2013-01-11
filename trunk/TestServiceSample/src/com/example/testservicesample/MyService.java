@@ -14,6 +14,7 @@ public class MyService extends Service {
 	int mCount = 0;
 	boolean isRunning = false;
 	private final static String TAG = "MyService";
+	public static final String EVENT_MODULAR_ZERO = "com.example.testservicesample.action.MODULAR_ZERO";
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -39,6 +40,13 @@ public class MyService extends Service {
 						e.printStackTrace();
 					}
 					mCount++;
+					
+					if ((mCount % 10) == 0) {
+						Intent i = new Intent(EVENT_MODULAR_ZERO);
+						i.putExtra("count", mCount);
+						sendBroadcast(i);
+					}
+					
 					Log.i(TAG, "mCount : " + mCount);
 				}
 			}
@@ -52,23 +60,23 @@ public class MyService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		// TODO Auto-generated method stub
 		if (intent != null) {
-			int count = intent.getIntExtra("count", mCount);
+//			int count = intent.getIntExtra("count", mCount);
 			
-			PendingIntent pi = (PendingIntent)intent.getParcelableExtra("resultPI");
+//			PendingIntent pi = (PendingIntent)intent.getParcelableExtra("resultPI");
 			
 			Toast.makeText(this, "mCount : " + mCount, Toast.LENGTH_SHORT).show();
 			
-			Intent resultIntent = new Intent();
-			resultIntent.putExtra("count", mCount);
+//			Intent resultIntent = new Intent();
+//			resultIntent.putExtra("count", mCount);
 			
-			try {
-				pi.send(this, Activity.RESULT_OK, resultIntent);
-			} catch (CanceledException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+//			try {
+//				pi.send(this, Activity.RESULT_OK, resultIntent);
+//			} catch (CanceledException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
 			
-			mCount = count;
+//			mCount = count;
 		} else {
 			Toast.makeText(this, "Service restart", Toast.LENGTH_SHORT).show();
 		}
