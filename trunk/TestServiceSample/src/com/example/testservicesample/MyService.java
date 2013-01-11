@@ -1,10 +1,8 @@
 package com.example.testservicesample;
 
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.app.PendingIntent.CanceledException;
 import android.app.Service;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -15,6 +13,8 @@ public class MyService extends Service {
 	boolean isRunning = false;
 	private final static String TAG = "MyService";
 	public static final String EVENT_MODULAR_ZERO = "com.example.testservicesample.action.MODULAR_ZERO";
+	
+	EventReceiveReceiver receiver;
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -54,6 +54,27 @@ public class MyService extends Service {
 		isRunning = true;
 		th.start();
 		Toast.makeText(this, "Service Created", Toast.LENGTH_SHORT).show();
+		
+		receiver = new EventReceiveReceiver();
+		receiver.setOnEventReceivedListener(new EventReceiveReceiver.OnEventReceivedListener() {
+			
+			@Override
+			public void onEventReceived(Intent i) {
+				// TODO Auto-generated method stub
+				// SCREEN_ON
+				if (i.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+					Log.i(TAG, "Receive Screen On");
+				} else if (i.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+					Log.i(TAG, "Receive Screen Off");
+				}				
+			}
+		});
+		
+		IntentFilter filterOn = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		registerReceiver(receiver, filterOn);
+		IntentFilter filterOff = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(receiver, filterOff);
+		
 	}
 	
 	@Override
@@ -90,6 +111,7 @@ public class MyService extends Service {
 		super.onDestroy();
 		isRunning = false;
 		Toast.makeText(this, "Service destroyed", Toast.LENGTH_SHORT).show();
+		unregisterReceiver(receiver);
 	}
 
 }
