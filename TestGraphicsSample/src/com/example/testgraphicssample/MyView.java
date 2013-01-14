@@ -3,6 +3,7 @@ package com.example.testgraphicssample;
 import java.io.InputStream;
 
 import android.content.Context;
+import android.content.res.TypedArray;
 import android.graphics.AvoidXfermode;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -36,6 +37,13 @@ public class MyView extends View {
 	public MyView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		// TODO Auto-generated constructor stub
+		
+		TypedArray ta = context.obtainStyledAttributes(attrs, R.styleable.MyView);
+		int posx = ta.getInt(R.styleable.MyView_posx, -1);
+		int posy = ta.getInt(R.styleable.MyView_posy, -1);
+		String drawText = ta.getString(R.styleable.MyView_drawText);
+		int bgColor = ta.getColor(R.styleable.MyView_bgColor, Color.BLACK);
+		
 		init(context);
 	}
 
