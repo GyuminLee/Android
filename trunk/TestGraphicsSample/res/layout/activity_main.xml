@@ -1,4 +1,5 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:myspace="http://schemas.android.com/apk/res/com.example.testgraphicssample"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
@@ -20,6 +21,10 @@
     <com.example.testgraphicssample.MyView
         android:id="@+id/myView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        myspace:posx="10"
+        myspace:posy="20"
+        myspace:drawText="test"
+        myspace:bgColor="#FF00FF" />
 
 </LinearLayout>

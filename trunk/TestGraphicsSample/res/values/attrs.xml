@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MyView">
+        <attr name="posx" format="integer" />
+        <attr name="posy" format="integer" />
+        <attr name="drawText" format="string" />
+        <attr name="bgColor" format="color" />
+    </declare-styleable>
+</resources>
