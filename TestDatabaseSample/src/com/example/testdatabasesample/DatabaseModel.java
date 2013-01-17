@@ -1,11 +1,14 @@
 package com.example.testdatabasesample;
 
+import android.R.array;
+import android.animation.ArgbEvaluator;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteDatabase.CursorFactory;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.os.Handler;
 import android.provider.BaseColumns;
 
 public class DatabaseModel {
@@ -16,6 +19,10 @@ public class DatabaseModel {
 	private static DatabaseModel instance;
 	
 	DatabaseHelper mDbHelper;
+	
+	public interface OnQueryResultListener {
+		public void onQueryResult(Cursor c);
+	}
 	
 	public static DatabaseModel getInstance() {
 		if (instance == null) {
@@ -43,7 +50,7 @@ public class DatabaseModel {
 		db.close();
 	}
 	
-	public Cursor getDataList(String name) {
+	public void getDataList(String name, OnQueryResultListener listener, Handler handler) {
 		String selection = null;
 		String[] args = null;
 		String[] projection = { DataFields.People.ID, 
@@ -56,11 +63,65 @@ public class DatabaseModel {
 			selection = DataFields.People.NAME + " = ?";
 			args = new String[] {name};
 		}
-		SQLiteDatabase db = mDbHelper.getReadableDatabase();
+		new MyThread(DataFields.People.TABLE_NAME, 
+				projection, 
+				selection, 
+				args, 
+				null, 
+				null, 
+				null, 
+				listener, 
+				handler).start();
+	}
+	
+	class MyThread extends Thread {
+		String mTableName;
+		String[] mProjection;
+		String mSelection;
+		String[] mArgs;
+		String mGroupBy;
+		String mHaving;
+		String mOrderBy;
+		OnQueryResultListener mListener;
+		Handler mHandler;
+		Cursor mCursor;
 		
-		Cursor c = db.query(DataFields.People.TABLE_NAME, projection, selection, args, null, null, null);
+		public MyThread(String tableName, 
+				String[] projection, 
+				String selection, 
+				String[] args,
+				String groupby,
+				String having,
+				String orderby, 
+				OnQueryResultListener listener, 
+				Handler handler) {
+			mTableName = tableName;
+			mProjection = projection;
+			mSelection = selection;
+			mArgs = args;
+			mGroupBy = groupby;
+			mHaving = having;
+			mOrderBy = orderby;
+			mListener = listener;
+			mHandler = handler;
+		}
 		
-		return c;
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			SQLiteDatabase db = mDbHelper.getReadableDatabase();
+			
+			mCursor = db.query(mTableName, mProjection, mSelection, mArgs, mGroupBy, mHaving, mOrderBy);
+			
+			mHandler.post(new Runnable() {
+				
+				@Override
+				public void run() {
+					// TODO Auto-generated method stub
+					mListener.onQueryResult(mCursor);
+				}
+			});
+		}
 	}
 	
 	public final static class DataFields {
