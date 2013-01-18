@@ -36,6 +36,10 @@ public class DatabaseModel {
 		mDbHelper = new DatabaseHelper(context, DB_NAME, null, DB_VERSION);
 	}
 	
+	public DatabaseHelper getDBHelper() {
+		return mDbHelper;
+	}
+	
 	public void saveData(MyData data) {
 		SQLiteDatabase db = mDbHelper.getWritableDatabase();
 		
