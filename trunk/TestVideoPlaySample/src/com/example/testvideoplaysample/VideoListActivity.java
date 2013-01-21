@@ -24,7 +24,7 @@ public class VideoListActivity extends FragmentActivity implements LoaderCallbac
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
-	    
+	    setContentView(R.layout.video_list);
 	    list = (ListView)findViewById(R.id.listView1);
 	    
 	    mAdapter = new SimpleCursorAdapter(this, android.R.layout.simple_list_item_1, null
