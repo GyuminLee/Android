@@ -17,13 +17,6 @@
         android:layout_height="wrap_content"
         android:text="Button" />
 
-    <MediaController
-        android:id="@+id/mediaController1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-
-    </MediaController>
-
     <VideoView
         android:id="@+id/videoView1"
         android:layout_width="match_parent"

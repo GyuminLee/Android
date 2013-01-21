@@ -2,6 +2,8 @@ package com.example.testvideoplaysample;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.media.MediaPlayer.OnPreparedListener;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -23,9 +25,18 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		
 		mVideoView = (VideoView)findViewById(R.id.videoView1);
-		mController = (MediaController)findViewById(R.id.mediaController1);
+		mController = new MediaController(this);
 		mController.setMediaPlayer(mVideoView);
 		mVideoView.setMediaController(mController);
+		mVideoView.setOnPreparedListener(new OnPreparedListener() {
+			
+			@Override
+			public void onPrepared(MediaPlayer mp) {
+				// TODO Auto-generated method stub
+				mVideoView.start();
+			}
+		});
+		
 		Button btn = (Button)findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -45,7 +56,6 @@ public class MainActivity extends Activity {
 			if (resultCode == RESULT_OK) {
 				Uri uri = data.getData();
 				mVideoView.setVideoURI(uri);
-				mVideoView.start();
 			}
 		}
 		super.onActivityResult(requestCode, resultCode, data);
