@@ -37,8 +37,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 		mRecorder = new MediaRecorder();
 
 		surfaceView = (SurfaceView)findViewById(R.id.surfaceView1);
-		
-		
+		surfaceView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+		surfaceView.getHolder().addCallback(this);
 		
 		Button btn = (Button)findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -88,7 +88,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 					mRecorder.stop();
 					
 					ContentValues values = new ContentValues();
-					long time = System.currentTimeMillis();
+					long time = System.currentTimeMillis()/1000;
 					values.put(MediaStore.Video.Media.TITLE, "testvideo");
 					values.put(MediaStore.Video.Media.DATE_ADDED, time);
 					values.put(MediaStore.Video.Media.MIME_TYPE, "video/mpeg");
