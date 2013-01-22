@@ -24,6 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="MyService">
+            <intent-filter>
+                <action android:name="com.example.testlocationmanager.ACTION_PROXIMITY_ALERT"/>
+            </intent-filter>
+        </service>
+        <activity android:name="AlertActivity"></activity>
     </application>
 
 </manifest>

@@ -5,18 +5,22 @@ import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 public class MainActivity extends Activity {
@@ -73,6 +77,8 @@ public class MainActivity extends Activity {
 	};
 	
 	EditText keywordView;
+	TextView addressView;
+	Address mSelectedAddress;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -98,8 +104,12 @@ public class MainActivity extends Activity {
 					
 					try {
 						List<Address> addresses = geocoder.getFromLocationName(keyword, 10);
-						for (Address addr : addresses) {
-							Toast.makeText(MainActivity.this, "Location : " + addr.toString(), Toast.LENGTH_SHORT).show();
+						if (addresses.size() > 0) {
+							Address addr = addresses.get(0);
+							addressView.setText(addr.toString());
+							mSelectedAddress = addr;
+						} else {
+							mSelectedAddress = null;
 						}
 					} catch (IOException e) {
 						// TODO Auto-generated catch block
@@ -111,6 +121,29 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+		addressView = (TextView)findViewById(R.id.textView1);
+		btn = (Button)findViewById(R.id.button2);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (mSelectedAddress != null) {
+					PendingIntent intent = null;
+					String url = "dbms://myservice/table/1";
+					Intent i = new Intent(MyService.ACTION_ALERT,Uri.parse(url));
+					intent = PendingIntent.getService(MainActivity.this, 0, i, 0);					
+					
+					long expiration = -1;//System.currentTimeMillis() + (24 * 60 * 60 * 1000);
+					
+					mLocationManager.addProximityAlert(
+							mSelectedAddress.getLatitude(), 
+							mSelectedAddress.getLongitude(), 
+							50, expiration, intent);
+				}
+			}
+		});
+		
 		
 	}
 	
