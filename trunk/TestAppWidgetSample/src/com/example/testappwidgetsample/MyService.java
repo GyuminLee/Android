@@ -1,5 +1,6 @@
 package com.example.testappwidgetsample;
 
+import android.app.PendingIntent;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -24,7 +25,7 @@ public class MyService extends Service implements Runnable {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		
-		new Thread(this).start();
+//		new Thread(this).start();
 		
 	}
 
@@ -52,13 +53,26 @@ public class MyService extends Service implements Runnable {
 		super.onDestroy();
 	}
 	
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		// TODO Auto-generated method stub
+		updateAppWidget();
+		
+		return super.onStartCommand(intent, flags, startId);
+	}
+	
 	public void updateAppWidget() {
 		AppWidgetManager manager = AppWidgetManager.getInstance(this);
 		ComponentName provider = new ComponentName(this, MyAppWedgetProvider.class);
 		
 		RemoteViews views = new RemoteViews(getPackageName(), R.layout.appwidget_layout);
 		
-		views.setTextViewText(R.id.textView1, "count : " + count);
+		views.setTextViewText(R.id.textView1, "count : " + count++);
+		Intent i = new Intent(this, MyService.class);
+		
+		PendingIntent pi = PendingIntent.getService(this, 0, i, 0);
+		
+		views.setOnClickPendingIntent(R.id.imageView1, pi);
 		
 		manager.updateAppWidget(provider, views);
 		
