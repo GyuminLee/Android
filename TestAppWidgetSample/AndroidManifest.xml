@@ -28,7 +28,7 @@
             </intent-filter>
             <meta-data android:name="android.appwidget.provider" android:resource="@xml/my_app_widget_provider"/>
         </receiver>
-        <service android:name="MyService"></service>
+        <service android:name="MyService" android:exported="true"></service>
     </application>
 
 </manifest>
