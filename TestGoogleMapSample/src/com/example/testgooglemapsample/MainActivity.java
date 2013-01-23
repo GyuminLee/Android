@@ -2,10 +2,15 @@ package com.example.testgooglemapsample;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -36,6 +41,55 @@ public class MainActivity extends FragmentActivity implements
 
     private GoogleMap mMap;
     LocationManager mLocationManager;
+    SensorManager mSensorManager;
+    Sensor mAccSensor;
+    Sensor mMagSensor;
+    CompassView mCompass;
+    Handler mHandler = new Handler();
+    
+    MySensorListener mSensorListner = new MySensorListener();
+    public class MySensorListener implements SensorEventListener {
+		
+    	float[] gvalue = new float[3];
+    	float[] mvalue = new float[3];
+    	
+    	float[] R = new float[9];
+    	float[] I = new float[9];
+    	
+    	float[] mRotate = new float[3];
+    	
+    	
+    	
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			// TODO Auto-generated method stub
+			switch(event.sensor.getType()) {
+			case Sensor.TYPE_ACCELEROMETER :
+				gvalue[0] = event.values[0];
+				gvalue[1] = event.values[1];
+				gvalue[2] = event.values[2];
+				break;
+			case Sensor.TYPE_MAGNETIC_FIELD :
+				mvalue[0] = event.values[0];
+				mvalue[1] = event.values[1];
+				mvalue[2] = event.values[2];
+				break;
+			}
+			
+			SensorManager.getRotationMatrix(R, I, gvalue, mvalue);
+			SensorManager.getOrientation(R, mRotate);
+			
+//			mCompass.setRotateDegrees((float)Math.toDegrees(mRotate[2]));
+			
+		}
+		
+		
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+			
+		}
+	};
 	
     LocationListener mListener = new LocationListener() {
 		
@@ -57,6 +111,9 @@ public class MainActivity extends FragmentActivity implements
 			
 		}
 		
+		
+		Marker myMarker;
+		
 		@Override
 		public void onLocationChanged(Location location) {
 			// TODO Auto-generated method stub
@@ -64,12 +121,16 @@ public class MainActivity extends FragmentActivity implements
 			CameraPosition position = CameraPosition.builder().target(pos).bearing(30).zoom(15.5f).tilt(50).build();
 			CameraUpdate update = CameraUpdateFactory.newCameraPosition(position);
 			mMap.animateCamera(update);
-			MarkerOptions options = new MarkerOptions().position(pos)
-					.title("My Position")
-					.snippet("Description")
-					//.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher))
-					.draggable(true);
-			Marker marker = mMap.addMarker(options);
+			if (myMarker == null) {
+				MarkerOptions options = new MarkerOptions().position(pos)
+						.title("My Position")
+						.snippet("Description")
+						//.icon(BitmapDescriptorFactory.fromResource(R.drawable.ic_launcher))
+						.draggable(true);
+				myMarker = mMap.addMarker(options);
+			} else {
+				myMarker.setPosition(pos);
+			}
 			
 		}
 	};
@@ -80,8 +141,23 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 		setUpMapIfNeeded();
 		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+		mAccSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mMagSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		mCompass = (CompassView)findViewById(R.id.compass);
 	}
 
+	Runnable drawingRunnable = new Runnable() {
+
+		@Override
+		public void run() {
+			// TODO Auto-generated method stub
+			mCompass.setRotateDegrees(mSensorListner.mRotate[2]);
+			mHandler.postDelayed(drawingRunnable, 200);
+		}
+		
+	};
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -109,6 +185,9 @@ public class MainActivity extends FragmentActivity implements
 		super.onResume();
 		setUpMapIfNeeded();
 		mLocationSource.onResume();
+		mSensorManager.registerListener(mSensorListner, mAccSensor, SensorManager.SENSOR_DELAY_GAME);
+		mSensorManager.registerListener(mSensorListner, mMagSensor, SensorManager.SENSOR_DELAY_GAME);
+		mHandler.post(drawingRunnable);
 	}
 
 	@Override
@@ -116,6 +195,8 @@ public class MainActivity extends FragmentActivity implements
 		// TODO Auto-generated method stub
 		super.onPause();
 		mLocationSource.onPause();
+		mSensorManager.unregisterListener(mSensorListner);
+		mHandler.removeCallbacks(drawingRunnable);
 	}
 	
     private void setUpMapIfNeeded() {
@@ -220,9 +301,19 @@ public class MainActivity extends FragmentActivity implements
         mMap.setInfoWindowAdapter(mInfoWindowAdapter);
     }
 
+    Marker mOldClickMarker = null;
+    
 	@Override
 	public boolean onMarkerClick(Marker marker) {
 		// TODO Auto-generated method stub
+		
+		if (mOldClickMarker != null && mOldClickMarker.equals(marker)) {
+			// ...
+		}
+		
+		//marker ....
+		
+		mOldClickMarker = marker;
 		
 		return false;
 	}
