@@ -24,6 +24,8 @@ public class MyService extends Service implements Runnable {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		
+		new Thread(this).start();
+		
 	}
 
 	@Override
