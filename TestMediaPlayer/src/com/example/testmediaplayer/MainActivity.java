@@ -3,13 +3,18 @@ package com.example.testmediaplayer;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.media.AudioManager.OnAudioFocusChangeListener;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.telephony.PhoneStateListener;
+import android.telephony.TelephonyManager;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +29,7 @@ public class MainActivity extends Activity {
 	SeekBar mVolumeBar;
 	
 	boolean isStopped = false;
+	boolean isPlaying = false;
 	boolean isSeekChanged = false;
 	AudioManager mAudioManager;
 	
@@ -46,6 +52,86 @@ public class MainActivity extends Activity {
 			mHandler.postDelayed(updateRunnable, UPDATE_INTERVAL);
 		}
 		
+	};
+	
+	OnAudioFocusChangeListener mAudioFocusChangeListener = new OnAudioFocusChangeListener() {
+		
+		@Override
+		public void onAudioFocusChange(int focusChange) {
+			// TODO Auto-generated method stub
+			switch(focusChange) {
+			case AudioManager.AUDIOFOCUS_GAIN :
+				break;
+			case AudioManager.AUDIOFOCUS_LOSS :
+				break;
+			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT :
+				break;
+			case AudioManager.AUDIOFOCUS_LOSS_TRANSIENT_CAN_DUCK :
+				break;
+			}
+			
+		}
+	};
+	
+	
+	BroadcastReceiver mHeadsetPlugReceiver = new BroadcastReceiver() {
+
+		int mOldState = -1;
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			int state = intent.getIntExtra("state", -1);
+			if (mOldState == -1) {
+				mOldState = state;
+			}
+			if (mOldState == state) {
+				return;
+			}
+			
+			if (state == 0) {
+				// unplugged
+				mHandler.post(new Runnable() {
+
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						mPlayer.pause();
+						mHandler.removeCallbacks(updateRunnable);
+						if (isPlaying) {
+							mTelephonyManager.listen(null, PhoneStateListener.LISTEN_CALL_STATE);
+							unregisterReceiver(mHeadsetPlugReceiver);
+						}
+						isPlaying = false;
+					}
+					
+				});
+			}
+			mOldState = state;
+		}
+		
+	};
+	IntentFilter filter = new IntentFilter(Intent.ACTION_HEADSET_PLUG);
+
+	boolean isCallingPause = false;
+	
+	TelephonyManager mTelephonyManager;
+	PhoneStateListener mPhoneStateListener = new PhoneStateListener() {
+		public void onCallStateChanged(int state, String incomingNumber) {
+			switch(state) {
+			case TelephonyManager.CALL_STATE_IDLE :
+				mPlayer.start();
+				mHandler.postDelayed(updateRunnable, UPDATE_INTERVAL);
+				isCallingPause = false;
+				break;
+			case TelephonyManager.CALL_STATE_OFFHOOK :
+				isCallingPause = true;
+				break;
+			case TelephonyManager.CALL_STATE_RINGING :
+				mPlayer.pause();
+				mHandler.removeCallbacks(updateRunnable);
+				break;
+			}
+		}
 	};
 	
 	@Override
@@ -112,6 +198,9 @@ public class MainActivity extends Activity {
 				}
 				mPlayer.start();
 				mHandler.postDelayed(updateRunnable, UPDATE_INTERVAL);
+				registerReceiver(mHeadsetPlugReceiver, filter);
+				mTelephonyManager.listen(mPhoneStateListener, PhoneStateListener.LISTEN_CALL_STATE);
+				isPlaying = true;
 			}
 		});
 		
@@ -123,6 +212,11 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				mPlayer.pause();
 				mHandler.removeCallbacks(updateRunnable);
+				if (isPlaying) {
+					unregisterReceiver(mHeadsetPlugReceiver);
+					mTelephonyManager.listen(null, PhoneStateListener.LISTEN_CALL_STATE);
+				}
+				isPlaying = false;
 			}
 		});
 		
@@ -137,13 +231,22 @@ public class MainActivity extends Activity {
 				mPosition = 0;
 				mPlayer.stop();
 				mHandler.removeCallbacks(updateRunnable);
+				if (isPlaying) {
+					unregisterReceiver(mHeadsetPlugReceiver);
+					mTelephonyManager.listen(null, PhoneStateListener.LISTEN_CALL_STATE);
+				}
+				isPlaying = false;
 			}
 		});
 		
 		
-//		mPlayer = MediaPlayer.create(this, R.raw.winter_blues);
+		mPlayer = MediaPlayer.create(this, R.raw.winter_blues);
+		int max = mPlayer.getDuration();
+		mSeekBar.setMax(max);
+		mSeekBar.setProgress(0);
+		isStopped = false;
 
-		mPlayer = new MediaPlayer();
+//		mPlayer = new MediaPlayer();
 		
 		mVolumeBar = (SeekBar)findViewById(R.id.seekBar2);
 		
@@ -186,8 +289,7 @@ public class MainActivity extends Activity {
 				startActivityForResult(i, REQUEST_CODE_SEARCH_MEDIA);
 			}
 		});
-		
-		
+		mTelephonyManager = (TelephonyManager)getSystemService(Context.TELEPHONY_SERVICE);
 	}
 
 	@Override
@@ -202,7 +304,8 @@ public class MainActivity extends Activity {
 					mPlayer.prepare();
 					int max = mPlayer.getDuration();
 					mSeekBar.setMax(max);
-					mSeekBar.setProgress(0);					
+					mSeekBar.setProgress(0);
+					isStopped = false;
 				} catch (IllegalArgumentException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -235,12 +338,16 @@ public class MainActivity extends Activity {
 	protected void onStop() {
 		// TODO Auto-generated method stub
 		super.onStop();
-		if (!isStopped) {
+		if (!isStopped && !isCallingPause) {
 			mPlayer.stop();
 			isStopped = true;
 			mSeekBar.setProgress(0);
 			mPosition = 0;
 			mHandler.removeCallbacks(updateRunnable);
+			if (isPlaying) {
+				unregisterReceiver(mHeadsetPlugReceiver);
+				mTelephonyManager.listen(null, PhoneStateListener.LISTEN_CALL_STATE);
+			}
 		}
 	}
 	
