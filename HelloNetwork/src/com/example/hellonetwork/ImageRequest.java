@@ -4,15 +4,23 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 
 public class ImageRequest extends NetworkRequest {
 
 	String urlString;
 	Bitmap mBitmap;
+	ArrayList<ImageRequest> notifyRequest = new ArrayList<ImageRequest>();
 	
+	public boolean addNotifyRequest(ImageRequest request) {
+		if (urlString.equals(request.urlString)) {
+			notifyRequest.add(request);
+			return true;
+		}
+		return false;
+	}
 	public ImageRequest(String url) {
 		this.urlString = url;
 	}
@@ -40,6 +48,9 @@ public class ImageRequest extends NetworkRequest {
 	protected void parsing(InputStream is) {
 		// TODO Auto-generated method stub
 		mBitmap = ImageCache.getInstance().createBitmapFromNetwork(getKey(), is);
+		for (ImageRequest rq : notifyRequest) {
+			rq.setBitmapAndPost(mBitmap);
+		}
 	}
 	
 	public String getKey() {

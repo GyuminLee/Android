@@ -45,7 +45,7 @@ public class URLImageView extends ImageView {
 			mRequest = null;
 		}
 		mRequest = new ImageRequest(url);
-		NetworkModel.getInstance().getNetworkData(mRequest, mCompleted, mHandler);
+		NetworkModel.getInstance().getImageData(mRequest, mCompleted, mHandler);
 		
 	}
 

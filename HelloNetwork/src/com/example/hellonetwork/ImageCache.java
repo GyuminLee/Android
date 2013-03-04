@@ -106,14 +106,14 @@ public class ImageCache {
 			try {
 				InputStream is = new FileInputStream(file);
 				bitmap = createBitmapFromInputStream(is);
-				if (bitmap != null) {
-					
-				}
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			
+		}
+		if (bitmap != null) {
+			addMemcache(key, bitmap);
 		}
 		return bitmap;
 	}
