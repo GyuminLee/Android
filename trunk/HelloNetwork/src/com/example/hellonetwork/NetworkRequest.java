@@ -1,5 +1,6 @@
 package com.example.hellonetwork;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -76,4 +77,23 @@ public abstract class NetworkRequest {
 	public String getRequestMethod() {
 		return "GET";
 	}
+	
+	public boolean setConnectionConfig(HttpURLConnection conn) {
+		return true;
+	}
+
+	public boolean setHeader(HttpURLConnection conn) {
+		return true;
+	}
+
+	public boolean setTimeout(HttpURLConnection conn) {
+		conn.setConnectTimeout(30000);
+		conn.setReadTimeout(30000);
+		return true;
+	}
+
+	public boolean setOutput(HttpURLConnection conn)  throws IOException {
+		return true;
+	}
+	
 }
