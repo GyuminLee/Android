@@ -11,6 +11,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 public class GooglePlaceItem implements Parcelable, SaxParserHandler {
+	public String formatted_address;
 	public String name;
 	public String vicinity;
 	public ArrayList<String> types = new ArrayList<String>();
