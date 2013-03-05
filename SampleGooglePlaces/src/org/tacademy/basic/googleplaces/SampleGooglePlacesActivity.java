@@ -91,7 +91,7 @@ public class SampleGooglePlacesActivity extends Activity {
 						if (result == NetworkRequest.PROCESS_SUCCESS) {
 							GooglePlaces places = (GooglePlaces)request.getResult();
 							mItemAdapter.clear();
-							mItemAdapter.addAll(places.items);
+							mItemAdapter.addAll(places.results);
 						} else {
 							Toast.makeText(SampleGooglePlacesActivity.this, "fail...", Toast.LENGTH_SHORT).show();
 						}

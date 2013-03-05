@@ -137,5 +137,6 @@ public class GooglePlaceConstants {
 	};
 	
 	public static final String PLACE_SERARCH_URL = "https://maps.googleapis.com/maps/api/place/search/xml?";
+	public static final String PLACE_SERARCH_URL_JSON = "https://maps.googleapis.com/maps/api/place/search/json?";
 	public static final String PLACE_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/xml?";
 }

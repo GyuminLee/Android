@@ -12,8 +12,8 @@ import android.os.Parcelable;
 
 public class GooglePlaces implements Parcelable, SaxParserHandler {
 	public String status;
-	public ArrayList<String> http_attrs = new ArrayList<String>();
-	public ArrayList<GooglePlaceItem> items = new ArrayList<GooglePlaceItem>();
+	public ArrayList<String> html_attributions = new ArrayList<String>();
+	public ArrayList<GooglePlaceItem> results = new ArrayList<GooglePlaceItem>();
 	
 	public GooglePlaces() {
 		
@@ -45,9 +45,9 @@ public class GooglePlaces implements Parcelable, SaxParserHandler {
 		if (tagName.equalsIgnoreCase("status")) {
 			status = (String)content;
 		} else if (tagName.equalsIgnoreCase("http_attribution")) {
-			http_attrs.add((String)content);
+			html_attributions.add((String)content);
 		} else if (tagName.equalsIgnoreCase("result")) {
-			items.add((GooglePlaceItem)content);
+			results.add((GooglePlaceItem)content);
 		}
 		
 	}
@@ -67,12 +67,12 @@ public class GooglePlaces implements Parcelable, SaxParserHandler {
 	@Override
 	public void writeToParcel(Parcel out, int flags) {
 		// TODO Auto-generated method stub
-		out.writeTypedList(items);
+		out.writeTypedList(results);
 	}
 	
 	private GooglePlaces(Parcel in) {
-		items = new ArrayList<GooglePlaceItem>();
-		in.readTypedList(items, GooglePlaceItem.CREATOR);
+		results = new ArrayList<GooglePlaceItem>();
+		in.readTypedList(results, GooglePlaceItem.CREATOR);
 	}
 	
 	public static Parcelable.Creator<GooglePlaces> CREATOR = new Parcelable.Creator<GooglePlaces>() {
