@@ -1,5 +1,8 @@
 package com.example.samplebarcode;
 
+import com.google.zxing.client.android.CaptureActivity;
+import com.google.zxing.client.android.Intents;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -42,13 +45,14 @@ public class MainActivity extends Activity {
 		}
 
 		if (requestCode == ACTIVITY_REQUEST_CODE_QRCODE) {
-			showQRTextView.setText(data.getStringExtra("SCAN_RESULT"));
+			showQRTextView.setText(data.getStringExtra(Intents.Scan.RESULT));
 		}
 	}
 	
     private void doExecuteQRCodeReader() {
-		Intent intent = new Intent("com.google.zxing.client.android.SCAN");
-		intent.putExtra("SCAN_MODE", "QR_CODE_MODE");
+		Intent intent = new Intent(Intents.Scan.ACTION);
+		intent.putExtra(Intents.Scan.MODE, Intents.Scan.QR_CODE_MODE);
+		intent.setClass(this, CaptureActivity.class);
 		startActivityForResult(intent, ACTIVITY_REQUEST_CODE_QRCODE);
 	}
     
