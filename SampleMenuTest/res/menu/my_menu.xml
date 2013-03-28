@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/firstMenu" android:title="menu1" android:orderInCategory="1" android:showAsAction="ifRoom|withText"></item>
+    <item android:id="@+id/secondMenu" android:title="SecondMenu" android:orderInCategory="2" android:showAsAction="always|withText|collapseActionView" android:actionViewClass="android.widget.SearchView" android:icon="@android:drawable/ic_search_category_default"></item>
+    <item android:id="@+id/subMenu" android:title="SubMenu" android:orderInCategory="3" android:showAsAction="always|withText">
+        <menu>
+            <item android:id="@+id/subMenu1" android:title="sub1" android:orderInCategory="5"/>
+            <item android:id="@+id/subMenu2" android:title="subMenu2" android:orderInCategory="6"/>
+        </menu>
+    </item>
+    
+
+</menu>
