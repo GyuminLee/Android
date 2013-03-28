@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MyItemView extends FrameLayout {
 
@@ -13,6 +14,16 @@ public class MyItemView extends FrameLayout {
 	TextView descView;
 	ImageView expandView;
 	MyData mData;
+	
+	public interface OnDescClickListener {
+		public void onDescClick(View v, MyData data);
+	}
+	
+	OnDescClickListener mListener;
+	
+	public void setOnDescClickListener(OnDescClickListener listener) {
+		mListener = listener;
+	}
 	
 	public MyItemView(Context context) {
 		super(context);
@@ -34,6 +45,16 @@ public class MyItemView extends FrameLayout {
 				}
 			}
 		});
+		descView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (mListener != null) {
+					mListener.onDescClick(MyItemView.this, mData);
+				}
+			}
+		});
 	}
 	
 	
@@ -41,6 +62,7 @@ public class MyItemView extends FrameLayout {
 		mData = data;
 		titleView.setText(data.title);
 		descView.setText(data.desc);
+		descView.setVisibility(View.GONE);
 	}
 	
 

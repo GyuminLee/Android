@@ -6,12 +6,14 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -39,6 +41,15 @@ public class MainActivity extends Activity {
 //				android.R.layout.simple_list_item_1, 
 //				mList);
 		mAdapter = new MyAdapter(this, mList);
+		
+		mAdapter.setOnItemViewClickListener(new MyAdapter.OnItemViewClickListener() {
+			
+			@Override
+			public void onItemViewClick(Adapter a, View v, MyData data) {
+				// TODO Auto-generated method stub
+				Toast.makeText(MainActivity.this, "desc clicked : " + data.desc, Toast.LENGTH_SHORT).show();
+			}
+		});
 		
 		listView.setAdapter(mAdapter);
 		
