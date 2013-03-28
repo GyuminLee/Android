@@ -71,7 +71,7 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				String text = addTextView.getText().toString();
 				if (text != null && !text.equals("")) {
-					mAdapter.add(new MyData(text,"desc"+text));
+					mAdapter.add(new MyData(text,"desc"+text, true));
 				}
 			}
 		});
