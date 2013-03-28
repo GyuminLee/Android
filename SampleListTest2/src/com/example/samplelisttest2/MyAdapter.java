@@ -10,6 +10,10 @@ import android.widget.BaseAdapter;
 
 public class MyAdapter extends BaseAdapter implements MyItemView.OnDescClickListener {
 
+	public static final int ITEM_VIEW_COUNT = 2;
+	public static final int ITEM_VIEW_TYPE_ONE = 0;
+	public static final int ITEM_VIEW_TYPE_SEND = 1;
+	
 	List<MyData> mList;
 	Context mContext;
 	public interface OnItemViewClickListener {
@@ -47,19 +51,48 @@ public class MyAdapter extends BaseAdapter implements MyItemView.OnDescClickList
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// TODO Auto-generated method stub
-		MyItemView view;
-		
-		if (convertView == null) {
-			view = new MyItemView(mContext);
-			view.setOnDescClickListener(this);
+		MyData data = mList.get(position);
+		if (data.isSend == false) {
+			MyItemView view;
+			
+			if (convertView == null) {
+				view = new MyItemView(mContext);
+				view.setOnDescClickListener(this);
+			} else {
+				view = (MyItemView)convertView;
+			}
+			
+			view.setData(data);
+			return view;
 		} else {
-			view = (MyItemView)convertView;
+			MyItemSendView view;
+			if (convertView == null) {
+				view = new MyItemSendView(mContext);
+			} else {
+				view = (MyItemSendView)convertView;
+			}
+			view.setData(data);
+			return view;
 		}
-		
-		view.setData(mList.get(position));
-		return view;
 	}
 
+	@Override
+	public int getViewTypeCount() {
+		// TODO Auto-generated method stub
+		return ITEM_VIEW_COUNT;
+	}
+	
+	@Override
+	public int getItemViewType(int position) {
+		// TODO Auto-generated method stub
+		MyData data = mList.get(position);
+		if (data.isSend == true) {
+			return ITEM_VIEW_TYPE_SEND;
+		} else {
+			return ITEM_VIEW_TYPE_ONE;
+		}
+	}
+	
 	public void add(MyData myData) {
 		// TODO Auto-generated method stub
 		mList.add(myData);
