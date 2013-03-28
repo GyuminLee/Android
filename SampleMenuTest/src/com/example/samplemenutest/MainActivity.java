@@ -1,14 +1,15 @@
 package com.example.samplemenutest;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.SubMenu;
 import android.view.View;
-import android.view.Window;
+import android.widget.Button;
 import android.widget.TextView;
 
 public class MainActivity extends Activity {
@@ -30,6 +31,46 @@ public class MainActivity extends Activity {
 
 		registerForContextMenu(tv1);
 		registerForContextMenu(tv2);
+		
+		Button btn = (Button)findViewById(R.id.showAlert);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				AlertDialog dlg = new AlertDialog.Builder(MainActivity.this).setTitle("dialog title")
+						.setIcon(R.drawable.ic_launcher)
+						.setMessage("dialog message")
+						.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+
+							@Override
+							public void onClick(DialogInterface dialog,
+									int which) {
+								// TODO Auto-generated method stub
+								
+							}
+							
+						})
+						.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								
+							}
+						})
+						.setNegativeButton("No", new DialogInterface.OnClickListener() {
+							
+							@Override
+							public void onClick(DialogInterface dialog, int which) {
+								// TODO Auto-generated method stub
+								
+							}
+						})
+						.create();
+				dlg.show();
+			}
+		});
 	}
 	
 	@Override
