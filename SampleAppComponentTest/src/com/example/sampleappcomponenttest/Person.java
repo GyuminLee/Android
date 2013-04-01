@@ -29,7 +29,7 @@ public class Person implements Parcelable {
 		dest.writeInt(weight);
 	}
 	
-	Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
+	public static Parcelable.Creator<Person> CREATOR = new Parcelable.Creator<Person>() {
 
 		@Override
 		public Person createFromParcel(Parcel source) {
