@@ -7,9 +7,12 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
+	public static final int REQUEST_CODE_MYACTIVITY = 0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -21,7 +24,9 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(MainActivity.this, MyActivity.class);
-				startActivity(i);
+				i.putExtra(MyActivity.PARAM_FIELD_NAME, "ysi");
+				i.putExtra(MyActivity.PARAM_FIELD_AGE, 39);
+				startActivityForResult(i , REQUEST_CODE_MYACTIVITY);
 			}
 		});
 		
@@ -65,6 +70,18 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		// TODO Auto-generated method stub
+		if (requestCode == REQUEST_CODE_MYACTIVITY) {
+			if (resultCode == Activity.RESULT_OK) {
+				String message = data.getStringExtra(MyActivity.PARAM_RESULT_FIELD_MESSAGE);
+				Toast.makeText(this, "result message : " + message, Toast.LENGTH_SHORT).show();
+			}
+		}
+		super.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

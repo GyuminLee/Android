@@ -26,6 +26,8 @@
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <data android:scheme="http" android:host="www.google.com"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
             </intent-filter>
         </activity>
     </application>
