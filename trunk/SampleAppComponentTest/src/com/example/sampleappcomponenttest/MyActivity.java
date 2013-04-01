@@ -11,6 +11,7 @@ public class MyActivity extends Activity {
 	
 	public static final String PARAM_FIELD_NAME = "name";
 	public static final String PARAM_FIELD_AGE = "age";
+	public static final String PARAM_FIELD_PERSON = "person";
 	public static final String PARAM_RESULT_FIELD_MESSAGE = "message";
 
 	/** Called when the activity is first created. */
@@ -21,8 +22,13 @@ public class MyActivity extends Activity {
 	    // TODO Auto-generated method stub
 	    setContentView(R.layout.my_activity_layout);
 	    Intent i = getIntent();
-	    String name = i.getStringExtra(PARAM_FIELD_NAME);
-	    int age = i.getIntExtra(PARAM_FIELD_AGE, 0);
+//	    String name = i.getStringExtra(PARAM_FIELD_NAME);
+//	    int age = i.getIntExtra(PARAM_FIELD_AGE, 0);
+
+	    Person p = i.getParcelableExtra(PARAM_FIELD_PERSON);
+
+	    String name = p.name;
+	    int age = p.age;
 	    TextView message = (TextView)findViewById(R.id.message);
 	    message.setText("name : " + name + ", age : " + age);
 	    Button btn = (Button)findViewById(R.id.button1);
