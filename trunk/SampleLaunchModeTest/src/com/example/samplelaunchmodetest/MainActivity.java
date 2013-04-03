@@ -19,8 +19,9 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Intent i = new Intent(MainActivity.this, AActivity.class);
-				i.putExtra(AActivity.PARAM_NAME_CALLER_MESSAGE, "Main Activity call");
+//				Intent i = new Intent(MainActivity.this, AActivity.class);
+//				i.putExtra(AActivity.PARAM_NAME_CALLER_MESSAGE, "Main Activity call");
+				Intent i = new Intent(MainActivity.this, BActivity.class);
 				startActivity(i);
 			}
 		});
