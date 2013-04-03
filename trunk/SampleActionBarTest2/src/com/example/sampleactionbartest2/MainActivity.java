@@ -1,18 +1,25 @@
 package com.example.sampleactionbartest2;
 
+import java.util.List;
+
 import android.app.ActionBar;
-import android.app.ActionBar.OnNavigationListener;
 import android.app.ActionBar.Tab;
 import android.app.Activity;
 import android.app.FragmentTransaction;
+import android.app.SearchManager;
+import android.app.SearchableInfo;
+import android.content.Context;
 import android.os.Bundle;
+import android.view.ActionMode;
 import android.view.Menu;
-import android.widget.ArrayAdapter;
-import android.widget.Toast;
+import android.view.MenuItem;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 
 public class MainActivity extends Activity implements ActionBar.TabListener {
 
 	String[] mItems = {"item1", "item2", "item3", "item4"};
+	ActionMode mActionMode;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -32,16 +39,49 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 //		});
 //		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
 
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
-		ActionBar.Tab tab = actionBar.newTab();
-		tab.setText("tab1");
-		tab.setTabListener(this);
-		actionBar.addTab(tab);
+//		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+//		ActionBar.Tab tab = actionBar.newTab();
+//		tab.setText("tab1");
+//		tab.setTabListener(this);
+//		actionBar.addTab(tab);
+//		
+//		tab = actionBar.newTab();
+//		tab.setText("tab2");
+//		tab.setTabListener(this);
+//		actionBar.addTab(tab);
 		
-		tab = actionBar.newTab();
-		tab.setText("tab2");
-		tab.setTabListener(this);
-		actionBar.addTab(tab);
+
+		mActionMode = startActionMode(new ActionMode.Callback() {
+			
+			@Override
+			public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public void onDestroyActionMode(ActionMode mode) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public boolean onCreateActionMode(ActionMode mode, Menu menu) {
+				// TODO Auto-generated method stub
+				menu.add("item1").setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM | MenuItem.SHOW_AS_ACTION_WITH_TEXT);
+				return true;
+			}
+			
+			@Override
+			public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+				// TODO Auto-generated method stub
+				switch(item.getItemId()) {
+			
+				}
+				mActionMode.finish();
+				return true;
+			}
+		});
 	
 		
 	}
@@ -50,6 +90,35 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		MenuItem item = menu.findItem(R.id.item1);
+		SearchView view = (SearchView)item.getActionView();
+		view.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+		
+		SearchManager searchManager = (SearchManager)getSystemService(Context.SEARCH_SERVICE);
+		if (searchManager != null) {
+			List<SearchableInfo> searchable = searchManager.getSearchablesInGlobalSearch();
+			SearchableInfo info = searchManager.getSearchableInfo(getComponentName());
+			for (SearchableInfo inf : searchable) {
+				if (inf.getSuggestAuthority() != null && inf.getSuggestAuthority().startsWith("applications")) {
+					info = inf;
+				}
+			}
+			view.setSearchableInfo(info);
+		}
+		
 		return true;
 	}
 
