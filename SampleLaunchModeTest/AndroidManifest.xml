@@ -23,6 +23,9 @@
             </intent-filter>
         </activity>
         <activity android:name="AActivity" android:finishOnTaskLaunch="true"></activity>
+        <activity android:name="BActivity"></activity>
+        <activity android:name="CActivity"></activity>
+        <activity android:name="DActivity"></activity>
     </application>
 
 </manifest>

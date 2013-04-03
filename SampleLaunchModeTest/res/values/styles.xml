@@ -20,5 +20,13 @@
         <item name="android:textSize">20sp</item>
         <item name="android:textColor">#FF00FF</item>
     </style>
+    
+    <style name="AppTranTheme" parent="android:style/Theme.Translucent">
+        <item name="android:windowBackground">@drawable/windowBackground</item>
+    </style>
+    <style name="AppTransTheme2">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@drawable/windowBackground</item>
+    </style>
 
 </resources>
