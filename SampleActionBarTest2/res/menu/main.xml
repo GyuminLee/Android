@@ -5,6 +5,12 @@
         android:orderInCategory="100"
         android:showAsAction="never"
         android:title="@string/action_settings"/>
-    <item android:id="@+id/item1" android:showAsAction="ifRoom|withText" android:title="Search" android:orderInCategory="1"></item>
+    <item
+        android:id="@+id/item1"
+        android:actionViewClass="android.widget.SearchView"
+        android:orderInCategory="1"
+        android:showAsAction="ifRoom|withText|collapseActionView"
+        android:title="Search">
+    </item>
 
 </menu>
