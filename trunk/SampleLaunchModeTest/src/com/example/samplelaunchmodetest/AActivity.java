@@ -12,6 +12,8 @@ public class AActivity extends Activity {
 	TextView messageView;
 	public static final String PARAM_NAME_CALLER_MESSAGE = "message";
 	
+	int count = 0;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -32,10 +34,32 @@ public class AActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent intent = new Intent(AActivity.this, AActivity.class);
-				intent.putExtra(PARAM_NAME_CALLER_MESSAGE, "AActivity call");
+				intent.putExtra(PARAM_NAME_CALLER_MESSAGE, "AActivity call " + count);
+				count++;
 				startActivity(intent);
 			}
 		});
+	    
+	    btn =(Button)findViewById(R.id.button2);
+	    btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(AActivity.this, MainActivity.class);
+				startActivity(intent);
+			}
+		});
+	}
+	
+	@Override
+	protected void onNewIntent(Intent intent) {
+		// TODO Auto-generated method stub
+		super.onNewIntent(intent);
+		String message = intent.getStringExtra(PARAM_NAME_CALLER_MESSAGE);
+		
+		messageView.setText("onNewIntent : caller message - " + message + "\n"
+				+ "activity " + this.toString());
 	}
 
 }
