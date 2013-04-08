@@ -13,6 +13,11 @@ public class MyService extends Service {
 
 	private final static String TAG = "MyService";
 	
+	public static final String ACTION_ZERO_MODE_TEN = "com.example.sampleservicetest2.action.zero_mode_ten";
+	
+	boolean isRunning = false;
+	int mCount = 0;
+	
 	@Override
 	public IBinder onBind(Intent arg0) {
 		// TODO Auto-generated method stub
@@ -24,6 +29,29 @@ public class MyService extends Service {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		Toast.makeText(this, "onCreate...", Toast.LENGTH_SHORT).show();
+		isRunning = true;
+		new Thread(new Runnable(){
+			@Override
+			public void run() {
+				// TODO Auto-generated method stub
+				while(isRunning) {
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					mCount++;
+					// mCount mod 10 == 0
+					if ((mCount % 10) == 0) {
+						Intent bintent = new Intent(ACTION_ZERO_MODE_TEN);
+						bintent.setFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
+						sendBroadcast(bintent);
+					}
+				}
+				
+			}
+		}).start();
 	}
 	
 	@Override
@@ -49,6 +77,7 @@ public class MyService extends Service {
 	public void onDestroy() {
 		// TODO Auto-generated method stub
 		Toast.makeText(this, "onDestroy...", Toast.LENGTH_SHORT).show();
+		isRunning = false;
 		super.onDestroy();
 	}
 
