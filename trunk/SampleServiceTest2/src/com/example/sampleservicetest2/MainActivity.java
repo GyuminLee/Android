@@ -2,7 +2,10 @@ package com.example.sampleservicetest2;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -45,8 +48,21 @@ public class MainActivity extends Activity {
 				stopService(serviceIntent);
 			}
 		});
+		IntentFilter filter = new IntentFilter(MyService.ACTION_ZERO_MODE_TEN);
+		registerReceiver(myReceiver, filter);
 	}
 
+	BroadcastReceiver myReceiver = new BroadcastReceiver() {
+		public void onReceive(Context context, Intent intent) {
+			Toast.makeText(context, "receive event", Toast.LENGTH_SHORT).show();
+		}
+	};
+	
+
+	protected void onDestroy() {
+		unregisterReceiver(myReceiver);
+	};
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
