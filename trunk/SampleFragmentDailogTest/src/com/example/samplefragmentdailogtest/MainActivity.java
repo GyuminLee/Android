@@ -1,12 +1,10 @@
 package com.example.samplefragmentdailogtest;
 
-import android.content.res.Configuration;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.Button;
 
 public class MainActivity extends FragmentActivity {
@@ -25,10 +23,20 @@ public class MainActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				MyDialogFragment f = new MyDialogFragment();
-				f.show(getSupportFragmentManager(), "mydialog");
+				Intent i = new Intent(MainActivity.this, MyActivity.class);
+				startActivity(i);
 			}
 		});
+
+//		btn.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				MyDialogFragment f = new MyDialogFragment();
+//				f.show(getSupportFragmentManager(), "mydialog");
+//			}
+//		});
 	}
 
 	@Override
