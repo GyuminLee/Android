@@ -2,21 +2,22 @@ package com.example.sampleactionbartest2;
 
 import java.util.List;
 
-import android.app.ActionBar;
-import android.app.ActionBar.Tab;
-import android.app.Activity;
-import android.app.FragmentTransaction;
 import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.os.Bundle;
-import android.view.ActionMode;
-import android.view.Menu;
-import android.view.MenuItem;
-import android.widget.SearchView;
-import android.widget.SearchView.OnQueryTextListener;
+import android.support.v4.app.FragmentTransaction;
 
-public class MainActivity extends Activity implements ActionBar.TabListener {
+import com.actionbarsherlock.app.ActionBar;
+import com.actionbarsherlock.app.ActionBar.Tab;
+import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.view.ActionMode;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
+
+public class MainActivity extends SherlockActivity implements ActionBar.TabListener {
 
 	String[] mItems = {"item1", "item2", "item3", "item4"};
 	ActionMode mActionMode;
@@ -25,7 +26,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		ActionBar actionBar = getActionBar();
+		ActionBar actionBar = getSupportActionBar();
 //		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, mItems);
 //		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 //		actionBar.setListNavigationCallbacks(adapter, new OnNavigationListener() {
@@ -89,7 +90,7 @@ public class MainActivity extends Activity implements ActionBar.TabListener {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
+		getSupportMenuInflater().inflate(R.menu.main, menu);
 		MenuItem item = menu.findItem(R.id.item1);
 		SearchView view = (SearchView)item.getActionView();
 		view.setOnQueryTextListener(new OnQueryTextListener() {
