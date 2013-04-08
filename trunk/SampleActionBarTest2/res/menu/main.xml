@@ -7,7 +7,7 @@
         android:title="@string/action_settings"/>
     <item
         android:id="@+id/item1"
-        android:actionViewClass="android.widget.SearchView"
+        android:actionViewClass="com.actionbarsherlock.widget.SearchView"
         android:orderInCategory="1"
         android:showAsAction="ifRoom|withText|collapseActionView"
         android:title="Search">
