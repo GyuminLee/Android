@@ -49,7 +49,8 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		if (mCursor != null) {
-			stopManagingCursor(mCursor);
+//			stopManagingCursor(mCursor);
+			mCursor.close();
 			mCursor = null;
 		}
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
@@ -64,11 +65,19 @@ public class MainActivity extends Activity {
 		
 		mAdapter.swapCursor(mCursor);
 		
-		startManagingCursor(mCursor);
+//		startManagingCursor(mCursor);
 		
 		super.onResume();
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		if (mCursor != null) {
+			mCursor.close();
+		}
+		super.onDestroy();
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
