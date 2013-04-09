@@ -1,5 +1,10 @@
 package com.example.sampledatabasetest;
 
+import com.example.sampledatabasetest.manager.DBConstant;
+import com.example.sampledatabasetest.manager.DBManager;
+import com.example.sampledatabasetest.manager.MyDatabaseOpenHelper;
+import com.example.sampledatabasetest.manager.Person;
+
 import android.app.Activity;
 import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
@@ -13,7 +18,6 @@ public class AddDBActivity extends Activity {
 
 	EditText nameText;
 	EditText ageText;
-	MyDatabaseOpenHelper dbHelper;
 	
 	/** Called when the activity is first created. */
 	@Override
@@ -31,25 +35,23 @@ public class AddDBActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				SQLiteDatabase db = dbHelper.getWritableDatabase();
 //				String sql = "INSERT INTO "+DBConstant.PersonTable.TABLE_NAME
 //							+"("+DBConstant.PersonTable.NAME+", "
 //							+ DBConstant.PersonTable.AGE+") VALUES('" + 
 //								nameText.getText().toString() + "' , " + 
 //							ageText.getText().toString() + ")";
 //				db.execSQL(sql);
+
+				Person p = new Person();
+				p.name = nameText.getText().toString();
+				p.age = Integer.parseInt(ageText.getText().toString());
 				
-				ContentValues values = new ContentValues();
-				values.put(DBConstant.PersonTable.NAME, nameText.getText().toString());
-				values.put(DBConstant.PersonTable.AGE, Integer.parseInt(ageText.getText().toString()));
-				db.insert(DBConstant.PersonTable.TABLE_NAME, null, values);
+				DBManager.getInstance().insertPerson(p);
 				
-				db.close();
 				nameText.setText("");
 				ageText.setText("0");
 			}
 		});
-	    dbHelper = new MyDatabaseOpenHelper(this, null, null, 0);
 	}
 
 }

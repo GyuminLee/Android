@@ -1,5 +1,9 @@
 package com.example.sampledatabasetest;
 
+import com.example.sampledatabasetest.manager.DBConstant;
+import com.example.sampledatabasetest.manager.DBManager;
+import com.example.sampledatabasetest.manager.MyDatabaseOpenHelper;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -56,14 +60,12 @@ public class MainActivity extends Activity {
 //		String[] argument = { "20" , "60" };
 //		mCursor = db.rawQuery(sql, argument);
 		
-		String[] columns = { DBConstant.PersonTable.ID, DBConstant.PersonTable.NAME, DBConstant.PersonTable.AGE };
-		String selection = DBConstant.PersonTable.AGE + " > ? AND " + DBConstant.PersonTable.AGE + " < ?";
-		String[] selectionArg = { "20" , "60" };
+		mCursor = DBManager.getInstance().getPersonList(20, 60);
 		
-		mCursor = db.query(DBConstant.PersonTable.TABLE_NAME, 
-				columns, selection, selectionArg, null, null, null);
 		mAdapter.swapCursor(mCursor);
+		
 		startManagingCursor(mCursor);
+		
 		super.onResume();
 	}
 

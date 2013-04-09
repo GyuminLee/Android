@@ -1,4 +1,4 @@
-package com.example.sampledatabasetest;
+package com.example.sampledatabasetest.manager;
 
 import android.provider.BaseColumns;
 
