@@ -16,6 +16,8 @@ public class MainActivity extends Activity {
 	ListView list;
 	MyDatabaseOpenHelper mDBHelper;
 	Cursor mCursor = null;
+
+	SimpleCursorAdapter mAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,35 +35,38 @@ public class MainActivity extends Activity {
 		});
 		mDBHelper = new MyDatabaseOpenHelper(this, null, null, 0);
 		list = (ListView)findViewById(R.id.listView1);
+		String[] from = { DBConstant.PersonTable.NAME, DBConstant.PersonTable.AGE };
+		int[] to = { R.id.fieldName, R.id.fieldAge };
+		mAdapter = new SimpleCursorAdapter(this, R.layout.item_layout, null, from, to, 0);
+		list.setAdapter(mAdapter);
 	}
 	
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		if (mCursor != null) {
-			mCursor.close();
+			stopManagingCursor(mCursor);
 			mCursor = null;
 		}
 		SQLiteDatabase db = mDBHelper.getReadableDatabase();
-		String sql = "SELECT "+DBConstant.PersonTable.ID+", "+DBConstant.PersonTable.NAME+" , "+DBConstant.PersonTable.AGE
-				+" FROM " + DBConstant.PersonTable.TABLE_NAME;
-		mCursor = db.rawQuery(sql, null);
-		String[] from = { DBConstant.PersonTable.NAME, DBConstant.PersonTable.AGE };
-		int[] to = { R.id.fieldName, R.id.fieldAge };
-		SimpleCursorAdapter adapter = new SimpleCursorAdapter(this, R.layout.item_layout, mCursor, from, to, 0);
-		list.setAdapter(adapter);
+//		String sql = "SELECT "+DBConstant.PersonTable.ID+", "+DBConstant.PersonTable.NAME+" , "+DBConstant.PersonTable.AGE
+//				+" FROM " + DBConstant.PersonTable.TABLE_NAME + " WHERE " +
+//				DBConstant.PersonTable.AGE + " > ? AND " +
+//				DBConstant.PersonTable.AGE + " < ?";
+//		String[] argument = { "20" , "60" };
+//		mCursor = db.rawQuery(sql, argument);
+		
+		String[] columns = { DBConstant.PersonTable.ID, DBConstant.PersonTable.NAME, DBConstant.PersonTable.AGE };
+		String selection = DBConstant.PersonTable.AGE + " > ? AND " + DBConstant.PersonTable.AGE + " < ?";
+		String[] selectionArg = { "20" , "60" };
+		
+		mCursor = db.query(DBConstant.PersonTable.TABLE_NAME, 
+				columns, selection, selectionArg, null, null, null);
+		mAdapter.swapCursor(mCursor);
+		startManagingCursor(mCursor);
 		super.onResume();
 	}
 
-	@Override
-	protected void onDestroy() {
-		// TODO Auto-generated method stub
-		if (mCursor != null) {
-			mCursor.close();
-		}
-		super.onDestroy();
-	}
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
