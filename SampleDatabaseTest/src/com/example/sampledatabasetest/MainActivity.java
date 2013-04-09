@@ -1,19 +1,21 @@
 package com.example.sampledatabasetest;
 
-import com.example.sampledatabasetest.manager.DBConstant;
-import com.example.sampledatabasetest.manager.DBManager;
-import com.example.sampledatabasetest.manager.MyDatabaseOpenHelper;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ListView;
+
+import com.example.sampledatabasetest.manager.DBConstant;
+import com.example.sampledatabasetest.manager.DBManager;
+import com.example.sampledatabasetest.manager.DBRequest;
+import com.example.sampledatabasetest.manager.MyDatabaseOpenHelper;
+import com.example.sampledatabasetest.manager.PersonRequest;
 
 public class MainActivity extends Activity {
 
@@ -22,6 +24,7 @@ public class MainActivity extends Activity {
 	Cursor mCursor = null;
 
 	SimpleCursorAdapter mAdapter;
+	Handler mHandler = new Handler();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,24 +51,39 @@ public class MainActivity extends Activity {
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
-		if (mCursor != null) {
-//			stopManagingCursor(mCursor);
-			mCursor.close();
-			mCursor = null;
-		}
-		SQLiteDatabase db = mDBHelper.getReadableDatabase();
+//		if (mCursor != null) {
+//			mCursor.close();
+//			mCursor = null;
+//		}
+//		SQLiteDatabase db = mDBHelper.getReadableDatabase();
 //		String sql = "SELECT "+DBConstant.PersonTable.ID+", "+DBConstant.PersonTable.NAME+" , "+DBConstant.PersonTable.AGE
 //				+" FROM " + DBConstant.PersonTable.TABLE_NAME + " WHERE " +
 //				DBConstant.PersonTable.AGE + " > ? AND " +
 //				DBConstant.PersonTable.AGE + " < ?";
 //		String[] argument = { "20" , "60" };
 //		mCursor = db.rawQuery(sql, argument);
+
+		PersonRequest request = new PersonRequest(20, 60);
+		DBManager.getInstance().getAsyncDBProcess(request, new DBRequest.OnQueryCompleteListener() {
+			
+			@Override
+			public void onQueryCompleted(DBRequest request) {
+				// TODO Auto-generated method stub
+				Cursor c = (Cursor)request.getResult();
+				if (mCursor != null) {
+					mCursor.close();
+					mCursor = null;
+				}
+				
+				mCursor = c;
+				mAdapter.swapCursor(mCursor);
+			}
+		}, mHandler);
 		
-		mCursor = DBManager.getInstance().getPersonList(20, 60);
+//		mCursor = DBManager.getInstance().getPersonList(20, 60);
+//		
+//		mAdapter.swapCursor(mCursor);
 		
-		mAdapter.swapCursor(mCursor);
-		
-//		startManagingCursor(mCursor);
 		
 		super.onResume();
 	}
