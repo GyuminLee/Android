@@ -1,4 +1,5 @@
-package com.example.sampledatabasetest;
+package com.example.sampledatabasetest.manager;
+
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
