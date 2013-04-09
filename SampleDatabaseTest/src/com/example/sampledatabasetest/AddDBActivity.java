@@ -1,6 +1,7 @@
 package com.example.sampledatabasetest;
 
 import android.app.Activity;
+import android.content.ContentValues;
 import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.view.View;
@@ -31,12 +32,18 @@ public class AddDBActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				SQLiteDatabase db = dbHelper.getWritableDatabase();
-				String sql = "INSERT INTO "+DBConstant.PersonTable.TABLE_NAME
-							+"("+DBConstant.PersonTable.NAME+", "
-							+ DBConstant.PersonTable.AGE+") VALUES('" + 
-								nameText.getText().toString() + "' , " + 
-							ageText.getText().toString() + ")";
-				db.execSQL(sql);
+//				String sql = "INSERT INTO "+DBConstant.PersonTable.TABLE_NAME
+//							+"("+DBConstant.PersonTable.NAME+", "
+//							+ DBConstant.PersonTable.AGE+") VALUES('" + 
+//								nameText.getText().toString() + "' , " + 
+//							ageText.getText().toString() + ")";
+//				db.execSQL(sql);
+				
+				ContentValues values = new ContentValues();
+				values.put(DBConstant.PersonTable.NAME, nameText.getText().toString());
+				values.put(DBConstant.PersonTable.AGE, Integer.parseInt(ageText.getText().toString()));
+				db.insert(DBConstant.PersonTable.TABLE_NAME, null, values);
+				
 				db.close();
 				nameText.setText("");
 				ageText.setText("0");
