@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
@@ -21,6 +23,7 @@ public class MainActivity extends Activity {
 	int mStoppedProgress = NOT_CHANGED;
 
 	enum PlayerState {
+		IDLE,
 		INITIALIZED,
 		PREPARED,
 		STARTED,
@@ -166,7 +169,48 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(MainActivity.this, SearchMediaActivity.class);
+				startActivityForResult(i, 0);
+			}
+		});
 	}
+	
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == 0) {
+			if (resultCode == Activity.RESULT_OK) {
+				Uri uri = data.getData();
+				mPlayer.reset();
+				mState = PlayerState.IDLE;
+				try {
+					mPlayer.setDataSource(this, uri);
+					mPlayer.prepare();
+					mState = PlayerState.PREPARED;
+					mStoppedProgress = 0;
+					progressView.setMax(mPlayer.getDuration());
+					progressView.setProgress(0);
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		}
+	};
 
 	Runnable mProgress = new Runnable() {
 		
