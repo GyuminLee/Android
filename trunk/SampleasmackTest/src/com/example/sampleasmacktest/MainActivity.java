@@ -24,13 +24,8 @@ import com.example.sampleasmacktest.XMPPManager.OnRosterListener;
 
 public class MainActivity extends Activity {
 
-	private final static String USERNAME = "dongja94";
-	private final static String PASSWORD = "ehdwk94";
-
-//	private static final String DOMAIN = "talk.google.com";
-//	private final static int PORT = 5222;
-//	private static final String USERNAME = "dongja94@gmail.com";
-//	private static final String PASSWORD = "ehdwk941";
+	private static final String USERNAME = "";
+	private static final String PASSWORD = "";
 	
 	private XMPPConnection mXmppConnection;
 	
