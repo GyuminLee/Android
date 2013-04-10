@@ -46,6 +46,46 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mPlayer = MediaPlayer.create(this, R.raw.winter_blues);
+		
+		mPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+			
+			@Override
+			public void onCompletion(MediaPlayer mp) {
+				// TODO Auto-generated method stub
+				mState = PlayerState.PAUSED;
+				
+			}
+		});
+		
+		mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+			
+			@Override
+			public boolean onError(MediaPlayer mp, int what, int extra) {
+				// TODO Auto-generated method stub
+				mPlayer.reset();
+				mState = PlayerState.IDLE;
+				return false;
+			}
+		});
+		
+		mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+			
+			@Override
+			public void onPrepared(MediaPlayer mp) {
+				// TODO Auto-generated method stub
+				mState = PlayerState.PREPARED;
+			}
+		});
+		
+		mPlayer.setOnInfoListener(new MediaPlayer.OnInfoListener() {
+			
+			@Override
+			public boolean onInfo(MediaPlayer mp, int what, int extra) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
+		
 		mState = PlayerState.PREPARED;
 		progressView = (SeekBar)findViewById(R.id.progress);
 		progressView.setMax(mPlayer.getDuration());

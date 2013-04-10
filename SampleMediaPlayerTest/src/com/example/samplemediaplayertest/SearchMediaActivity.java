@@ -46,6 +46,7 @@ public class SearchMediaActivity extends FragmentActivity implements LoaderCallb
 				finish();
 			}
 		});
+	    getSupportLoaderManager().initLoader(0, null, this);
 	}
 
 	@Override
