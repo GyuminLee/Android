@@ -16,6 +16,13 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
+    <Button
+        android:id="@+id/search"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="search" />
+
     <SeekBar
         android:id="@+id/progress"
         android:layout_width="match_parent"
