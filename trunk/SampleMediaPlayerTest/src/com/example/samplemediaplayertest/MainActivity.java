@@ -3,6 +3,8 @@ package com.example.samplemediaplayertest;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,10 +30,13 @@ public class MainActivity extends Activity {
 	
 	PlayerState mState = PlayerState.INITIALIZED;
 	SeekBar progressView;
+	SeekBar volumeView;
 	
 	public final static int UPDATE_TIME = 200;
 	
 	Handler mHandler = new Handler();
+	
+	AudioManager mAudioManager;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,36 @@ public class MainActivity extends Activity {
 				// TODO Auto-generated method stub
 				if (fromUser) {
 					mProgress = progress;
+				}
+			}
+		});
+		volumeView = (SeekBar)findViewById(R.id.volumneBar);
+		
+		mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+		int maxvolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		int currentvolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		volumeView.setMax(maxvolume);
+		volumeView.setProgress(currentvolume);
+		volumeView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				// TODO Auto-generated method stub
+				if (fromUser) {
+					mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
 				}
 			}
 		});
