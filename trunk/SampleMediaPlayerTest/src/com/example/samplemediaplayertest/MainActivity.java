@@ -10,10 +10,13 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class MainActivity extends Activity {
 
 	MediaPlayer mPlayer;
+	private final static int NOT_CHANGED = 0;
+	int mStoppedProgress = NOT_CHANGED;
 
 	enum PlayerState {
 		INITIALIZED,
@@ -38,6 +41,38 @@ public class MainActivity extends Activity {
 		mState = PlayerState.PREPARED;
 		progressView = (SeekBar)findViewById(R.id.progress);
 		progressView.setMax(mPlayer.getDuration());
+		progressView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			int mProgress;
+			private final static int NOT_PROGRESS = -1;
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				if (mProgress != NOT_PROGRESS) {
+					if (mState == PlayerState.STARTED || mState == PlayerState.PREPARED || mState == PlayerState.PAUSED) {
+						mPlayer.seekTo(mProgress);
+					} else {
+						mStoppedProgress = mProgress;
+					}
+				}
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				// TODO Auto-generated method stub
+				mProgress = NOT_PROGRESS;
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				// TODO Auto-generated method stub
+				if (fromUser) {
+					mProgress = progress;
+				}
+			}
+		});
 		
 		Button btn = (Button)findViewById(R.id.start);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -48,6 +83,7 @@ public class MainActivity extends Activity {
 				if (mState == PlayerState.INITIALIZED || mState == PlayerState.STOPPED) {
 					try {
 						mPlayer.prepare();
+						mPlayer.seekTo(mStoppedProgress);
 					} catch (IllegalStateException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
@@ -89,6 +125,8 @@ public class MainActivity extends Activity {
 				if (mState == PlayerState.PREPARED || mState == PlayerState.STARTED || mState == PlayerState.PAUSED) {
 					mPlayer.stop();
 					mHandler.removeCallbacks(mProgress);
+					mStoppedProgress = NOT_CHANGED;
+					progressView.setProgress(0);
 					mState = PlayerState.STOPPED;
 				}
 			}
