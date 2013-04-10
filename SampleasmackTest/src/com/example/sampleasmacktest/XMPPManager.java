@@ -28,8 +28,10 @@ public class XMPPManager {
 		return instance;
 	}
 
-	private final static String DOMAIN = "192.168.4.37";
+//	private final static String DOMAIN = "192.168.4.37";
+	private final static String DOMAIN = "talk.google.com";
 	private final static int PORT = 5222;
+	private final static String SERVICE = "gmail.com";
 	private XMPPConnection mXmppConnection;
 	
 	public interface OnLoginListener {
@@ -66,7 +68,7 @@ public class XMPPManager {
 	
 	private XMPPManager() {
 		mHandler = new Handler();
-		ConnectionConfiguration confing = new ConnectionConfiguration(DOMAIN, PORT);
+		ConnectionConfiguration confing = new ConnectionConfiguration(DOMAIN, PORT, SERVICE);
 		mXmppConnection = new XMPPConnection(confing);
 	}
 	
