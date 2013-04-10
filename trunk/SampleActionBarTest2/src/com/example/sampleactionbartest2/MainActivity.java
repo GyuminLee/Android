@@ -10,14 +10,14 @@ import android.support.v4.app.FragmentTransaction;
 
 import com.actionbarsherlock.app.ActionBar;
 import com.actionbarsherlock.app.ActionBar.Tab;
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuItem;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 
-public class MainActivity extends SherlockActivity implements ActionBar.TabListener {
+public class MainActivity extends SherlockFragmentActivity implements ActionBar.TabListener {
 
 	String[] mItems = {"item1", "item2", "item3", "item4"};
 	ActionMode mActionMode;
