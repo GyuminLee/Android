@@ -251,7 +251,9 @@ public class MainActivity extends FragmentActivity {
     	mMap.setMyLocationEnabled(true);
     	mMap.getUiSettings().setCompassEnabled(true);
     	mMap.getUiSettings().setZoomControlsEnabled(false);
-    	mMap.setLocationSource(new MyLocationSource());
+    	MyLocationSource locationSource = new MyLocationSource();
+    	mMap.setLocationSource(locationSource);
+    	mMap.setOnMapLongClickListener(locationSource);
     	mMap.setOnMyLocationChangeListener(new OnMyLocationChangeListener() {
 			
 			@Override
