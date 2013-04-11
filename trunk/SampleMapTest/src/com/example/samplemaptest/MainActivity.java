@@ -8,15 +8,22 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.GoogleMap.OnInfoWindowClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMapLongClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerClickListener;
 import com.google.android.gms.maps.GoogleMap.OnMarkerDragListener;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -101,7 +108,77 @@ public class MainActivity extends FragmentActivity {
         }
     }
     
+    
+    public class MyInfoWindow implements InfoWindowAdapter {
+
+    	Context mContext;
+    	View infoView;
+    	TextView titleView;
+    	TextView snippetView;
+    	
+    	public MyInfoWindow(Context context) {
+    	
+    		LayoutInflater inflater = LayoutInflater.from(context);
+    		infoView = inflater.inflate(R.layout.info_layout, null);
+    		titleView = (TextView)infoView.findViewById(R.id.textView1);
+    		snippetView = (TextView)infoView.findViewById(R.id.textView2);
+    		
+    	}
+    	
+		@Override
+		public View getInfoContents(Marker marker) {
+			// TODO Auto-generated method stub
+			titleView.setText(marker.getTitle());
+			snippetView.setText(marker.getSnippet());
+			return infoView;
+		}
+
+		@Override
+		public View getInfoWindow(Marker marker) {
+			// TODO Auto-generated method stub
+//			titleView.setText(marker.getTitle());
+//			snippetView.setText(marker.getSnippet());
+//			return infoView;
+			return null;
+		}
+    	
+    }
+    
+    class MyLocationSource implements LocationSource, OnMapLongClickListener {
+
+    	OnLocationChangedListener mListener;
+    	
+		@Override
+		public void activate(OnLocationChangedListener listener) {
+			// TODO Auto-generated method stub
+			mListener = listener;
+		}
+
+		@Override
+		public void deactivate() {
+			// TODO Auto-generated method stub
+			mListener = null;
+		}
+
+		@Override
+		public void onMapLongClick(LatLng pos) {
+			// TODO Auto-generated method stub
+			if (mListener != null) {
+				Location location = new Location("MyLocation");
+				location.setLatitude(pos.latitude);
+				location.setLongitude(pos.longitude);
+				location.setAccuracy(100.0f);
+				mListener.onLocationChanged(location);
+			}
+		}
+    	
+    }
+    
+    
     private void setUpMap() {
+    	
+    	mMap.setInfoWindowAdapter(new MyInfoWindow(this));
+    	
     	mMap.setOnMapClickListener(new OnMapClickListener() {
 			
 			@Override
@@ -161,11 +238,28 @@ public class MainActivity extends FragmentActivity {
 			}
 		});
     	
+    	mMap.setOnInfoWindowClickListener(new OnInfoWindowClickListener() {
+			
+			@Override
+			public void onInfoWindowClick(Marker arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+    	
     	mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
     	mMap.setMyLocationEnabled(true);
     	mMap.getUiSettings().setCompassEnabled(true);
     	mMap.getUiSettings().setZoomControlsEnabled(false);
-    	
+    	mMap.setLocationSource(new MyLocationSource());
+    	mMap.setOnMyLocationChangeListener(new OnMyLocationChangeListener() {
+			
+			@Override
+			public void onMyLocationChange(Location arg0) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
     }
 	
     
