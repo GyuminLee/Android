@@ -18,16 +18,19 @@ public class CompassView extends View {
 	public CompassView(Context context) {
 		super(context);
 		// TODO Auto-generated constructor stub
+		init(context);
 	}
 
 	public CompassView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		// TODO Auto-generated constructor stub
+		init(context);
 	}
 
 	public CompassView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// TODO Auto-generated constructor stub
+		init(context);
 	}
 	
 	private void init(Context context) {
@@ -45,7 +48,7 @@ public class CompassView extends View {
 	public void setOrientation(float angle) {
 		int centerX = compass.getWidth() / 2;
 		int centerY = compass.getHeight() / 2;
-		rotateMatrix.setRotate(angle, centerX, centerY);
+		rotateMatrix.setRotate(-angle, centerX, centerY);
 		invalidate();
 	}
 }
