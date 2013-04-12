@@ -28,6 +28,7 @@
             </intent-filter>
             <meta-data android:resource="@xml/provider" android:name="android.appwidget.provider"/>
         </receiver>
+        <service android:exported="true" android:name="MyProviderService"></service>
     </application>
 
 </manifest>
