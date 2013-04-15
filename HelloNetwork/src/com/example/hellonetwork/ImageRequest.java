@@ -15,7 +15,7 @@ public class ImageRequest extends NetworkRequest {
 	ArrayList<ImageRequest> notifyRequest = new ArrayList<ImageRequest>();
 	
 	public boolean addNotifyRequest(ImageRequest request) {
-		if (urlString.equals(request.urlString)) {
+		if (!isCanceled() && urlString.equals(request.urlString)) {
 			notifyRequest.add(request);
 			return true;
 		}
@@ -40,8 +40,10 @@ public class ImageRequest extends NetworkRequest {
 	@Override
 	public void cancel() {
 		// TODO Auto-generated method stub
-//		super.cancel();
-		NetworkModel.getInstance().remove(this);
+		if (notifyRequest.size() == 0) {
+			super.cancel();
+			NetworkModel.getInstance().remove(this);
+		}
 	}
 
 	@Override
