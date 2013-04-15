@@ -59,7 +59,7 @@ public class NetworkModel {
 	ArrayList<ImageRequest> mImageRequests = new ArrayList<ImageRequest>();
 	ArrayList<ImageRequest> mRunningRequests = new ArrayList<ImageRequest>();
 	
-	boolean mIsRunning = false;
+	boolean mIsRunning = true;
 	
 	public boolean getNetworkData(final NetworkRequest request,NetworkRequest.OnProcessCompletedListener listener, Handler handler) {
 		// 1. request listener. handler.
