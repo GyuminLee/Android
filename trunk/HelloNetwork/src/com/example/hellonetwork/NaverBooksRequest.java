@@ -9,15 +9,14 @@ import java.net.URLEncoder;
 import com.example.hellonetwork.parser.GsonResultParser;
 import com.example.hellonetwork.parser.InputStreamParserException;
 
-public class NaverMovieRequest extends NetworkRequest {
+public class NaverBooksRequest extends NetworkRequest {
 
+	public static final String REQUEST_URL = "http://openapi.naver.com/search?key=55f1e342c5bce1cac340ebb6032c7d9a&display=10&start=1&target=book&query=";
 	String url;
-	NaverMovies movies;
-	public NaverMovieRequest(String keyword) {
+	NaverBooks result;
+	public NaverBooksRequest(String keyword) {
 		try {
-			url = "http://openapi.naver.com/search?"+
-					"key=55f1e342c5bce1cac340ebb6032c7d9a&target=movie&query=" + 
-					URLEncoder.encode(keyword,"UTF-8");
+			url = REQUEST_URL + URLEncoder.encode(keyword, "UTF8");
 		} catch (UnsupportedEncodingException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -38,21 +37,24 @@ public class NaverMovieRequest extends NetworkRequest {
 	@Override
 	protected void parsing(InputStream is) {
 		// TODO Auto-generated method stub
-		NaverMovieParser parser = new NaverMovieParser();
+		NaverBookParser parser = new NaverBookParser();
+//		GsonResultParser<NaverBooks> parser = new GsonResultParser<NaverBooks>(NaverBooks.class);
+		
 		try {
 			parser.doParse(is);
-			movies = (NaverMovies)parser.getResult();
+			result = (NaverBooks)parser.getResult();
 		} catch (InputStreamParserException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		
 
 	}
 
 	@Override
 	public Object getResult() {
 		// TODO Auto-generated method stub
-		return movies;
+		return result;
 	}
 
 }

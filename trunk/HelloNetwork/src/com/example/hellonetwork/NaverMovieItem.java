@@ -39,6 +39,13 @@ public class NaverMovieItem implements SaxParserHandler, Parcelable {
 			String namespaceUri, String qualifiedName, SaxResultParser parser)
 			throws SAXException {
 		// TODO Auto-generated method stub
+		if (tagName.equalsIgnoreCase("title")) {
+			title = (String)content;
+		} else if (tagName.equalsIgnoreCase("link")) {
+			link = (String)content;
+		} else if (tagName.equalsIgnoreCase("image")) {
+			image = (String)content;
+		}
 		
 	}
 

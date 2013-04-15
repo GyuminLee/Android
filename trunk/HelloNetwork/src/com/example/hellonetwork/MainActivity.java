@@ -34,7 +34,7 @@ public class MainActivity extends Activity implements MyAdapter.OnAdapterImageCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         mListView = (ListView)findViewById(R.id.listView1);
-        Button btn = (Button)findViewById(R.id.button1);
+        Button btn = (Button)findViewById(R.id.search);
         btn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
