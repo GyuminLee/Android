@@ -111,6 +111,7 @@ public class NetworkModel {
 		request.setOnProcessCompletedListener(listener);
 		Bitmap bitmap = ImageCache.getInstance().getCacheBitmap(request.getKey());
 		if (bitmap != null) {
+			request.setHandler(null);
 			request.setBitmapAndPost(bitmap);
 		} else {
 			// Thread  
