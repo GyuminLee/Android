@@ -59,25 +59,25 @@ public class ImageCache {
 	
 	
 	public Bitmap getMemoryCacheBitmap(String searchKey) {
-		// mMemCache key ÀÖ´ÂÁö °Ë»ö
-		// ÀÖÀ¸¸é bitmap
-		// ¾øÀ¸¸é null
-		String matchKey = null;
 		Bitmap bitmap = null;
-		Set keys = mMemCache.keySet();
-		Iterator iter = keys.iterator();
-		while(iter.hasNext()) {
-			String key = (String)iter.next();
-			if (key.equals(searchKey)) {
-				WeakReference<Bitmap> wr = mMemCache.get(key);
-				matchKey = key;
-				bitmap = wr.get();
-				break;
+		synchronized (this) {
+			String matchKey = null;
+			Set keys = mMemCache.keySet();
+			Iterator iter = keys.iterator();
+			while(iter.hasNext()) {
+				String key = (String)iter.next();
+				if (key.equals(searchKey)) {
+					WeakReference<Bitmap> wr = mMemCache.get(key);
+					matchKey = key;
+					bitmap = wr.get();
+					break;
+				}
 			}
-		}
-		
-		if (matchKey != null && bitmap == null) {
-			mMemCache.remove(matchKey);
+			
+			if (matchKey != null && bitmap == null) {
+				mMemCache.remove(matchKey);
+			}
+			
 		}
 		return bitmap;
 	}
@@ -96,10 +96,6 @@ public class ImageCache {
 	}
 	
 	public Bitmap getFileCacheBitmap(String key) {
-		//  file¿¡ ÀÖ´ÂÁö È®ÀÎ.
-		// ÀÖÀ¸¸é  File is ¾ò¾î¿Í¼­ Bitmap»ý¼º
-		// mMemCacheÃß°¡ ÈÄ Bitmap return
-		// ¾øÀ¸¸é null return;
 		Bitmap bitmap = null;
 		if (exists(key)) {
 			File file = getCacheFile(key);
@@ -119,8 +115,10 @@ public class ImageCache {
 	}
 	
 	private void addMemcache(String key, Bitmap bitmap) {
-		WeakReference<Bitmap> wr = new WeakReference<Bitmap>(bitmap);
-		mMemCache.put(key, wr);
+		synchronized (this) {
+			WeakReference<Bitmap> wr = new WeakReference<Bitmap>(bitmap);
+			mMemCache.put(key, wr);
+		}
 	}
 	
 	private void saveInputStream(String key, InputStream is) throws IOException {
@@ -148,9 +146,9 @@ public class ImageCache {
 	}
 	
 	public Bitmap createBitmapFromNetwork(String key, InputStream is) {
-		// isÀ» file¿¡ ÀúÀå.
-		// file¿¡¼­ bitmap »ý¼º.
-		// mMemCache¿¡ bitmap µî·Ï.
+		// isï¿½ï¿½ fileï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½.
+		// fileï¿½ï¿½ï¿½ï¿½ bitmap ï¿½ï¿½.
+		// mMemCacheï¿½ï¿½ bitmap ï¿½ï¿½ï¿½.
 		// bitmap return
 		Bitmap bitmap = null;
 		try {
@@ -158,7 +156,7 @@ public class ImageCache {
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			// ÀÌ¹Ì ´Ù¸¥ Thread¿¡¼­ write¸¦ ÇÏ°í ÀÖ´Â °æ¿ì.
+			// ï¿½Ì¹ï¿½ ï¿½Ù¸ï¿½ Threadï¿½ï¿½ï¿½ï¿½ writeï¿½ï¿½ ï¿½Ï°ï¿½ ï¿½Ö´ï¿½ ï¿½ï¿½ï¿½.
 		}
 		bitmap = getFileCacheBitmap(key);
 		

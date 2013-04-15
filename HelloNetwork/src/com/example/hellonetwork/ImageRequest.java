@@ -40,7 +40,7 @@ public class ImageRequest extends NetworkRequest {
 	@Override
 	public void cancel() {
 		// TODO Auto-generated method stub
-		super.cancel();
+//		super.cancel();
 		NetworkModel.getInstance().remove(this);
 	}
 
