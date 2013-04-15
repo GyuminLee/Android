@@ -9,7 +9,10 @@ import android.app.Activity;
 import android.nfc.NdefMessage;
 import android.nfc.NdefRecord;
 import android.nfc.NfcAdapter;
+import android.nfc.NfcEvent;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 public class NFCSendActivity extends Activity {
@@ -22,6 +25,16 @@ public class NFCSendActivity extends Activity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+	    setContentView(R.layout.nfc_send_layout);
+	    Button btn = (Button)findViewById(R.id.button1);
+	    btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				mAdapter.setNdefPushMessage(mMessage, NFCSendActivity.this);
+			}
+		});
 
 	    mAdapter = NfcAdapter.getDefaultAdapter(this);
 	    if (mAdapter == null) {
@@ -37,20 +50,44 @@ public class NFCSendActivity extends Activity {
 	    // TODO Auto-generated method stub
 	    
 	    mMessage = makeNdefMessage(object);
+	    mAdapter.setOnNdefPushCompleteCallback(new NfcAdapter.OnNdefPushCompleteCallback() {
+			
+			@Override
+			public void onNdefPushComplete(NfcEvent event) {
+				// TODO Auto-generated method stub
+				runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						Toast.makeText(NFCSendActivity.this, "ndef messeage sended", Toast.LENGTH_SHORT).show();						
+					}
+				});
+			}
+		}, this);
+	    
+	    mAdapter.setNdefPushMessageCallback(new NfcAdapter.CreateNdefMessageCallback() {
+			
+			@Override
+			public NdefMessage createNdefMessage(NfcEvent event) {
+				// TODO Auto-generated method stub
+				return mMessage;
+			}
+		}, this);
 	}
 	
 	@Override
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		super.onResume();
-        if (mAdapter != null) mAdapter.enableForegroundNdefPush(this, mMessage);
+//        if (mAdapter != null) mAdapter.enableForegroundNdefPush(this, mMessage);
 	}
 
 	@Override
 	protected void onPause() {
 		// TODO Auto-generated method stub
 		super.onPause();
-        if (mAdapter != null) mAdapter.disableForegroundNdefPush(this);
+//        if (mAdapter != null) mAdapter.disableForegroundNdefPush(this);
 	}
 
 	private NdefMessage makeNdefMessage(DataObject object) {
@@ -97,7 +134,8 @@ public class NFCSendActivity extends Activity {
 			byte[] payload = baos.toByteArray();
 			//byte[] payload = "playload data".getBytes();
 			if (payload != null && payload.length > 0) {
-				record = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, mimeType.getBytes(Charset.forName("US-ASCII")),new byte[0],payload );
+				record = new NdefRecord(NdefRecord.TNF_MIME_MEDIA, mimeType.getBytes(Charset.forName("US-ASCII")),
+						new byte[0],payload );
 			}
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
