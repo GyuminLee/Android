@@ -8,30 +8,30 @@ import org.xml.sax.SAXException;
 import com.example.hellonetwork.parser.SaxParserHandler;
 import com.example.hellonetwork.parser.SaxResultParser;
 
-public class NaverMovies implements SaxParserHandler {
+public class NaverBooks implements SaxParserHandler {
 
 	String title;
-	ArrayList<NaverMovieItem> items = new ArrayList<NaverMovieItem>();
+	String description;
+	int total;
+	int start;
+	int display;
+	ArrayList<NaverBookItem> items = new ArrayList<NaverBookItem>();
+	
 	@Override
 	public String getTagName() {
 		// TODO Auto-generated method stub
 		return "channel";
 	}
-
 	@Override
 	public void parseStartElement(String tagName, Attributes attributes,
 			String namespaceUri, String qualifiedName, SaxResultParser parser)
 			throws SAXException {
 		// TODO Auto-generated method stub
 		if (tagName.equalsIgnoreCase("item")) {
-			NaverMovieItem item = new NaverMovieItem();
+			NaverBookItem item = new NaverBookItem();
 			parser.pushHandler(item);
-		} else if (tagName.equalsIgnoreCase("a")) {
-			String imageurl = attributes.getValue("img");
 		}
-		
 	}
-
 	@Override
 	public void parseEndElement(String tagName, Object content,
 			String namespaceUri, String qualifiedName, SaxResultParser parser)
@@ -40,15 +40,17 @@ public class NaverMovies implements SaxParserHandler {
 		if (tagName.equalsIgnoreCase("title")) {
 			title = (String)content;
 		} else if (tagName.equalsIgnoreCase("item")) {
-			items.add((NaverMovieItem)content);
+			items.add((NaverBookItem)content);
+		} else if (tagName.equalsIgnoreCase("total")) {
+			if (content != null) {
+				total = Integer.parseInt((String)content);
+			}
 		}
-		
 	}
-
+	
 	@Override
 	public Object getParseResult() {
 		// TODO Auto-generated method stub
 		return this;
 	}
-
 }
