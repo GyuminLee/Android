@@ -25,6 +25,7 @@
             </intent-filter>
         </activity>
         <service android:exported="true" android:name="MyLocationService"></service>
+        <service android:exported="true" android:name="MyAlertService"></service>
     </application>
 
 </manifest>
