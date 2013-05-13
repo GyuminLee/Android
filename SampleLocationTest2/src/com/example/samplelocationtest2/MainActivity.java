@@ -14,7 +14,9 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -127,7 +129,47 @@ public class MainActivity extends Activity {
 			}
 		});
 		
+		btn = (Button)findViewById(R.id.testProvider);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (isTestProvider == false) {
+					LocationProvider provider = mLocationManager.getProvider(LocationManager.NETWORK_PROVIDER);
+					mLocationManager.addTestProvider(LocationManager.NETWORK_PROVIDER, provider.requiresNetwork(), provider.requiresSatellite(), provider.requiresCell(), provider.hasMonetaryCost(), 
+							provider.supportsAltitude(), provider.supportsSpeed(), provider.supportsBearing(), provider.getPowerRequirement(), provider.getAccuracy());
+					mLocationManager.setTestProviderEnabled(LocationManager.NETWORK_PROVIDER, true);
+					isTestProvider = true;
+					mHandler.post(locationUpdate);
+				} else {
+					mHandler.removeCallbacks(locationUpdate);
+					mLocationManager.removeTestProvider(LocationManager.NETWORK_PROVIDER);
+					isTestProvider = false;
+				}
+			}
+		});
+		
 	}
+	
+	double mLatitude = 37.535353;
+	double mLongitude = 127.252525;
+	
+	Runnable locationUpdate = new Runnable() {
+		public void run() {
+			Location loc = new Location(LocationManager.NETWORK_PROVIDER);
+			loc.setLatitude(mLatitude);
+			loc.setLongitude(mLongitude);
+			mLatitude += 0.000050;
+			mLongitude += 0.000050;
+			loc.setTime(System.currentTimeMillis());
+			mLocationManager.setTestProviderLocation(LocationManager.NETWORK_PROVIDER, loc);
+			mHandler.postDelayed(this, 1000);
+		}
+	};
+	
+	Handler mHandler = new Handler();
+	boolean isTestProvider = false;
 	
 	@Override
 	protected void onStart() {

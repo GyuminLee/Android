@@ -31,6 +31,13 @@
     </EditText>
 
     <Button
+        android:id="@+id/testProvider"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Test" />
+
+    <Button
         android:id="@+id/search"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
