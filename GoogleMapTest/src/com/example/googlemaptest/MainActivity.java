@@ -21,6 +21,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.Projection;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
@@ -109,7 +110,15 @@ public class MainActivity extends FragmentActivity implements
 	protected void onResume() {
 		// TODO Auto-generated method stub
 		setUpMapIfNeeded();
+		myLocationSource.onResume();
 		super.onResume();
+	}
+	
+	@Override
+	protected void onPause() {
+		// TODO Auto-generated method stub
+		myLocationSource.onPause();
+		super.onPause();
 	}
 	
 	private void setUpMapIfNeeded() {
@@ -141,9 +150,53 @@ public class MainActivity extends FragmentActivity implements
 		mMap.setOnMarkerClickListener(this);
 		mMap.setOnInfoWindowClickListener(this);
 		mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
+		mMap.setLocationSource(myLocationSource);
+		mMap.setOnMapLongClickListener(myLocationSource);
 		
 	}
 
+	MyLocationSource myLocationSource = new MyLocationSource();
+	
+	class MyLocationSource implements LocationSource, GoogleMap.OnMapLongClickListener {
+		
+		OnLocationChangedListener mListener;
+		boolean isResumed = false;
+
+		@Override
+		public void onMapLongClick(LatLng latLng) {
+			// TODO Auto-generated method stub
+			if (mListener != null && isResumed) {
+				Location location = new Location("MyLocation");
+				location.setLatitude(latLng.latitude);
+				location.setLongitude(latLng.longitude);
+				location.setAccuracy(100);
+				mListener.onLocationChanged(location);
+			}
+		}
+
+		@Override
+		public void activate(OnLocationChangedListener listener) {
+			// TODO Auto-generated method stub
+			mListener = listener;
+		}
+
+		@Override
+		public void deactivate() {
+			// TODO Auto-generated method stub
+			mListener = null;
+			
+		}
+		
+		public void onPause() {
+			isResumed = false;
+		}
+		
+		public void onResume() {
+			isResumed = true;
+		}
+	}
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
