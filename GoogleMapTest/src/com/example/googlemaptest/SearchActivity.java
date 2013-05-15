@@ -60,11 +60,13 @@ public class SearchActivity extends Activity {
 					@Override
 					public void onDownloadCompleted(int result, NetworkRequest request) {
 						// TODO Auto-generated method stub
-						GooglePlaces places = (GooglePlaces) request.getResult();
-						if (places.results != null) {
-							mAdapter = new ArrayAdapter<GooglePlaceItem>(SearchActivity.this,
-									android.R.layout.simple_list_item_1, places.results);
-							mListView.setAdapter(mAdapter);
+						if (result == NetworkRequest.PROCESS_SUCCESS ) {
+							GooglePlaces places = (GooglePlaces) request.getResult();
+							if (places.results != null) {
+								mAdapter = new ArrayAdapter<GooglePlaceItem>(SearchActivity.this,
+										android.R.layout.simple_list_item_1, places.results);
+								mListView.setAdapter(mAdapter);
+							}
 						}
 					}
 				});

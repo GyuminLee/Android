@@ -1,9 +1,15 @@
 package com.example.googlemaptest;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import com.example.googlemaptest.parser.SaxParserHandler;
+import com.example.googlemaptest.parser.SaxResultParser;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Geometry implements Parcelable {
+public class Geometry implements Parcelable, SaxParserHandler {
 
 	Location location;
 	
@@ -42,4 +48,39 @@ public class Geometry implements Parcelable {
 			return new Geometry[size];
 		}
 	};
+
+	@Override
+	public String getTagName() {
+		// TODO Auto-generated method stub
+		return "geometry";
+	}
+
+	@Override
+	public void parseStartElement(String tagName, Attributes attributes,
+			String namespaceUri, String qualifiedName, SaxResultParser parser)
+			throws SAXException {
+		// TODO Auto-generated method stub
+		if (tagName.equalsIgnoreCase("location")) {
+			Location location = new Location();
+			parser.pushHandler(location);
+		}
+		
+	}
+
+	@Override
+	public void parseEndElement(String tagName, Object content,
+			String namespaceUri, String qualifiedName, SaxResultParser parser)
+			throws SAXException {
+		// TODO Auto-generated method stub
+		if (tagName.equalsIgnoreCase("location")) {
+			location = (Location)content;
+		}
+		
+	}
+
+	@Override
+	public Object getParseResult() {
+		// TODO Auto-generated method stub
+		return this;
+	}
 }
