@@ -1,9 +1,15 @@
 package com.example.googlemaptest;
 
+import org.xml.sax.Attributes;
+import org.xml.sax.SAXException;
+
+import com.example.googlemaptest.parser.SaxParserHandler;
+import com.example.googlemaptest.parser.SaxResultParser;
+
 import android.os.Parcel;
 import android.os.Parcelable;
 
-public class Location implements Parcelable {
+public class Location implements Parcelable,SaxParserHandler {
 	double lat;
 	double lng;
 	
@@ -43,4 +49,36 @@ public class Location implements Parcelable {
 			return new Location[size];
 		}
 	};
+
+	@Override
+	public String getTagName() {
+		// TODO Auto-generated method stub
+		return "location";
+	}
+
+	@Override
+	public void parseStartElement(String tagName, Attributes attributes,
+			String namespaceUri, String qualifiedName, SaxResultParser parser)
+			throws SAXException {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void parseEndElement(String tagName, Object content,
+			String namespaceUri, String qualifiedName, SaxResultParser parser)
+			throws SAXException {
+		// TODO Auto-generated method stub
+		if (tagName.equalsIgnoreCase("lat")) {
+			lat = Double.parseDouble((String)content);
+		} else if (tagName.equalsIgnoreCase("lng")) {
+			lng = Double.parseDouble((String)content);
+		}
+	}
+
+	@Override
+	public Object getParseResult() {
+		// TODO Auto-generated method stub
+		return this;
+	}
 }
