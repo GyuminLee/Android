@@ -33,6 +33,13 @@
             android:layout_height="wrap_content"
             android:text="next" />
 
+        <Button
+            android:id="@+id/search"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Search" />
+
     </LinearLayout>
 
 	<fragment

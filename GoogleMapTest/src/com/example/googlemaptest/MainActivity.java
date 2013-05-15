@@ -1,8 +1,11 @@
 package com.example.googlemaptest;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
@@ -38,8 +41,12 @@ public class MainActivity extends FragmentActivity implements
 	GoogleMap mMap;
 	LocationManager mLocationManager;
 	ArrayList<Marker> markerList = new ArrayList<Marker>();
+	HashMap<Marker,GooglePlaceItem> mDataMap = new HashMap<Marker,GooglePlaceItem>();
+	
 	
 	int mCurrentMarkerIndex = -1;
+	
+	public static final int REQUEST_CODE_SEARCH_POI = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +74,41 @@ public class MainActivity extends FragmentActivity implements
 				moveNextMarker();
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent i = new Intent(MainActivity.this, SearchActivity.class);
+				startActivityForResult(i, REQUEST_CODE_SEARCH_POI);
+			}
+		});
 	}
 
+	
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_CODE_SEARCH_POI) {
+			if (resultCode == Activity.RESULT_OK) {
+//				GooglePlaceItem item = data.getParcelableExtra(SearchActivity.RETURN_FIELD_POI);
+				ArrayList<GooglePlaceItem> list = data.<GooglePlaceItem>getParcelableArrayListExtra(SearchActivity.RETURN_FIELD_POI);
+				for (GooglePlaceItem item : list) {
+					MarkerOptions options = new MarkerOptions();
+					LatLng latLng = new LatLng(item.geometry.location.lat, item.geometry.location.lng);
+					options.position(latLng)
+						.title(item.name)
+						.snippet(item.vicinity);
+					Marker marker = mMap.addMarker(options);
+					CameraUpdate update = CameraUpdateFactory.newLatLng(latLng);
+					mMap.animateCamera(update);
+					mDataMap.put(marker, item);
+				}
+			}
+		}
+	}
 	
 	@Override
 	protected void onStart() {
