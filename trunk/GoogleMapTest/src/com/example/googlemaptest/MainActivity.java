@@ -82,6 +82,12 @@ public class MainActivity extends FragmentActivity implements
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(MainActivity.this, SearchActivity.class);
+				
+				CameraPosition position = mMap.getCameraPosition();
+				Location location = new Location("MyLocation");
+				location.setLatitude(position.target.latitude);
+				location.setLongitude(position.target.longitude);
+				i.putExtra(SearchActivity.PARAM_FIELD_LOCATION, location);
 				startActivityForResult(i, REQUEST_CODE_SEARCH_POI);
 			}
 		});
