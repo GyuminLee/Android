@@ -1,20 +1,23 @@
 package com.example.testcustomlistsample;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-public class MyItemView extends FrameLayout {
+public class MyItemView extends FrameLayout implements Checkable {
 
 	ImageView iconView;
 	TextView nameView;
 	TextView descView;
 	MyData mData;
 	Drawable happy, neutral, sad;
+	Boolean isChecked;
 	
 	OnItemImageClickListener mListener;
 	
@@ -59,6 +62,34 @@ public class MyItemView extends FrameLayout {
 			iconView.setImageDrawable(neutral);
 		} else {
 			iconView.setImageDrawable(sad);
+		}
+		isChecked=false;
+		redrawBackground();
+	}
+
+	@Override
+	public boolean isChecked() {
+		
+		return isChecked;
+	}
+
+	@Override
+	public void setChecked(boolean checked) {
+		isChecked = checked;
+		redrawBackground();
+	}
+
+	@Override
+	public void toggle() {
+		isChecked = !isChecked;
+		redrawBackground();
+	}
+	
+	private void redrawBackground() {
+		if (isChecked) {
+			setBackgroundColor(Color.BLACK);
+		} else {
+			setBackgroundColor(Color.WHITE);
 		}
 	}
 }

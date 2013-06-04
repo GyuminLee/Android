@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
@@ -20,6 +21,8 @@ public class MainActivity extends Activity {
 	EditText inputView;
 	ListView list;
 	MyAdapter mAdapter;
+	CheckBox isSendView;
+	
 	ArrayList<MyData> mData = new ArrayList<MyData>();
 	
 	@Override
@@ -30,6 +33,7 @@ public class MainActivity extends Activity {
 		messageView = (TextView)findViewById(R.id.message);
 		inputView = (EditText)findViewById(R.id.inputText);
 		list = (ListView)findViewById(R.id.list);
+		isSendView = (CheckBox)findViewById(R.id.isSend);
 		mAdapter = new MyAdapter(this, mData);
 		mAdapter.setOnAdapterItemClickListener(new MyAdapter.OnAdapterItemClickListener() {
 			
@@ -56,7 +60,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				String str = inputView.getText().toString();
-				mAdapter.add(new MyData(str,39,"desc:" + str));
+				mAdapter.add(new MyData(str,39,"desc:" + str,isSendView.isChecked()));
 			}
 		});
 	}
