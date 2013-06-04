@@ -24,7 +24,7 @@ public class MyAdapter extends BaseAdapter {
 	}
 
 	@Override
-	public Object getItem(int position) {
+	public MyData getItem(int position) {
 		return mData.get(position);
 	}
 
@@ -35,8 +35,10 @@ public class MyAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView v = new TextView(mContext);
-		v.setText(mData.get(position).name);
+//		TextView v = new TextView(mContext);
+//		v.setText(mData.get(position).name);
+		MyItemView v = new MyItemView(mContext);
+		v.setMyData(mData.get(position));
 		return v;
 	}
 

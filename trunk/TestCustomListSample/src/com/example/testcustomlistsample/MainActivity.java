@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				MyData str = (MyData)mAdapter.getItem(position);
+				MyData str = mAdapter.getItem(position);
 				messageView.setText(str.name);
 			}
 		});
