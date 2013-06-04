@@ -21,8 +21,8 @@ public class MainActivity extends Activity {
 	TextView messageView;
 	EditText inputView;
 	ListView list;
-	ArrayAdapter<String> mAdapter;
-	ArrayList<String> mData = new ArrayList<String>();
+	ArrayAdapter<MyData> mAdapter;
+	ArrayList<MyData> mData = new ArrayList<MyData>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +33,16 @@ public class MainActivity extends Activity {
 		inputView = (EditText)findViewById(R.id.inputText);
 		list = (ListView)findViewById(R.id.list);
 		
-		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_multiple_choice, mData);
+		mAdapter = new ArrayAdapter<MyData>(this, R.layout.list_item_layout, R.id.textView1, mData);
 		list.setAdapter(mAdapter);
-		list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//		list.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		list.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				String str = mAdapter.getItem(position);
+				MyData item = mAdapter.getItem(position);
+				String str = item.name;
 				messageView.setText(str);
 				Toast.makeText(MainActivity.this, "click item : " + str, Toast.LENGTH_SHORT).show();
 			}
@@ -52,7 +53,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				String addString = inputView.getText().toString();
-				mAdapter.add(addString);
+				mAdapter.add(new MyData(addString,39, "desc : " + addString));
 			}
 		});
 		
@@ -65,16 +66,16 @@ public class MainActivity extends Activity {
 //				int position = list.getCheckedItemPosition();
 //				String str = mAdapter.getItem(position);
 //				messageView.setText("choice item : " + str);
-				SparseBooleanArray selectedArray = list.getCheckedItemPositions();
-				StringBuilder sb = new StringBuilder();
-				sb.append("selected items : ");
-				for (int i = 0; i < mAdapter.getCount(); i++) {
-					boolean isSelected = selectedArray.get(i);
-					if (isSelected) {
-						sb.append(mAdapter.getItem(i) + ",");
-					}
-				}
-				messageView.setText(sb.toString());
+//				SparseBooleanArray selectedArray = list.getCheckedItemPositions();
+//				StringBuilder sb = new StringBuilder();
+//				sb.append("selected items : ");
+//				for (int i = 0; i < mAdapter.getCount(); i++) {
+//					boolean isSelected = selectedArray.get(i);
+//					if (isSelected) {
+//						sb.append(mAdapter.getItem(i).name + ",");
+//					}
+//				}
+//				messageView.setText(sb.toString());
 			}
 		});
 		
@@ -83,7 +84,7 @@ public class MainActivity extends Activity {
 	private void initData() {
 		String[] arrays = getResources().getStringArray(R.array.listItem);
 		for(int i = 0; i < arrays.length ; i++) {
-			mData.add(arrays[i]);
+			mData.add(new MyData(arrays[i], 20, "desc : " + arrays[i]));
 		}
 	}
 
