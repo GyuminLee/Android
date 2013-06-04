@@ -12,6 +12,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -30,6 +31,13 @@ public class MainActivity extends Activity {
 		inputView = (EditText)findViewById(R.id.inputText);
 		list = (ListView)findViewById(R.id.list);
 		mAdapter = new MyAdapter(this, mData);
+		mAdapter.setOnAdapterItemClickListener(new MyAdapter.OnAdapterItemClickListener() {
+			
+			@Override
+			public void onAdapterItemClick(MyData data) {
+				Toast.makeText(MainActivity.this, data.name + "item image clicked...", Toast.LENGTH_SHORT).show();
+			}
+		});
 		list.setAdapter(mAdapter);
 		
 		list.setOnItemClickListener(new OnItemClickListener() {
@@ -56,7 +64,7 @@ public class MainActivity extends Activity {
 	private void initData() {
 		String[] arrays = getResources().getStringArray(R.array.listItem);
 		for (int i = 0; i < arrays.length; i++) {
-			String[] item = arrays[i].split("|");
+			String[] item = arrays[i].split(";");
 			mData.add(new MyData(item[0], Integer.parseInt(item[1]), item[2]));
 		}
 	}
