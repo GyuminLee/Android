@@ -12,6 +12,9 @@ public class MyAdapter extends BaseAdapter implements MyItemView.OnItemImageClic
 
 	List<MyData> mData;
 	Context mContext;
+	public final static int VIEW_TYPE_COUNT = 2;
+	public final static int VIEW_TYPE_RECEIVE = 0;
+	public final static int VIEW_TYPE_SEND = 1;
 	
 	OnAdapterItemClickListener mListener;
 	
@@ -44,20 +47,42 @@ public class MyAdapter extends BaseAdapter implements MyItemView.OnItemImageClic
 	}
 
 	@Override
-	public View getView(int position, View convertView, ViewGroup parent) {
-//		TextView v = new TextView(mContext);
-//		v.setText(mData.get(position).name);
-//		MyItemView v = new MyItemView(mContext);
-		MyItemView v;
-		if (convertView == null) {
-			v = new MyItemView(mContext);
-			v.setOnItemImageClickListener(this);
+	public int getViewTypeCount() {
+		return VIEW_TYPE_COUNT;
+	}
+	
+	@Override
+	public int getItemViewType(int position) {
+		if (mData.get(position).isSend) {
+			return VIEW_TYPE_SEND;
 		} else {
-			v = (MyItemView)convertView;
+			return VIEW_TYPE_RECEIVE;
 		}
-		
-		v.setMyData(mData.get(position));
-		return v;
+	}
+	
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		if (mData.get(position).isSend) {
+			MyItemSendView v;
+			if (convertView == null) {
+				v = new MyItemSendView(mContext);
+			} else {
+				v = (MyItemSendView)convertView;
+			}
+			v.setMyData(mData.get(position));
+			return v;
+		} else {
+			MyItemView v;
+			if (convertView == null) {
+				v = new MyItemView(mContext);
+				v.setOnItemImageClickListener(this);
+			} else {
+				v = (MyItemView)convertView;
+			}
+			
+			v.setMyData(mData.get(position));
+			return v;
+		}
 	}
 
 	public void add(MyData str) {
