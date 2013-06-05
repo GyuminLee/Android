@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.Button;
@@ -31,6 +32,7 @@ public class MyActivity extends Activity {
 	    Person p = intent.<Person>getParcelableExtra(PARAM_PERSON);
 	    String name = p.name;
 	    int age = p.age;
+	    
 //	    String name = intent.getStringExtra(PARAM_NAME);
 //	    int age = intent.getIntExtra(PARAM_AGE, -1);
 	    
