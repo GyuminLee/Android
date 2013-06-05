@@ -2,7 +2,10 @@ package com.example.testcomponentsample;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
@@ -96,8 +99,25 @@ public class MainActivity extends Activity {
 				stopService(i);
 			}
 		});
+		
+		IntentFilter filter = new IntentFilter(MyService.ACTION_TEN_COUNT);
+		registerReceiver(mReceiver, filter);
 	}
 	
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(mReceiver);
+		super.onDestroy();
+	}
+	
+	BroadcastReceiver mReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Toast.makeText(context, "receive service count : " + intent.getIntExtra("count", 0), Toast.LENGTH_SHORT).show();
+		}
+		
+	};
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == REQUEST_CODE_MY_ACTIVITY) {

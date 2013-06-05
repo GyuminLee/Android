@@ -16,6 +16,8 @@ public class MyService extends Service {
 
 	private static final String TAG = "MyService";
 	
+	public static final String ACTION_TEN_COUNT = "com.example.testcomponentsample.ACTION.TEN_COUNT";
+	
 	int mCount = 0;
 	boolean isRunning = false;
 	@Override
@@ -37,6 +39,11 @@ public class MyService extends Service {
 						e.printStackTrace();
 					}
 					mCount++;
+					if (mCount % 10 == 0) {
+						Intent i = new Intent(ACTION_TEN_COUNT);
+						i.putExtra("count", mCount);
+						sendBroadcast(i,"com.example.testcomponentsample.permission.TEN_COUNT");
+					}
 				}
 			}
 		}).start();
