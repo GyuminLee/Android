@@ -4,12 +4,18 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.PendingIntent.CanceledException;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 public class MyService extends Service {
 
+	private static final String TAG = "MyService";
+	
 	int mCount = 0;
 	boolean isRunning = false;
 	@Override
@@ -35,7 +41,25 @@ public class MyService extends Service {
 			}
 		}).start();
 		Toast.makeText(this, "Service onCreated", Toast.LENGTH_SHORT).show();
+		
+		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(mReceiver, filter);
 	}
+	
+	BroadcastReceiver mReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// TODO Auto-generated method stub
+			if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+				Log.i(TAG, "screen off message received");
+			} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+				Log.i(TAG, "screen on message received");
+				Toast.makeText(context, "Screen On!!!" , Toast.LENGTH_SHORT).show();
+			}
+		}
+	};
 	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
@@ -57,6 +81,7 @@ public class MyService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		unregisterReceiver(mReceiver);
 		Toast.makeText(this, "Service onDestroy", Toast.LENGTH_SHORT).show();
 	}
 	
