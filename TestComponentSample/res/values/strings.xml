@@ -8,5 +8,7 @@
     <string name="getPicture">Get Picture</string>
     <string name="showMyActivity">Show My Activity</string>
     <string name="finish">Finish</string>
+    <string name="startService">Service start</string>
+    <string name="stopService">Service Stop</string>
 
 </resources>

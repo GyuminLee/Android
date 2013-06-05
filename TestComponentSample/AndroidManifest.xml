@@ -23,6 +23,7 @@
             </intent-filter>
         </activity>
         <activity android:name="MyActivity" android:launchMode="standard" android:screenOrientation="sensor"></activity>
+        <service android:name="MyService"></service>
     </application>
 
 </manifest>
