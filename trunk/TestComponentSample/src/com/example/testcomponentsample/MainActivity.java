@@ -52,8 +52,10 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				Intent i = new Intent(MainActivity.this, MyActivity.class);
-				i.putExtra(MyActivity.PARAM_NAME, "ysi");
-				i.putExtra(MyActivity.PARAM_AGE, 39);
+				Person p = new Person("ysi", 39);
+				i.putExtra(MyActivity.PARAM_PERSON, p);
+//				i.putExtra(MyActivity.PARAM_NAME, "ysi");
+//				i.putExtra(MyActivity.PARAM_AGE, 39);
 //				startActivity(i);
 				startActivityForResult(i, REQUEST_CODE_MY_ACTIVITY);
 			}
