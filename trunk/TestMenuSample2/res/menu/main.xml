@@ -6,7 +6,8 @@
         android:showAsAction="never"
         android:title="@string/action_settings"/>
     <item android:id="@+id/activity_start" android:title="@string/startActivity" android:orderInCategory="1"></item>
-    <item android:id="@+id/menuItem2" android:title="@string/menuItem2" android:orderInCategory="2" android:showAsAction="always|withText"></item>
+    <item android:id="@+id/menuItem2" android:title="@string/menuItem2" android:orderInCategory="2" android:showAsAction="always|collapseActionView"
+        android:icon="@android:drawable/ic_menu_search" android:actionViewClass="android.widget.SearchView"></item>
     <item android:id="@+id/submenu" android:title="@string/submenu" android:orderInCategory="3">
         <menu>
             <item android:id="@+id/item1" android:orderInCategory="11" android:title="subitem1"/>
