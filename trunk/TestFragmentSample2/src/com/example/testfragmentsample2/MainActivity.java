@@ -1,6 +1,7 @@
 package com.example.testfragmentsample2;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
@@ -22,6 +23,17 @@ public class MainActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				FragmentF1 f = new FragmentF1();
+				Bundle b = new Bundle();
+				b.putString("count", "20");
+				f.setArguments(b);
+				f.setOnFragmentButtonClickListener(new FragmentF1.OnFragmentButtonClickListener() {
+					
+					@Override
+					public void onButtonClick(Fragment f) {
+						// TODO Auto-generated method stub
+						// ...
+					}
+				});
 				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 				ft.replace(R.id.container, f);
 				ft.commit();
@@ -35,6 +47,7 @@ public class MainActivity extends FragmentActivity {
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
 				FragmentF2 f = new FragmentF2();
+				f.setHasOptionsMenu(true);
 				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 				ft.replace(R.id.container, f);
 				ft.commit();
