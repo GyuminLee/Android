@@ -18,6 +18,7 @@ public class TabManager implements OnTabChangeListener {
     private final int mContainerId;
     private final HashMap<String, TabInfo> mTabs = new HashMap<String, TabInfo>();
     TabInfo mLastTab;
+    OnTabChangeListener mTabChangeListener;
 
     static final class TabInfo {
         private final String tag;
@@ -55,6 +56,10 @@ public class TabManager implements OnTabChangeListener {
         mTabHost.setOnTabChangedListener(this);
     }
 
+    public void setOnTabChangedListener(OnTabChangeListener listener) {
+    	mTabChangeListener = listener;
+    }
+    
     public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
         tabSpec.setContent(new DummyTabFactory(mActivity));
         String tag = tabSpec.getTag();
@@ -98,6 +103,10 @@ public class TabManager implements OnTabChangeListener {
             mLastTab = newTab;
             ft.commit();
             mActivity.getSupportFragmentManager().executePendingTransactions();
+        }
+        
+        if (mTabChangeListener != null) {
+        	mTabChangeListener.onTabChanged(tabId);
         }
     }
 
