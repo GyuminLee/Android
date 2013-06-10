@@ -6,11 +6,15 @@ import android.view.Menu;
 
 public class MainActivity extends Activity {
 
+	MyView myView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-//		setContentView(R.layout.activity_main);
-		setContentView(new MyView(this));
+		setContentView(R.layout.activity_main);
+//		setContentView(new MyView(this));
+		myView = (MyView)findViewById(R.id.myView);
+		myView.setText("Activity Setting Text");
 	}
 
 	@Override
