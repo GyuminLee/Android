@@ -3,6 +3,7 @@
     android:id="@+id/LinearLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:layoutAnimation="@anim/layout_anim"
     android:orientation="vertical"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
@@ -67,12 +68,21 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="serialize" />
+
+        <Button
+            android:id="@+id/custom"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Custom" />
+
     </LinearLayout>
 
     <ImageView
         android:id="@+id/target"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="center"
         android:src="@drawable/gallery_photo_1" />
 
     <ImageView

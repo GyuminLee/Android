@@ -6,6 +6,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.view.animation.Animation;
+import android.view.animation.BounceInterpolator;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -78,7 +79,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
-				Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.set_anim);
+				Animation anim = AnimationUtils.loadAnimation(MainActivity.this, R.anim.wave_scale);
 				target.startAnimation(anim);
 			}
 		});
@@ -110,6 +111,20 @@ public class MainActivity extends Activity {
 						target.startAnimation(anim);
 					}
 				});
+				target.startAnimation(anim);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.custom);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+
+				My3DAnimation anim = new My3DAnimation();
+				anim.setDuration(2000);
+				anim.setFillAfter(true);
+				anim.setInterpolator(new BounceInterpolator());
 				target.startAnimation(anim);
 			}
 		});
