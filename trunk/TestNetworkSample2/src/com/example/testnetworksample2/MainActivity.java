@@ -32,12 +32,30 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				String urlString = urlView.getText().toString();
 				if (urlString != null && !urlString.equals("")) {
-					String url = null;
-					if (urlString.startsWith("http://") || urlString.startsWith("https://")) {
-						url = urlString;
-					} else {
-						url = "http://" + urlString;
-					}
+					
+					NaverMovieRequest request = new NaverMovieRequest(urlString);
+					NetworkModel.getInstance().getNetworkData(request, new NetworkRequest.OnProcessCompleteListener() {
+						
+						@Override
+						public void onError(NetworkRequest request, String errorMessage) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+						@Override
+						public void onCompleted(NetworkRequest request) {
+							// TODO Auto-generated method stub
+							
+						}
+					}, mHandler);
+					
+					
+//					String url = null;
+//					if (urlString.startsWith("http://") || urlString.startsWith("https://")) {
+//						url = urlString;
+//					} else {
+//						url = "http://" + urlString;
+//					}
 //					NetworkUrlRequest request = new NetworkUrlRequest(url,mHandler);
 //					request.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
 //						
@@ -68,23 +86,23 @@ public class MainActivity extends Activity {
 //							messageView.setText(message);
 //						}
 //					}, mHandler);
-					MelonRequest request = new MelonRequest();
-					NetworkModel.getInstance().getNetworkData(request, new NetworkRequest.OnProcessCompleteListener() {
-						
-						@Override
-						public void onError(NetworkRequest request, String errorMessage) {
-							// TODO Auto-generated method stub
-							
-						}
-						
-						@Override
-						public void onCompleted(NetworkRequest request) {
-							MelonRequest rq = (MelonRequest)request;
-							Melon melon = rq.getResult();
-							ArrayAdapter<Song> aa = new ArrayAdapter<Song>(MainActivity.this, android.R.layout.simple_list_item_1, melon.songs.song);
-							list.setAdapter(aa);
-						}
-					}, mHandler);
+//					MelonRequest request = new MelonRequest();
+//					NetworkModel.getInstance().getNetworkData(request, new NetworkRequest.OnProcessCompleteListener() {
+//						
+//						@Override
+//						public void onError(NetworkRequest request, String errorMessage) {
+//							// TODO Auto-generated method stub
+//							
+//						}
+//						
+//						@Override
+//						public void onCompleted(NetworkRequest request) {
+//							MelonRequest rq = (MelonRequest)request;
+//							Melon melon = rq.getResult();
+//							ArrayAdapter<Song> aa = new ArrayAdapter<Song>(MainActivity.this, android.R.layout.simple_list_item_1, melon.songs.song);
+//							list.setAdapter(aa);
+//						}
+//					}, mHandler);
 					
 				}
 			}
