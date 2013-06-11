@@ -37,20 +37,35 @@ public class MainActivity extends Activity {
 					} else {
 						url = "http://" + urlString;
 					}
-					NetworkUrlRequest request = new NetworkUrlRequest(url,mHandler);
-					request.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
+//					NetworkUrlRequest request = new NetworkUrlRequest(url,mHandler);
+//					request.setOnDownloadCompleteListener(new OnDownloadCompleteListener() {
+//						
+//						@Override
+//						public void onError(NetworkUrlRequest request, String errorMessage) {
+//							Toast.makeText(MainActivity.this, "error Message : " + errorMessage, Toast.LENGTH_SHORT).show();
+//						}
+//						
+//						@Override
+//						public void onCompleted(NetworkUrlRequest request) {
+//							messageView.setText(request.getResult());
+//						}
+//					});
+//					request.start();
+					UrlRequest request = new UrlRequest(url);
+					NetworkModel.getInstance().getNetworkData(request, new NetworkRequest.OnProcessCompleteListener() {
 						
 						@Override
-						public void onError(NetworkUrlRequest request, String errorMessage) {
+						public void onError(NetworkRequest request, String errorMessage) {
 							Toast.makeText(MainActivity.this, "error Message : " + errorMessage, Toast.LENGTH_SHORT).show();
 						}
 						
 						@Override
-						public void onCompleted(NetworkUrlRequest request) {
-							messageView.setText(request.getResult());
+						public void onCompleted(NetworkRequest request) {
+							UrlRequest rq = (UrlRequest)request;
+							String message = rq.getResult();
+							messageView.setText(message);
 						}
-					});
-					request.start();
+					}, mHandler);
 				}
 			}
 		});
