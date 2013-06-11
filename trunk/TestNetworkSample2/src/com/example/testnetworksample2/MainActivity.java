@@ -5,18 +5,18 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
-
-import com.example.testnetworksample2.NetworkUrlRequest.OnDownloadCompleteListener;
 
 public class MainActivity extends Activity {
 
 	EditText urlView;
 	TextView messageView;
 	Handler mHandler = new Handler();
+	ListView list;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		urlView = (EditText)findViewById(R.id.urlText);
 		messageView = (TextView)findViewById(R.id.message);
+		list = (ListView)findViewById(R.id.listView1);
 		Button btn = (Button)findViewById(R.id.go);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -51,21 +52,40 @@ public class MainActivity extends Activity {
 //						}
 //					});
 //					request.start();
-					UrlRequest request = new UrlRequest(url);
+
+//					UrlRequest request = new UrlRequest(url);
+//					NetworkModel.getInstance().getNetworkData(request, new NetworkRequest.OnProcessCompleteListener() {
+//						
+//						@Override
+//						public void onError(NetworkRequest request, String errorMessage) {
+//							Toast.makeText(MainActivity.this, "error Message : " + errorMessage, Toast.LENGTH_SHORT).show();
+//						}
+//						
+//						@Override
+//						public void onCompleted(NetworkRequest request) {
+//							UrlRequest rq = (UrlRequest)request;
+//							String message = rq.getResult();
+//							messageView.setText(message);
+//						}
+//					}, mHandler);
+					MelonRequest request = new MelonRequest();
 					NetworkModel.getInstance().getNetworkData(request, new NetworkRequest.OnProcessCompleteListener() {
 						
 						@Override
 						public void onError(NetworkRequest request, String errorMessage) {
-							Toast.makeText(MainActivity.this, "error Message : " + errorMessage, Toast.LENGTH_SHORT).show();
+							// TODO Auto-generated method stub
+							
 						}
 						
 						@Override
 						public void onCompleted(NetworkRequest request) {
-							UrlRequest rq = (UrlRequest)request;
-							String message = rq.getResult();
-							messageView.setText(message);
+							MelonRequest rq = (MelonRequest)request;
+							Melon melon = rq.getResult();
+							ArrayAdapter<Song> aa = new ArrayAdapter<Song>(MainActivity.this, android.R.layout.simple_list_item_1, melon.songs.song);
+							list.setAdapter(aa);
 						}
 					}, mHandler);
+					
 				}
 			}
 		});
