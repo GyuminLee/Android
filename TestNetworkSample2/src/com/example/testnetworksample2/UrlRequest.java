@@ -23,9 +23,7 @@ public class UrlRequest extends NetworkRequest {
 	
 	@Override
 	public void setRequestProperty(HttpURLConnection conn) {
-		// TODO Auto-generated method stub
 		super.setRequestProperty(conn);
-//		conn.setRequestProperty("accept", "text/plain");
 	}
 	
 	@Override
@@ -46,7 +44,6 @@ public class UrlRequest extends NetworkRequest {
 			}
 			result = sb.toString();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 			throw new ParsingException();
 		}
@@ -54,7 +51,6 @@ public class UrlRequest extends NetworkRequest {
 
 	@Override
 	public String getResult() {
-		// TODO Auto-generated method stub
 		return result;
 	}
 
