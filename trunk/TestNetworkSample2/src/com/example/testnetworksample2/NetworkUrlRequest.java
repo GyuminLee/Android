@@ -58,6 +58,7 @@ public class NetworkUrlRequest implements Runnable {
 					sb.append(line);
 					sb.append("\n\r");
 				}
+				resultMessage = sb.toString();
 				if (mHandler != null) {
 					mHandler.post(new Runnable() {
 
