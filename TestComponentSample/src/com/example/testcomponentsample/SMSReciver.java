@@ -25,7 +25,8 @@ public class SMSReciver extends BroadcastReceiver {
 		builder.setTicker("SMS Receive...");
 		builder.setSmallIcon(R.drawable.ic_launcher);
 		builder.setContentTitle("SMS");
-		builder.setContentText("ContentText");
+//		builder.setContentText("ContentText");
+		builder.setProgress(100, 50, false);
 		builder.setContentInfo("info");
 		builder.setWhen(System.currentTimeMillis());
 		builder.setAutoCancel(true);
@@ -34,12 +35,15 @@ public class SMSReciver extends BroadcastReceiver {
 		PendingIntent pi =  PendingIntent.getActivity(context, 0, i, 0);
 		builder.setContentIntent(pi);
 		
-		Intent ci = new Intent(context, SMSActivity.class);
+		builder.setFullScreenIntent(pi, true);
+		
+		Intent ci = new Intent(context, SMSCancelActivity.class);
 		PendingIntent cpi = PendingIntent.getActivity(context, 0, ci, 0);
 		builder.setDeleteIntent(cpi);
+//		builder.setOngoing(true);
 		
 		Notification nofication = builder.build();
-		nm.notify(mId++, nofication);
+		nm.notify(mId, nofication);
 	}
 
 }
