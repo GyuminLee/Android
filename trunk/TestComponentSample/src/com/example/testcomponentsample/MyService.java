@@ -88,6 +88,7 @@ public class MyService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+		isRunning = false;
 		unregisterReceiver(mReceiver);
 		Toast.makeText(this, "Service onDestroy", Toast.LENGTH_SHORT).show();
 	}
