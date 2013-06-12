@@ -19,6 +19,9 @@ public class DatabaseManager {
 	public interface OnQueryCompleteListener {
 		public void onCompleted(ArrayList<Person> personlist);
 	}
+	public interface OnQueryCompleteListener2 {
+		public void onCompleted(Cursor cursor);
+	}
 	
 	private static DatabaseManager instance;
 	public static DatabaseManager getInstance() {
@@ -42,6 +45,26 @@ public class DatabaseManager {
 		db.close();
 	}
 	
+	public void getPersonCurosr(final OnQueryCompleteListener2 listener,
+			final Handler handler) {
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				SQLiteDatabase db = mHelper.getReadableDatabase();
+				String[] columns = {PersonTable.ID, PersonTable.NAME, PersonTable.ADDRESS};
+				
+				final Cursor c = db.query(PersonTable.TABLE_NAME, columns, null, null, null, null, null);
+				handler.post(new Runnable() {
+					
+					@Override
+					public void run() {
+						// TODO Auto-generated method stub
+						listener.onCompleted(c);
+					}
+				});
+			}
+		}).start();
+	}
 	public void getPersonTable(
 			final OnQueryCompleteListener listener,
 			final Handler handler) {

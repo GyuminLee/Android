@@ -55,6 +55,13 @@
             android:layout_height="wrap_content"
             android:text="Show" />
 
+        <Button
+            android:id="@+id/getCursor"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cursor" />
+
     </LinearLayout>
 
     <ListView
