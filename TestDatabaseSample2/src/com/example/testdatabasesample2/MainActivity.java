@@ -25,6 +25,8 @@ public class MainActivity extends Activity {
 	EditText editAddressView;
 	ListView list;
 	Handler mHandler = new Handler();
+
+	Cursor mCurrentCursor = null;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,6 +78,10 @@ public class MainActivity extends Activity {
 					public void onCompleted(Cursor cursor) {
 						String[] from = {PersonTable.NAME, PersonTable.ADDRESS};
 						int[] to = {R.id.name, R.id.address};
+						if (mCurrentCursor != null) {
+							mCurrentCursor.close();
+						}
+						mCurrentCursor = cursor;
 						SimpleCursorAdapter adapter = new SimpleCursorAdapter(
 								MainActivity.this, 
 								R.layout.item_layout, 
@@ -98,6 +104,15 @@ public class MainActivity extends Activity {
 		});
 	}
 
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		if (mCurrentCursor != null) {
+			mCurrentCursor.close();
+			mCurrentCursor = null;
+		}
+		super.onDestroy();
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
