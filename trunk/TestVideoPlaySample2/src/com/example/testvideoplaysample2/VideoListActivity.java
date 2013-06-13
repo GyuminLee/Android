@@ -27,6 +27,8 @@ public class VideoListActivity extends FragmentActivity implements LoaderCallbac
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
 	
+	    setContentView(R.layout.video_list);
+	    
 	    list = (ListView)findViewById(R.id.listView1);
 	    String[] from = {MediaStore.Video.Media.TITLE};
 	    int[] to = {android.R.id.text1};
@@ -54,7 +56,11 @@ public class VideoListActivity extends FragmentActivity implements LoaderCallbac
 
 	@Override
 	public Loader<Cursor> onCreateLoader(int arg0, Bundle arg1) {
-		String[] columns = {MediaStore.Video.Media._ID, MediaStore.Video.Media.TITLE};
+		String[] columns = {MediaStore.Video.Media._ID, 
+				MediaStore.Video.Media.TITLE,
+				MediaStore.Video.Media.WIDTH,
+				MediaStore.Video.Media.HEIGHT,
+				MediaStore.Video.Media.DATA};
 		String selection = "((" + MediaStore.Video.Media.TITLE + " NOTNULL) AND ("
 	            + MediaStore.Video.Media.TITLE + " != '' ))";
 		String sortOrder = MediaStore.Video.Media.TITLE + " COLLATE LOCALIZED ASC";
