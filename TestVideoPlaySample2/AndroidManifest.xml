@@ -24,6 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name="VideoListActivity"></activity>
+        <activity android:name="SurfacePlayActivity"></activity>
     </application>
 
 </manifest>
