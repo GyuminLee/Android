@@ -7,6 +7,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
 import android.widget.RemoteViews;
+import android.widget.TextView;
 
 public class MyService extends Service {
 
@@ -35,6 +36,11 @@ public class MyService extends Service {
 		
 		RemoteViews views = new RemoteViews(getPackageName(), R.layout.app_widget_layout);
 		views.setTextViewText(R.id.message, "message : " + mCount);
+		float size = 40;
+		if (mCount % 2 == 0) {
+			size = 20;
+		}
+		views.setFloat(R.id.message, "setTextSize", size);
 		views.setImageViewResource(R.id.icon, resIds[mCount % resIds.length]);
 		Intent i = new Intent(this, MainActivity.class);
 		PendingIntent pi = PendingIntent.getActivity(this, 0, i, 0);
