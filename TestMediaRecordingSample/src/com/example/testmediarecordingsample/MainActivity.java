@@ -6,6 +6,7 @@ import java.io.IOException;
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.OnErrorListener;
 import android.net.Uri;
@@ -24,11 +25,14 @@ public class MainActivity extends Activity {
 	MediaRecorder mRecorder;
 	File mOutputDirectory;
 	File mOutputFile;
+	Camera mCamera;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		mCamera = Camera.open();
+		mCamera.setDisplayOrientation(90);
 		surfaceView = (SurfaceView)findViewById(R.id.surfaceView1);
 		surfaceView.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 		mRecorder = new MediaRecorder();
@@ -48,6 +52,8 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				mOutputFile = new File(mOutputDirectory, "myFile" + System.currentTimeMillis());
 
+				mCamera.unlock();
+				mRecorder.setCamera(mCamera);
 				mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 				mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 				
