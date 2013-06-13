@@ -3,22 +3,33 @@ package com.example.testmediaplayersample;
 import java.io.IOException;
 
 import android.content.BroadcastReceiver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.database.Cursor;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.LoaderManager.LoaderCallbacks;
+import android.support.v4.content.CursorLoader;
+import android.support.v4.content.Loader;
+import android.support.v4.widget.SimpleCursorAdapter;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cursor>{
 
 	MediaPlayer mPlayer = null;
 
@@ -33,7 +44,10 @@ public class MainActivity extends FragmentActivity {
 	ListView list;
 	Handler mHandler = new Handler();
 	AudioManager mAudioManager;
+	TextView titleView;
 
+	SimpleCursorAdapter mAdapter;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,7 +57,60 @@ public class MainActivity extends FragmentActivity {
 		progressView = (SeekBar) findViewById(R.id.progress);
 		volumnView = (SeekBar) findViewById(R.id.volumn);
 		list = (ListView) findViewById(R.id.listView1);
+		titleView = (TextView)findViewById(R.id.title);
+		
+		String[] from = { MediaStore.Audio.Media.TITLE };
+		int[] to = {android.R.id.text1};
+		
+		mAdapter = new SimpleCursorAdapter(this, 
+				android.R.layout.simple_list_item_1, 
+				null, 
+				from, 
+				to, 
+				0);
+		list.setAdapter(mAdapter);
+		list.setOnItemClickListener(new OnItemClickListener() {
 
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				Uri contentUri = ContentUris.withAppendedId(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, id);
+				
+				Cursor c = (Cursor)mAdapter.getItem(position);
+				int titleIndex = c.getColumnIndex(MediaStore.Audio.Media.TITLE);
+				String title = c.getString(titleIndex);
+				titleView.setText(title);
+				
+				stop();
+				mPlayer.reset();
+				mState = PlayerState.IDLE;
+				try {
+					mPlayer.setDataSource(MainActivity.this, contentUri);
+					mState = PlayerState.INITIALIZED;
+					mPlayer.prepare();
+					mState = PlayerState.PREPARED;
+					int duration = mPlayer.getDuration();
+					progressView.setMax(duration);
+					progressView.setProgress(0);
+					play();
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+		});
+		getSupportLoaderManager().initLoader(0, null, this);
+		
 		int duration = mPlayer.getDuration();
 		progressView.setMax(duration);
 		progressView.setProgress(0);
@@ -240,6 +307,26 @@ public class MainActivity extends FragmentActivity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	@Override
+	public Loader<Cursor> onCreateLoader(int code, Bundle args) {
+		String[] columns = {MediaStore.Audio.Media._ID, MediaStore.Audio.Media.TITLE};
+		String selection = "((" + MediaStore.Audio.Media.TITLE + " NOTNULL) AND ("
+	            + MediaStore.Audio.Media.TITLE + " != '' ))";
+		String sortOrder = MediaStore.Audio.Media.TITLE + " COLLATE LOCALIZED ASC";
+		return new CursorLoader(this, MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, columns, selection, null, sortOrder);
+	}
+
+	@Override
+	public void onLoadFinished(Loader<Cursor> loader, Cursor cursor) {
+		mAdapter.swapCursor(cursor);
+		
+	}
+
+	@Override
+	public void onLoaderReset(Loader<Cursor> loader) {
+		mAdapter.swapCursor(null);
 	}
 
 }
