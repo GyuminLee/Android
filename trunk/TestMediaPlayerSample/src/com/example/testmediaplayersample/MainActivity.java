@@ -293,6 +293,13 @@ public class MainActivity extends FragmentActivity implements LoaderCallbacks<Cu
 	}
 
 	@Override
+	protected void onResume() {
+		// TODO Auto-generated method stub
+		getSupportLoaderManager().restartLoader(0, null, this);
+		super.onResume();
+	}
+	
+	@Override
 	protected void onDestroy() {
 		if (mPlayer != null) {
 			mPlayer.release();
