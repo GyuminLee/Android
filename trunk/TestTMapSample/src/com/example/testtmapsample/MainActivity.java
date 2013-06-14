@@ -1,7 +1,14 @@
 package com.example.testtmapsample;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -11,12 +18,15 @@ import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
@@ -25,15 +35,18 @@ import com.skp.Tmap.TMapView;
 public class MainActivity extends Activity {
 
 	TMapView mMapView;
+	EditText keywordView;
 	LocationManager mLocationManager;
 	boolean isInitialized = false;
 	HashMap<String,TMapMarkerItem> markers = new HashMap<String, TMapMarkerItem>();
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mMapView = (TMapView)findViewById(R.id.map);
+		keywordView = (EditText)findViewById(R.id.keyword);
 		new Thread(new Runnable() {
 			
 			@Override
@@ -90,6 +103,17 @@ public class MainActivity extends Activity {
 				Bitmap righticon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_sad)).getBitmap();
 				item.setCalloutRightButtonImage(righticon);
 				mMapView.addMarkerItem("markerid", item);
+			}
+		});
+		btn = (Button)findViewById(R.id.search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					new TotalPOIWorker().execute(keyword);
+				}
 			}
 		});
 	}
@@ -173,14 +197,12 @@ public class MainActivity extends Activity {
 		public boolean onPressUpEvent(ArrayList<TMapMarkerItem> markers,
 				ArrayList<TMapPOIItem> pois, TMapPoint mappoint, PointF point) {
 			
-			Toast.makeText(MainActivity.this, "onPressUpEvent : " + mappoint.getLatitude() + "," + mappoint.getLongitude(), Toast.LENGTH_SHORT).show();
 			return false;
 		}
 		
 		@Override
 		public boolean onPressEvent(ArrayList<TMapMarkerItem> markers,
 				ArrayList<TMapPOIItem> pois, TMapPoint mappoint, PointF point) {
-			Toast.makeText(MainActivity.this, "onPressEvent : " + mappoint.getLatitude() + "," + mappoint.getLongitude(), Toast.LENGTH_SHORT).show();
 			
 			for (TMapMarkerItem item : markers) {
 				if (item.getID().equals("markerid")) {
@@ -195,10 +217,52 @@ public class MainActivity extends Activity {
 	TMapView.OnCalloutRightButtonClickCallback callout = new TMapView.OnCalloutRightButtonClickCallback() {
 		
 		@Override
-		public void onCalloutRightButton(TMapMarkerItem arg0) {
-			
+		public void onCalloutRightButton(TMapMarkerItem item) {
+			Toast.makeText(MainActivity.this, "callout", Toast.LENGTH_SHORT).show();
 		}
 	};
+	
+	public class TotalPOIWorker extends AsyncTask<String, Integer, ArrayList<TMapPOIItem>> {
+
+		@Override
+		protected ArrayList<TMapPOIItem> doInBackground(String... params) {
+			if (params != null && params.length > 0) {
+				String keyword = params[0];
+				TMapData data = new TMapData();
+				try {
+					ArrayList<TMapPOIItem> items = data.findAllPOI(keyword);
+					return items;
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (FactoryConfigurationError e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(ArrayList<TMapPOIItem> result) {
+			mMapView.addTMapPOIItem(result);
+			if (result.size() > 0) {
+				TMapPOIItem item = result.get(0);
+				mMapView.setCenterPoint(item.getPOIPoint().getLongitude(), 
+						item.getPOIPoint().getLatitude());
+			}
+		}
+		
+	}
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
