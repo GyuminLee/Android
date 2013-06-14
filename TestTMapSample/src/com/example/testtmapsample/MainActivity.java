@@ -88,6 +88,7 @@ public class MainActivity extends Activity {
 		@Override
 		public void onLocationChanged(Location location) {
 			if (isInitialized) {
+				setMyLocation(location);
 				setMoveMap(location);
 			} else {
 				mCacheLocation = location;
@@ -114,6 +115,7 @@ public class MainActivity extends Activity {
 		mMapView.setOnClickListenerCallBack(clickCallback);
 		isInitialized = true;
 		if (mCacheLocation != null) {
+			setMyLocation(mCacheLocation);
 			setMoveMap(mCacheLocation);
 			mCacheLocation = null;
 		}
