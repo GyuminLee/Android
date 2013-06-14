@@ -1,6 +1,7 @@
 package com.example.testtmapsample;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.content.Context;
@@ -12,6 +13,8 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.skp.Tmap.TMapMarkerItem;
@@ -24,6 +27,7 @@ public class MainActivity extends Activity {
 	TMapView mMapView;
 	LocationManager mLocationManager;
 	boolean isInitialized = false;
+	HashMap<String,TMapMarkerItem> markers = new HashMap<String, TMapMarkerItem>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -47,6 +51,47 @@ public class MainActivity extends Activity {
 		}).start();
 		
 		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		Button btn = (Button)findViewById(R.id.zoomIn);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mMapView.MapZoomIn();
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.zoomOut);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mMapView.MapZoomOut();
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.addMarker);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				TMapMarkerItem item = new TMapMarkerItem();
+				TMapPoint center = mMapView.getCenterPoint();
+				TMapPoint point = new TMapPoint(center.getLatitude(), center.getLongitude());
+				item.setTMapPoint(point);
+				Bitmap icon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_happy)).getBitmap();
+				item.setIcon(icon);
+				item.setPosition(0.5f, 0.5f);
+				item.setName("MyMarker");
+				item.setCanShowCallout(true);
+				item.setCalloutTitle("title");
+				item.setCalloutSubTitle("sub title");
+				Bitmap lefticon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_neutral)).getBitmap();
+				item.setCalloutLeftImage(lefticon);
+				Bitmap righticon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_sad)).getBitmap();
+				item.setCalloutRightButtonImage(righticon);
+				mMapView.addMarkerItem("markerid", item);
+			}
+		});
 	}
 	
 	@Override
@@ -113,6 +158,7 @@ public class MainActivity extends Activity {
 		mMapView.setTrafficInfo(true);
 		mMapView.setSightVisible(true);
 		mMapView.setOnClickListenerCallBack(clickCallback);
+		mMapView.setOnCalloutRightButtonClickListener(callout);
 		isInitialized = true;
 		if (mCacheLocation != null) {
 			setMyLocation(mCacheLocation);
@@ -135,11 +181,25 @@ public class MainActivity extends Activity {
 		public boolean onPressEvent(ArrayList<TMapMarkerItem> markers,
 				ArrayList<TMapPOIItem> pois, TMapPoint mappoint, PointF point) {
 			Toast.makeText(MainActivity.this, "onPressEvent : " + mappoint.getLatitude() + "," + mappoint.getLongitude(), Toast.LENGTH_SHORT).show();
+			
+			for (TMapMarkerItem item : markers) {
+				if (item.getID().equals("markerid")) {
+					
+				}
+			}
 
 			return false;
 		}
 	};
 
+	TMapView.OnCalloutRightButtonClickCallback callout = new TMapView.OnCalloutRightButtonClickCallback() {
+		
+		@Override
+		public void onCalloutRightButton(TMapMarkerItem arg0) {
+			
+		}
+	};
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
