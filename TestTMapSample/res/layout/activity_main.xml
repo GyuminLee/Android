@@ -14,6 +14,34 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/addMarker"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="add Marker" />
+
+        <Button
+            android:id="@+id/zoomOut"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ZoomOut" />
+
+        <Button
+            android:id="@+id/zoomIn"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ZoomIn" />
+
+    </LinearLayout>
+
     <com.skp.Tmap.TMapView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
