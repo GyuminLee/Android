@@ -1,6 +1,7 @@
 package com.example.googlemaptest;
 
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
 import java.net.URLEncoder;
 
 import com.example.googlemaptest.network.NetworkRequest;
@@ -26,4 +27,15 @@ public class GooglePlaceRequest extends NetworkRequest {
 			e.printStackTrace();
 		}
 	}
+
+	@Override
+	public boolean setHeader(HttpURLConnection conn) {
+		// TODO Auto-generated method stub
+		conn.setRequestProperty("Accept", "application/json");
+		conn.setRequestProperty("appKey", "");
+		return super.setHeader(conn);
+	}
+	
+	
+	
 }
