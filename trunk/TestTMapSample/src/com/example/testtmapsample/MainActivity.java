@@ -39,26 +39,26 @@ public class MainActivity extends Activity {
 	EditText keywordView;
 	LocationManager mLocationManager;
 	boolean isInitialized = false;
-	HashMap<String,TMapMarkerItem> markers = new HashMap<String, TMapMarkerItem>();
-	
+	HashMap<String, TMapMarkerItem> markers = new HashMap<String, TMapMarkerItem>();
+
 	TMapPoint mSelectedPoint;
 	TMapPoint mStartPoint;
 	TMapPoint mEndPoint;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		mMapView = (TMapView)findViewById(R.id.map);
-		keywordView = (EditText)findViewById(R.id.keyword);
+		mMapView = (TMapView) findViewById(R.id.map);
+		keywordView = (EditText) findViewById(R.id.keyword);
 		new Thread(new Runnable() {
-			
+
 			@Override
 			public void run() {
 				mMapView.setSKPMapApiKey("458a10f5-c07e-34b5-b2bd-4a891e024c2a");
 				mMapView.setLanguage(mMapView.LANGUAGE_KOREAN);
 				runOnUiThread(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						setUpMap();
@@ -66,52 +66,56 @@ public class MainActivity extends Activity {
 				});
 			}
 		}).start();
-		
-		mLocationManager = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
-		Button btn = (Button)findViewById(R.id.zoomIn);
+
+		mLocationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
+		Button btn = (Button) findViewById(R.id.zoomIn);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				mMapView.MapZoomIn();
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.zoomOut);
+
+		btn = (Button) findViewById(R.id.zoomOut);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				mMapView.MapZoomOut();
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.addMarker);
+
+		btn = (Button) findViewById(R.id.addMarker);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				TMapMarkerItem item = new TMapMarkerItem();
 				TMapPoint center = mMapView.getCenterPoint();
-				TMapPoint point = new TMapPoint(center.getLatitude(), center.getLongitude());
+				TMapPoint point = new TMapPoint(center.getLatitude(), center
+						.getLongitude());
 				item.setTMapPoint(point);
-				Bitmap icon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_happy)).getBitmap();
+				Bitmap icon = ((BitmapDrawable) getResources().getDrawable(
+						R.drawable.stat_happy)).getBitmap();
 				item.setIcon(icon);
 				item.setPosition(0.5f, 0.5f);
 				item.setName("MyMarker");
 				item.setCanShowCallout(true);
 				item.setCalloutTitle("title");
 				item.setCalloutSubTitle("sub title");
-				Bitmap lefticon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_neutral)).getBitmap();
+				Bitmap lefticon = ((BitmapDrawable) getResources().getDrawable(
+						R.drawable.stat_neutral)).getBitmap();
 				item.setCalloutLeftImage(lefticon);
-				Bitmap righticon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_sad)).getBitmap();
+				Bitmap righticon = ((BitmapDrawable) getResources()
+						.getDrawable(R.drawable.stat_sad)).getBitmap();
 				item.setCalloutRightButtonImage(righticon);
 				mMapView.addMarkerItem("markerid", item);
 			}
 		});
-		btn = (Button)findViewById(R.id.search);
+		btn = (Button) findViewById(R.id.search);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				String keyword = keywordView.getText().toString();
@@ -120,91 +124,97 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.setstart);
+
+		btn = (Button) findViewById(R.id.setstart);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if (mSelectedPoint != null) {
 					mStartPoint = mSelectedPoint;
 					mSelectedPoint = null;
 				} else {
-					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MainActivity.this, "not selected",
+							Toast.LENGTH_SHORT).show();
 				}
-				
+
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.setend);
+
+		btn = (Button) findViewById(R.id.setend);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if (mSelectedPoint != null) {
 					mEndPoint = mSelectedPoint;
 					mSelectedPoint = null;
 				} else {
-					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MainActivity.this, "not selected",
+							Toast.LENGTH_SHORT).show();
 				}
-				
+
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.route);
+
+		btn = (Button) findViewById(R.id.route);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if (mStartPoint != null && mEndPoint != null) {
-					new RoutingSearchWorker().execute(mStartPoint,mEndPoint);
+					new RoutingSearchWorker().execute(mStartPoint, mEndPoint);
 					mStartPoint = null;
 					mEndPoint = null;
 				} else {
-					Toast.makeText(MainActivity.this, "not setting start point or end point ", Toast.LENGTH_SHORT).show();
+					Toast.makeText(MainActivity.this,
+							"not setting start point or end point ",
+							Toast.LENGTH_SHORT).show();
 				}
-				
+
 			}
 		});
-		
+
 	}
-	
+
 	@Override
 	protected void onStart() {
 		// TODO Auto-generated method stub
 		super.onStart();
-		Location location = mLocationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		Location location = mLocationManager
+				.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		if (location != null) {
 			mListener.onLocationChanged(location);
 		}
-		mLocationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 2000, 0, mListener);
+		mLocationManager.requestLocationUpdates(
+				LocationManager.NETWORK_PROVIDER, 2000, 0, mListener);
 	}
-	
+
 	@Override
 	protected void onStop() {
 		super.onStop();
 		mLocationManager.removeUpdates(mListener);
 	}
-	
+
 	Location mCacheLocation = null;
-	
+
 	LocationListener mListener = new LocationListener() {
-		
+
 		@Override
 		public void onStatusChanged(String provider, int status, Bundle extras) {
-			
+
 		}
-		
+
 		@Override
 		public void onProviderEnabled(String provider) {
-			
+
 		}
-		
+
 		@Override
 		public void onProviderDisabled(String provider) {
-			
+
 		}
-		
+
 		@Override
 		public void onLocationChanged(Location location) {
 			if (isInitialized) {
@@ -215,21 +225,23 @@ public class MainActivity extends Activity {
 			}
 		}
 	};
-	
+
 	private void setMoveMap(Location location) {
 		mMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
 	}
 
 	private void setMyLocation(Location location) {
-		mMapView.setLocationPoint(location.getLongitude(), location.getLatitude());
-		Bitmap icon = ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap();
+		mMapView.setLocationPoint(location.getLongitude(),
+				location.getLatitude());
+		Bitmap icon = ((BitmapDrawable) getResources().getDrawable(
+				R.drawable.ic_launcher)).getBitmap();
 		mMapView.setIcon(icon);
 		mMapView.setIconVisibility(true);
 	}
-	
+
 	private void setUpMap() {
-//		mMapView.setCompassMode(true);
-//		mMapView.setTrackingMode(true);
+		// mMapView.setCompassMode(true);
+		// mMapView.setTrackingMode(true);
 		mMapView.setTrafficInfo(true);
 		mMapView.setSightVisible(true);
 		mMapView.setOnClickListenerCallBack(clickCallback);
@@ -241,24 +253,24 @@ public class MainActivity extends Activity {
 			mCacheLocation = null;
 		}
 	}
-	
+
 	TMapView.OnClickListenerCallback clickCallback = new TMapView.OnClickListenerCallback() {
-		
+
 		@Override
 		public boolean onPressUpEvent(ArrayList<TMapMarkerItem> markers,
 				ArrayList<TMapPOIItem> pois, TMapPoint mappoint, PointF point) {
-			
+
 			return false;
 		}
-		
+
 		@Override
 		public boolean onPressEvent(ArrayList<TMapMarkerItem> markers,
 				ArrayList<TMapPOIItem> pois, TMapPoint mappoint, PointF point) {
-			
-			for (TMapMarkerItem marker :markers) {
+
+			for (TMapMarkerItem marker : markers) {
 				mSelectedPoint = marker.getTMapPoint();
 			}
-			
+
 			for (TMapPOIItem poi : pois) {
 				mSelectedPoint = poi.getPOIPoint();
 			}
@@ -268,14 +280,16 @@ public class MainActivity extends Activity {
 	};
 
 	TMapView.OnCalloutRightButtonClickCallback callout = new TMapView.OnCalloutRightButtonClickCallback() {
-		
+
 		@Override
 		public void onCalloutRightButton(TMapMarkerItem item) {
-			Toast.makeText(MainActivity.this, "callout", Toast.LENGTH_SHORT).show();
+			Toast.makeText(MainActivity.this, "callout", Toast.LENGTH_SHORT)
+					.show();
 		}
 	};
-	
-	public class TotalPOIWorker extends AsyncTask<String, Integer, ArrayList<TMapPOIItem>> {
+
+	public class TotalPOIWorker extends
+			AsyncTask<String, Integer, ArrayList<TMapPOIItem>> {
 
 		@Override
 		protected ArrayList<TMapPOIItem> doInBackground(String... params) {
@@ -304,21 +318,23 @@ public class MainActivity extends Activity {
 			}
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(ArrayList<TMapPOIItem> result) {
-			mMapView.addTMapPOIItem(result);
-			if (result.size() > 0) {
-				TMapPOIItem item = result.get(0);
-				mMapView.setCenterPoint(item.getPOIPoint().getLongitude(), 
-						item.getPOIPoint().getLatitude());
+			if (result != null) {
+				mMapView.addTMapPOIItem(result);
+				if (result.size() > 0) {
+					TMapPOIItem item = result.get(0);
+					mMapView.setCenterPoint(item.getPOIPoint().getLongitude(),
+							item.getPOIPoint().getLatitude());
+				}
 			}
 		}
-		
+
 	}
-	
-	
-	public class RoutingSearchWorker extends AsyncTask<TMapPoint, Integer, TMapPolyLine> {
+
+	public class RoutingSearchWorker extends
+			AsyncTask<TMapPoint, Integer, TMapPolyLine> {
 
 		@Override
 		protected TMapPolyLine doInBackground(TMapPoint... params) {
@@ -345,23 +361,25 @@ public class MainActivity extends Activity {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				
+
 			}
 			return null;
 		}
-		
+
 		@Override
 		protected void onPostExecute(TMapPolyLine result) {
 			if (result != null) {
 				mMapView.addTMapPath(result);
-				Bitmap startIcon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_happy)).getBitmap();
-				Bitmap endIcon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_sad)).getBitmap();
+				Bitmap startIcon = ((BitmapDrawable) getResources()
+						.getDrawable(R.drawable.stat_happy)).getBitmap();
+				Bitmap endIcon = ((BitmapDrawable) getResources().getDrawable(
+						R.drawable.stat_sad)).getBitmap();
 				mMapView.setTMapPathIcon(startIcon, endIcon);
 			}
 			super.onPostExecute(result);
 		}
 	}
-	
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
