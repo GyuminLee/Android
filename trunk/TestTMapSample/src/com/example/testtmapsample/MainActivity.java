@@ -30,6 +30,7 @@ import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapPolyLine;
 import com.skp.Tmap.TMapView;
 
 public class MainActivity extends Activity {
@@ -40,6 +41,9 @@ public class MainActivity extends Activity {
 	boolean isInitialized = false;
 	HashMap<String,TMapMarkerItem> markers = new HashMap<String, TMapMarkerItem>();
 	
+	TMapPoint mSelectedPoint;
+	TMapPoint mStartPoint;
+	TMapPoint mEndPoint;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +120,53 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.setstart);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (mSelectedPoint != null) {
+					mStartPoint = mSelectedPoint;
+					mSelectedPoint = null;
+				} else {
+					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+				}
+				
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.setend);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (mSelectedPoint != null) {
+					mEndPoint = mSelectedPoint;
+					mSelectedPoint = null;
+				} else {
+					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+				}
+				
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.route);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (mStartPoint != null && mEndPoint != null) {
+					new RoutingSearchWorker().execute(mStartPoint,mEndPoint);
+					mStartPoint = null;
+					mEndPoint = null;
+				} else {
+					Toast.makeText(MainActivity.this, "not setting start point or end point ", Toast.LENGTH_SHORT).show();
+				}
+				
+			}
+		});
+		
 	}
 	
 	@Override
@@ -204,10 +255,12 @@ public class MainActivity extends Activity {
 		public boolean onPressEvent(ArrayList<TMapMarkerItem> markers,
 				ArrayList<TMapPOIItem> pois, TMapPoint mappoint, PointF point) {
 			
-			for (TMapMarkerItem item : markers) {
-				if (item.getID().equals("markerid")) {
-					
-				}
+			for (TMapMarkerItem marker :markers) {
+				mSelectedPoint = marker.getTMapPoint();
+			}
+			
+			for (TMapPOIItem poi : pois) {
+				mSelectedPoint = poi.getPOIPoint();
 			}
 
 			return false;
@@ -262,6 +315,51 @@ public class MainActivity extends Activity {
 			}
 		}
 		
+	}
+	
+	
+	public class RoutingSearchWorker extends AsyncTask<TMapPoint, Integer, TMapPolyLine> {
+
+		@Override
+		protected TMapPolyLine doInBackground(TMapPoint... params) {
+			if (params != null && params.length >= 2) {
+				TMapPoint start = params[0];
+				TMapPoint end = params[1];
+				TMapData data = new TMapData();
+				try {
+					TMapPolyLine line = data.findPathData(start, end);
+					return line;
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (FactoryConfigurationError e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(TMapPolyLine result) {
+			if (result != null) {
+				mMapView.addTMapPath(result);
+				Bitmap startIcon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_happy)).getBitmap();
+				Bitmap endIcon = ((BitmapDrawable)getResources().getDrawable(R.drawable.stat_sad)).getBitmap();
+				mMapView.setTMapPathIcon(startIcon, endIcon);
+			}
+			super.onPostExecute(result);
+		}
 	}
 	
 	@Override
