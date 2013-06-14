@@ -107,6 +107,7 @@ public class MainActivity extends FragmentActivity implements
 		mMap.setOnInfoWindowClickListener(this);
 		mMap.setOnMapClickListener(this);
 		mMap.setOnMarkerClickListener(this);
+		mMap.setInfoWindowAdapter(new MyInfoWindow(this));
 	}
 	
 
