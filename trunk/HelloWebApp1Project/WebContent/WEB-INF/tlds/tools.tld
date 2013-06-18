@@ -11,6 +11,21 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
+		<name>line2</name>
+		<tag-class>com.example.web.tool2.LineTag</tag-class>
+		<body-content>empty</body-content>
+		<attribute>
+			<name>color</name>
+			<type>java.lang.String</type>
+			<required>true</required>
+		</attribute>
+		<attribute>
+			<name>size</name>
+			<type>java.lang.Integer</type>
+			<required>true</required>
+		</attribute>
+	</tag>
+	<tag>
 		<name>box</name>
 		<tag-class>com.example.web.tool.BoxTag</tag-class>
 		<body-content>scriptless</body-content>
