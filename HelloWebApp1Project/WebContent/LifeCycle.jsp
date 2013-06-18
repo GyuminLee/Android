@@ -17,7 +17,7 @@
 %>
 
 <%
-	out.println("init Param : " + pageContext.getServletConfig().getInitParameter("logfile") + ", count : " + count++ + "<BR>");
+	out.println("init Param : " + getInitParameter("logfile") + ", count : " + count++ + "<BR>");
 	out.println("context init param : " + application.getInitParameter("debug") + "<BR>");
 	out.println("server : " + application.getServerInfo());
 	out.println("version : " + application.getMajorVersion());
