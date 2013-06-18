@@ -7,8 +7,11 @@
 <title>Insert title here</title>
 </head>
 <body>
-이름() : ${name}<br>
-비밀번호() : ${password}<br>
-param1 : <%= request.getParameter("name1") %>
+<%
+	Cookie cookie = new Cookie("field1","value1");
+	cookie.setMaxAge(3600);
+	response.addCookie(cookie);
+	out.println("Cookie Added");
+%>
 </body>
 </html>

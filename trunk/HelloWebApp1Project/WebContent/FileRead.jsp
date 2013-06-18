@@ -21,9 +21,10 @@
 			request.setAttribute("password", token[1]);
 		}
 	}
-	RequestDispatcher dispatcher = request.getRequestDispatcher("Show.jsp");
-	dispatcher.forward(request, response);
 	reader.close();
 %>
+<jsp:forward page="Show.jsp">
+	<jsp:param value="value1" name="name1"/>
+</jsp:forward>
 </body>
 </html>

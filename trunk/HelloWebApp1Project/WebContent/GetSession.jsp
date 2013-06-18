@@ -7,8 +7,8 @@
 <title>Insert title here</title>
 </head>
 <body>
-이름() : ${name}<br>
-비밀번호() : ${password}<br>
-param1 : <%= request.getParameter("name1") %>
+<%
+	out.println((String)session.getAttribute("name"));
+%>
 </body>
 </html>
