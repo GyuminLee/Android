@@ -19,6 +19,14 @@
       <servlet-name>MyLifeCycle</servlet-name>
       <url-pattern>/MyLifeCycle</url-pattern>
   </servlet-mapping>
+  <error-page>
+      <error-code>404</error-code>
+      <location>/error.jsp</location>
+  </error-page>
+  <error-page>
+      <exception-type>java.io.IOException</exception-type>
+      <location>/error.jsp</location>
+  </error-page>
   <context-param>
       <param-name>debug</param-name>
       <param-value>true</param-value>
