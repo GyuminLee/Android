@@ -7,6 +7,9 @@
 	      <taglib-location>/WEB-INF/tlds/tools.tld</taglib-location>
 	  </taglib>
   </jsp-config>
+  <session-config>
+      <session-timeout>3600</session-timeout>
+  </session-config>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>

@@ -7,8 +7,10 @@
 <title>Insert title here</title>
 </head>
 <body>
-이름() : ${name}<br>
-비밀번호() : ${password}<br>
-param1 : <%= request.getParameter("name1") %>
+<%
+	String name = request.getParameter("name");
+	session.setAttribute("name", name);
+%>
+Session Setting
 </body>
 </html>
