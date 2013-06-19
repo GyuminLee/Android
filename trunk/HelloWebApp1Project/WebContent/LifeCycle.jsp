@@ -9,11 +9,7 @@
 </head>
 <%! 
 	String initParam;
-	int count;
-
-	public void jspInit() {
-		count = 10;
-	}
+	int count = 10;
 %>
 
 <%
@@ -22,9 +18,6 @@
 	out.println("server : " + application.getServerInfo());
 	out.println("version : " + application.getMajorVersion());
 	application.log("LifeCylce.jsp called");
-%>
-<%! public void jspDestroy() {
-	}
 %>
 <body>
 

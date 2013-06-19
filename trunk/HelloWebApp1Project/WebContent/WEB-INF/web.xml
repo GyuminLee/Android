@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://java.sun.com/xml/ns/javaee" xmlns:jsp="http://java.sun.com/xml/ns/javaee/jsp" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd" xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd" id="WebApp_ID" version="3.0">
-  <display-name>HelloWebApp1Project</display-name>  
+  <display-name>HelloWebApp1Project</display-name>
   <jsp-config>
     <taglib>
       <taglib-uri>/taglibs/tools.tld</taglib-uri>
@@ -8,32 +8,72 @@
     </taglib>
   </jsp-config>
   <servlet>
-      <servlet-name>MyLifeCycle</servlet-name>
-      <jsp-file>/LifeCycle.jsp</jsp-file>
-      <init-param>
-          <param-name>logfile</param-name>
-          <param-value>log.txt</param-value>
-      </init-param>
+    <servlet-name>MyLifeCycle</servlet-name>
+    <jsp-file>/LifeCycle.jsp</jsp-file>
+    <init-param>
+      <param-name>logfile</param-name>
+      <param-value>log.txt</param-value>
+    </init-param>
   </servlet>
   <servlet-mapping>
-      <servlet-name>MyLifeCycle</servlet-name>
-      <url-pattern>/MyLifeCycle</url-pattern>
+    <servlet-name>MyLifeCycle</servlet-name>
+    <url-pattern>/MyLifeCycle</url-pattern>
   </servlet-mapping>
   <error-page>
-      <error-code>404</error-code>
-      <location>/error.jsp</location>
+    <error-code>404</error-code>
+    <location>/error.jsp</location>
   </error-page>
   <error-page>
-      <exception-type>java.io.IOException</exception-type>
-      <location>/error.jsp</location>
+    <exception-type>java.io.IOException</exception-type>
+    <location>/error.jsp</location>
   </error-page>
   <context-param>
-      <param-name>debug</param-name>
-      <param-value>true</param-value>
+    <param-name>debug</param-name>
+    <param-value>true</param-value>
   </context-param>
   <session-config>
     <session-timeout>3600</session-timeout>
   </session-config>
+  <security-constraint>
+      <web-resource-collection>
+          <web-resource-name>security2</web-resource-name>
+          <url-pattern>/CustomAction.jsp</url-pattern>
+      </web-resource-collection>
+      <auth-constraint>
+          <role-name>administrator</role-name>
+      </auth-constraint>
+      <user-data-constraint>
+          <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+      </user-data-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>security</web-resource-name>
+      <url-pattern>/security/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>administrator</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  <security-constraint>
+    <web-resource-collection>
+      <web-resource-name>basicauth</web-resource-name>
+      <url-pattern>/basicauth</url-pattern>
+    </web-resource-collection>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
+  </security-constraint>
+  <login-config>
+    <auth-method>FORM</auth-method>
+    <form-login-config>
+        <form-login-page>/login.jsp</form-login-page>
+        <form-error-page>/login_error.jsp</form-error-page>
+    </form-login-config>
+  </login-config>
   <welcome-file-list>
     <welcome-file>index.html</welcome-file>
     <welcome-file>index.htm</welcome-file>

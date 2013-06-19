@@ -9,7 +9,6 @@
 <body>
 <%
 	int div = 0;
-	int f = 10 / div;
 %>
 </body>
 </html>
