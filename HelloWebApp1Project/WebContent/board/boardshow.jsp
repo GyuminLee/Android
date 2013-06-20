@@ -22,22 +22,25 @@
 	statement.setInt(DBConstant.BoardTable.FIELD_ID, id);
 	ResultSet rs = statement.executeQuery();
 	if (rs.next()) {
-		pageContext.setAttribute("RESULT", rs);
+		pageContext.setAttribute("AUTHOR", rs.getString("author"));
+		pageContext.setAttribute("TITLE", rs.getString("title"));
+		pageContext.setAttribute("CONTENT", rs.getString("content"));
+		pageContext.setAttribute("ID", rs.getInt("id"));
 	} else {
 		throw new IOException("Data Empty");
 	}
 %>
 <table>
-<tr><td>Author</td><td><c:out value="${RESULT.author}" /></td></tr>
-<tr><td>Title</td><td><c:out value="${RESULT.title}" /></td></tr>
+<tr><td>Author</td><td><c:out value="${AUTHOR}" /></td></tr>
+<tr><td>Title</td><td><c:out value="${TITLE}" /></td></tr>
 <tr><td colspan="2">Content</td></tr>
-<tr><td colspan="2"><c:out value="${RESULT.content}" /></td></tr>
+<tr><td colspan="2"><c:out value="${CONTENT}" /></td></tr>
 </table>
 
 <%
-	if (request.getRemoteUser().equals(rs.getString("id"))) {
+	if (request.getRemoteUser().equals(rs.getString("author"))) {
 %>
-	<a href="${RESULT.id}/updateForm.jsp">수정</a> <a href="${RESULT.id}/boarddelete">삭제</a>
+	<a href="updateForm.jsp/${ID}">수정</a> <a href="boarddelete/${ID}">삭제</a>
 <%
 	}
 %>

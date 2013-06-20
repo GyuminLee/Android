@@ -25,7 +25,7 @@
   </servlet>
   <servlet-mapping>
     <servlet-name>boarddetail</servlet-name>
-    <url-pattern>/board/*/boardshow.jsp</url-pattern>
+    <url-pattern>/board/boardshow/*</url-pattern>
   </servlet-mapping>
   <error-page>
     <error-code>404</error-code>

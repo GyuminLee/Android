@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Servlet Filter implementation class ReportFilter
  */
-@WebFilter("/*")
 public class ReportFilter implements Filter {
 
     /**
