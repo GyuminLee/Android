@@ -30,7 +30,7 @@
 		throw new IOException("Data Empty");
 	}
 %>
-<table>
+<table border="1">
 <tr><td>Author</td><td><c:out value="${AUTHOR}" /></td></tr>
 <tr><td>Title</td><td><c:out value="${TITLE}" /></td></tr>
 <tr><td colspan="2">Content</td></tr>
