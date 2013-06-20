@@ -36,20 +36,15 @@ public class InsertServlet extends HttpServlet {
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
 		try {
-			Class.forName("com.mysql.jdbc.Driver");
-			Connection conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/authority", "root", "apmsetup");
-			String sql = "INSERT INTO `authority`.`boardtbl` (`id`, `author`, `title`, `content`) VALUES (NULL, ?, ?, ?);";
-			PreparedStatement statement = conn.prepareStatement(sql);
-			statement.setString(1, author);
-			statement.setString(2, title);
-			statement.setString(3, content);
+			Connection conn = DBConstant.getConnection();
+			PreparedStatement statement = conn.prepareStatement(DBConstant.BoardTable.BOARD_INSERT);
+			statement.setString(DBConstant.BoardTable.FIELD_AUTHOR, author);
+			statement.setString(DBConstant.BoardTable.FIELD_TITLE, title);
+			statement.setString(DBConstant.BoardTable.FIELD_CONTENT, content);
 			statement.executeUpdate();
 			response.setContentType("text/plain");
 			response.getWriter().println("OK");
 			return;
-		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

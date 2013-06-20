@@ -19,6 +19,14 @@
     <servlet-name>MyLifeCycle</servlet-name>
     <url-pattern>/MyLifeCycle</url-pattern>
   </servlet-mapping>
+  <servlet>
+    <servlet-name>boarddetail</servlet-name>
+    <jsp-file>/board/boardshow.jsp</jsp-file>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>boarddetail</servlet-name>
+    <url-pattern>/board/*/boardshow.jsp</url-pattern>
+  </servlet-mapping>
   <error-page>
     <error-code>404</error-code>
     <location>/error.jsp</location>
@@ -68,13 +76,13 @@
     </user-data-constraint>
   </security-constraint>
   <security-constraint>
-      <web-resource-collection>
-          <web-resource-name>board</web-resource-name>
-          <url-pattern>/board/*</url-pattern>
-      </web-resource-collection>
-      <auth-constraint>
-          <role-name>registered</role-name>
-      </auth-constraint>
+    <web-resource-collection>
+      <web-resource-name>board</web-resource-name>
+      <url-pattern>/board/*</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>registered</role-name>
+    </auth-constraint>
   </security-constraint>
   <login-config>
     <auth-method>FORM</auth-method>
