@@ -35,16 +35,16 @@
     <session-timeout>3600</session-timeout>
   </session-config>
   <security-constraint>
-      <web-resource-collection>
-          <web-resource-name>security2</web-resource-name>
-          <url-pattern>/CustomAction.jsp</url-pattern>
-      </web-resource-collection>
-      <auth-constraint>
-          <role-name>administrator</role-name>
-      </auth-constraint>
-      <user-data-constraint>
-          <transport-guarantee>CONFIDENTIAL</transport-guarantee>
-      </user-data-constraint>
+    <web-resource-collection>
+      <web-resource-name>security2</web-resource-name>
+      <url-pattern>/CustomAction.jsp</url-pattern>
+    </web-resource-collection>
+    <auth-constraint>
+      <role-name>administrator</role-name>
+    </auth-constraint>
+    <user-data-constraint>
+      <transport-guarantee>CONFIDENTIAL</transport-guarantee>
+    </user-data-constraint>
   </security-constraint>
   <security-constraint>
     <web-resource-collection>
@@ -67,11 +67,20 @@
       <transport-guarantee>CONFIDENTIAL</transport-guarantee>
     </user-data-constraint>
   </security-constraint>
+  <security-constraint>
+      <web-resource-collection>
+          <web-resource-name>board</web-resource-name>
+          <url-pattern>/board/*</url-pattern>
+      </web-resource-collection>
+      <auth-constraint>
+          <role-name>registered</role-name>
+      </auth-constraint>
+  </security-constraint>
   <login-config>
     <auth-method>FORM</auth-method>
     <form-login-config>
-        <form-login-page>/login.jsp</form-login-page>
-        <form-error-page>/login_error.jsp</form-error-page>
+      <form-login-page>/login.jsp</form-login-page>
+      <form-error-page>/login_error.jsp</form-error-page>
     </form-login-config>
   </login-config>
   <welcome-file-list>
