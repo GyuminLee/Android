@@ -2,7 +2,6 @@ package com.example.web;
 
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -11,6 +10,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import com.google.gson.Gson;
 
 /**
  * Servlet implementation class InsertServlet
@@ -33,8 +34,12 @@ public class InsertServlet extends HttpServlet {
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		request.setCharacterEncoding("euc-kr");
 		String author = request.getRemoteUser();
+		if (author == null || author.equals("")) {
+			author = "dongja94";
+		}
 		String title = request.getParameter("title");
 		String content = request.getParameter("content");
+		DBResult result = new DBResult();
 		try {
 			Connection conn = DBConstant.getConnection();
 			PreparedStatement statement = conn.prepareStatement(DBConstant.BoardTable.BOARD_INSERT);
@@ -42,15 +47,25 @@ public class InsertServlet extends HttpServlet {
 			statement.setString(DBConstant.BoardTable.FIELD_TITLE, title);
 			statement.setString(DBConstant.BoardTable.FIELD_CONTENT, content);
 			statement.executeUpdate();
-			response.setContentType("text/plain");
-			response.getWriter().println("OK");
-			return;
+			result.code = "SUCCESS";
+			result.message = "OK";
+//			request.setAttribute("CODE", "SUCCESS");
+//			request.setAttribute("MESSAGE", "OK");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			result.code = "FAIL";
+			result.message = "DB Fail";
+//			request.setAttribute("CODE", "FAIL");
+//			request.setAttribute("MESSAGE", "DB Fail");
 		}
-		response.setContentType("text/plain");
-		response.getWriter().println("Fail");
+		
+		response.setContentType("application/json;charset=euc-kr");
+		Gson gson = new Gson();
+		String json = gson.toJson(result);
+		response.getWriter().print(json);
+//		RequestDispatcher dispatcher = request.getRequestDispatcher("../DBResult.jsp");
+//		dispatcher.forward(request, response);
 	}
 
 }
