@@ -14,12 +14,14 @@ public class IDGetWrapper extends HttpServletRequestWrapper {
 	public String getParameter(String name) {
 		String value = super.getParameter(name);
 		if (name.equals("id")) {
-			String url = mRequest.getRequestURI();
-			int startIndex = url.indexOf("/board/");
-			startIndex += 7;
-			String sub = url.substring(startIndex);
-			int endIndex = sub.indexOf("/");
-			String id = sub.substring(0, endIndex - 1);
+			String url = mRequest.getRequestURL().toString();
+			int endIndex = url.indexOf("/");
+			int startIndex = endIndex;
+			while(endIndex != -1) {
+				startIndex = endIndex + 1;
+				endIndex = url.indexOf("/", startIndex);
+			}			
+			String id = url.substring(startIndex);
 			return id;
 		}
 		return value;

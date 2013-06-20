@@ -40,7 +40,7 @@
 			while (rs.next()) {
 		%>
 		<tr>
-			<td><a href="<%=rs.getInt(DBConstant.BoardTable.ID)%>/boardshow.jsp"><%=rs.getInt(DBConstant.BoardTable.ID)%></a></td>
+			<td><a href="boardshow/<%=rs.getInt(DBConstant.BoardTable.ID)%>"><%=rs.getInt(DBConstant.BoardTable.ID)%></a></td>
 			<td><%=rs.getString(DBConstant.BoardTable.TITLE)%></td>
 			<td><%=rs.getString(DBConstant.BoardTable.AUTHOR)%></td>
 		</tr>

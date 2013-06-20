@@ -15,9 +15,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * Servlet Filter implementation class IdGetFilter
  */
-@WebFilter({ "/board/*/boardshow.jsp", "/board/*/boardupdate",
-		"/board/*/boarddelete", "/board/*/replyForm.jsp",
-		"/board/*/replyinsert" })
+@WebFilter("/board/boardshow/*")
 public class IdGetFilter implements Filter {
 
 	ServletContext mContext;
