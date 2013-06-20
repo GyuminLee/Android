@@ -38,7 +38,7 @@
 </table>
 
 <%
-	if (request.getRemoteUser().equals(rs.getString("author"))) {
+	if (request.getRemoteUser().equals(rs.getString("author")) || request.isUserInRole("administrator")) {
 %>
 	<a href="updateForm.jsp/${ID}">수정</a> <a href="boarddelete/${ID}">삭제</a>
 <%

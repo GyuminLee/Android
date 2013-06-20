@@ -84,6 +84,24 @@
       <role-name>registered</role-name>
     </auth-constraint>
   </security-constraint>
+  <security-constraint>
+      <web-resource-collection>
+          <web-resource-name>admin</web-resource-name>
+          <url-pattern>/admin/*</url-pattern>
+      </web-resource-collection>
+      <auth-constraint>
+          <role-name>administrator</role-name>
+      </auth-constraint>
+  </security-constraint>
+  <security-constraint>
+      <web-resource-collection>
+          <web-resource-name>login</web-resource-name>
+          <url-pattern>/login/login</url-pattern>
+      </web-resource-collection>
+      <auth-constraint>
+          <role-name>registered</role-name>
+      </auth-constraint>
+  </security-constraint>
   <login-config>
     <auth-method>FORM</auth-method>
     <form-login-config>

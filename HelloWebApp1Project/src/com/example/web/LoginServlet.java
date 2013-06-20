@@ -35,27 +35,15 @@ public class LoginServlet extends HttpServlet {
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+		response.sendRedirect("http://localhost:8880/HelloWebApp1Project/");
 	}
 
 	/**
 	 * @see HttpServlet#doPost(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		request.setCharacterEncoding("euc-kr");
-		String username = request.getParameter("username");
-		String password = request.getParameter("password");
-		
-		HttpSession session = request.getSession();
-		session.setAttribute("userid", username);
-		String userid = (String)session.getAttribute("userid");
-		
-		request.setAttribute("username", username);
-		request.setAttribute("password", password);
-		
-		RequestDispatcher dispatcher = request.getRequestDispatcher("jsp");
-		
-		dispatcher.forward(request, response);		
+		doGet(request,response);
 	}
 
 }
