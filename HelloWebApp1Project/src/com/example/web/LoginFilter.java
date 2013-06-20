@@ -1,28 +1,24 @@
 package com.example.web;
 
 import java.io.IOException;
-import java.util.Date;
-
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.annotation.WebFilter;
-import javax.servlet.http.HttpServletRequest;
 
 /**
- * Servlet Filter implementation class ReportFilter
+ * Servlet Filter implementation class LoginFilter
  */
-@WebFilter("/*")
-public class ReportFilter implements Filter {
+@WebFilter({ "/board/*", "/security/*" })
+public class LoginFilter implements Filter {
 
     /**
      * Default constructor. 
      */
-    public ReportFilter() {
+    public LoginFilter() {
         // TODO Auto-generated constructor stub
     }
 
@@ -37,19 +33,18 @@ public class ReportFilter implements Filter {
 	 * @see Filter#doFilter(ServletRequest, ServletResponse, FilterChain)
 	 */
 	public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
-		HttpServletRequest req = (HttpServletRequest)request;
-		mContext.log(req.getRemoteUser() + " tried to acces " + req.getRequestURL() + " on " + new Date());
+		// TODO Auto-generated method stub
+		// place your code here
+
+		// pass the request along the filter chain
 		chain.doFilter(request, response);
 	}
 
-	ServletContext mContext;
-	String filterName;
 	/**
 	 * @see Filter#init(FilterConfig)
 	 */
 	public void init(FilterConfig fConfig) throws ServletException {
-		mContext = fConfig.getServletContext();
-		filterName = fConfig.getFilterName();
+		// TODO Auto-generated method stub
 	}
 
 }

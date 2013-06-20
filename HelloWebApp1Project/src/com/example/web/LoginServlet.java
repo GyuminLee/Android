@@ -3,6 +3,8 @@ package com.example.web;
 import java.io.IOException;
 
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -13,7 +15,7 @@ import javax.servlet.http.HttpSession;
 /**
  * Servlet implementation class LoginServlet
  */
-@WebServlet("/login")
+@WebServlet("/login/login")
 public class LoginServlet extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        
@@ -25,18 +27,15 @@ public class LoginServlet extends HttpServlet {
         // TODO Auto-generated constructor stub
     }
 
+    @Override
+    public void init(ServletConfig config) throws ServletException {
+    	// TODO Auto-generated method stub
+    	super.init(config);
+    }
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
-	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		String username = request.getParameter("username");
-		byte[] b = username.getBytes("iso-8859-1");
-		username = new String(b,"euc-kr");
-		String password = request.getParameter("password");
-		
-		response.setContentType("text/plain;charset=euc-kr");
-		response.getWriter().println("이름 : " + username);
-		response.getWriter().println("비밀번호 : " + password);
+	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {		
 	}
 
 	/**
