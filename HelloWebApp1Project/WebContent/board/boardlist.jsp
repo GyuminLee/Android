@@ -1,9 +1,12 @@
-<?xml version="1.0" encoding="EUC-KR" ?>
 <%@page import="java.sql.PreparedStatement"%>
 <%@page import="java.sql.ResultSet"%>
 <%@page import="com.example.web.DBConstant"%>
 <%@page import="java.sql.Connection"%>
-<%@ page language="java" contentType="text/html; charset=EUC-KR"
+<%@page import="com.example.web.BoardList" %>
+<%@page import="com.example.web.BoardItem" %>
+<%@page import="java.util.ArrayList" %>
+<%@page import="com.google.gson.Gson" %>
+<%@ page language="java" contentType="application/json; charset=EUC-KR"
 	pageEncoding="EUC-KR"%>
 <%
 	String str = request.getParameter("count");
@@ -22,32 +25,20 @@
 	statement.setInt(DBConstant.BoardTable.FIELD_COUNT, count);
 	statement.setInt(DBConstant.BoardTable.FIELD_START, start);
 	ResultSet rs = statement.executeQuery();
+	BoardList list = new BoardList();
+	list.start = start;
+	list.items = new ArrayList<BoardItem>();
+	while(rs.next()) {
+		BoardItem item = new BoardItem();
+		item.id = rs.getInt("id");
+		item.link = "http://localhost:8880/HelloWebApp1Project/board/boardshow/" + rs.getInt("id");
+		item.title = rs.getString("title");
+		item.author = rs.getString("author");
+		list.items.add(item);
+	}
+	rs.last();
+	list.count = rs.getRow();
+	Gson gson = new Gson();
+	String json = gson.toJson(list);
 %>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-<head>
-<meta http-equiv="Content-Type" content="text/html; charset=EUC-KR" />
-<title>Insert title here</title>
-</head>
-<body>
-	<TABLE border="1">
-		<TR>
-			<th>id</th>
-			<th>Title</th>
-			<th>Author</th>
-		</TR>
-		<%
-			while (rs.next()) {
-		%>
-		<tr>
-			<td><a href="boardshow/<%=rs.getInt(DBConstant.BoardTable.ID)%>"><%=rs.getInt(DBConstant.BoardTable.ID)%></a></td>
-			<td><%=rs.getString(DBConstant.BoardTable.TITLE)%></td>
-			<td><%=rs.getString(DBConstant.BoardTable.AUTHOR)%></td>
-		</tr>
-		<%
-			}
-		%>
-	</TABLE>
-
-</body>
-</html>
+<%= json %>
