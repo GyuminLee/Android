@@ -12,15 +12,20 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLEncoder;
 
-import com.example.samplenavermovies.parser.InputStreamParserException;
-
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
+
+import com.example.samplenavermovies.parser.InputStreamParserException;
 
 public class NetworkManager {
 
 	private static NetworkManager instance;
+	private Handler mainHandler;
+	private ImageRequestManager irm;
+	private ImageDownloader[] mImageDownloader;
 	
+	public static final int DOWNLOADER_COUNT = 5;
 	
 	public interface OnNetworkResultListener {
 		public void onSuccess(String keyword, NaverMovieList list);
@@ -65,6 +70,15 @@ public class NetworkManager {
 				return null;
 			}
 		});
+		
+		mainHandler = new Handler(Looper.getMainLooper());
+		irm = new ImageRequestManager();
+		mImageDownloader = new ImageDownloader[DOWNLOADER_COUNT];
+		for (int i = 0; i < DOWNLOADER_COUNT; i++) {
+			mImageDownloader[i] = new ImageDownloader(irm);
+			new Thread(mImageDownloader[i]).start();
+		}
+		
 	}
 	
 	public boolean getNetworkData(NetworkRequest request,
@@ -86,6 +100,24 @@ public class NetworkManager {
 	}
 	
 	
+	public boolean getImageData(ImageRequest request,
+			NetworkRequest.OnCompletedListener listener) {
+		// cache...
+		Bitmap bm = CacheManager.getInstance().getFileCache(request.getKey());
+		if (bm != null) {
+			request.sendResult(bm);
+			return true;
+		}
+		request.setOnCompletedListener(listener);
+		request.setHandler(mainHandler);
+		
+		irm.enqueue(request);
+		
+//		DataDownloader downloader = new DataDownloader(request);
+//		new Thread(downloader).start();
+		
+		return true;
+	}
 	
 	public boolean getNaverMovieList(final String keyword,final  int start,final  int display,
 			final OnNetworkResultListener listener, final Handler handler) {
