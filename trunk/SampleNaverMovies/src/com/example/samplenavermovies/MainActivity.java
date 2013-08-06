@@ -21,7 +21,9 @@ import com.example.samplenavermovies.MovieAdapter.OnAdapterImageClickListener;
 import com.example.samplenavermovies.model.ItemData;
 import com.example.samplenavermovies.model.NaverMovieItem;
 import com.example.samplenavermovies.model.NaverMovieList;
+import com.example.samplenavermovies.model.NaverMovieRequest;
 import com.example.samplenavermovies.model.NetworkManager;
+import com.example.samplenavermovies.model.NetworkRequest;
 
 public class MainActivity extends Activity {
 
@@ -81,14 +83,32 @@ public class MainActivity extends Activity {
 				if (keyword != null && !keyword.equals("")) {
 					titleView.setText(keyword);
 					
-					// search ...
-					NetworkManager.getInstance().getNaverMovieList(keyword, 1, 10, new NetworkManager.OnSimpleNetworkResultListener() {
+					
+					NaverMovieRequest request = new NaverMovieRequest(keyword,1, 10);
+					NetworkManager.getInstance().getNetworkData(request, new NetworkRequest.OnCompletedListener() {
 						
 						@Override
-						public void onSuccess(String keyword, NaverMovieList list) {
-							mAdapter.addAll(list.items);
+						public void onSuccess(NetworkRequest request, Object result) {
+							if (result != null) {
+								NaverMovieList list = (NaverMovieList)result;
+								mAdapter.addAll(list.items);
+							}
 						}
+						
+						@Override
+						public void onFail(NetworkRequest request, int errorCode, String errorMsg) {
+						}
+						
 					}, mHandler);
+					
+//					// search ...
+//					NetworkManager.getInstance().getNaverMovieList(keyword, 1, 10, new NetworkManager.OnSimpleNetworkResultListener() {
+//						
+//						@Override
+//						public void onSuccess(String keyword, NaverMovieList list) {
+//							mAdapter.addAll(list.items);
+//						}
+//					}, mHandler);
 					
 //					ArrayList<NaverMovieItem> movieList = getDummyList();
 //					mAdapter.clear();

@@ -1,6 +1,7 @@
 package com.example.samplenavermovies.view;
 
 import android.content.Context;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -49,8 +50,8 @@ public class ItemView extends FrameLayout {
 	
 	public void setItemData(NaverMovieItem data) {
 		mData = data;
-		movieTitleView.setText(data.title);
-		authorView.setText(data.director);
+		movieTitleView.setText(Html.fromHtml(data.title));
+		authorView.setText(Html.fromHtml(data.director));
 	}
 
 }

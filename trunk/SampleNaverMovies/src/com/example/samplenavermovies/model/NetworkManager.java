@@ -15,6 +15,7 @@ import java.net.URLEncoder;
 import com.example.samplenavermovies.parser.InputStreamParserException;
 
 import android.os.Handler;
+import android.os.Looper;
 
 public class NetworkManager {
 
@@ -65,6 +66,26 @@ public class NetworkManager {
 			}
 		});
 	}
+	
+	public boolean getNetworkData(NetworkRequest request,
+			NetworkRequest.OnCompletedListener listener,
+			Handler handler) {
+		request.setOnCompletedListener(listener);
+		request.setHandler(handler);
+		
+		DataDownloader downloader = new DataDownloader(request);
+		if (handler != null) {
+			new Thread(downloader).start();
+		} else if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
+			new Thread(downloader).start();
+		}else {
+			downloader.run();
+		}
+		
+		return true;
+	}
+	
+	
 	
 	public boolean getNaverMovieList(final String keyword,final  int start,final  int display,
 			final OnNetworkResultListener listener, final Handler handler) {
