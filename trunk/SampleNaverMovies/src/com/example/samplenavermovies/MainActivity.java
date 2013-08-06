@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Adapter;
@@ -18,6 +19,9 @@ import android.widget.Toast;
 
 import com.example.samplenavermovies.MovieAdapter.OnAdapterImageClickListener;
 import com.example.samplenavermovies.model.ItemData;
+import com.example.samplenavermovies.model.NaverMovieItem;
+import com.example.samplenavermovies.model.NaverMovieList;
+import com.example.samplenavermovies.model.NetworkManager;
 
 public class MainActivity extends Activity {
 
@@ -26,6 +30,7 @@ public class MainActivity extends Activity {
 	ListView listView;
 	MovieAdapter mAdapter;
 	ImageView showImageView;
+	Handler mHandler = new Handler();
 	
 	
 	@Override
@@ -41,7 +46,7 @@ public class MainActivity extends Activity {
 		mAdapter.setOnAdapterImageClickListener(new OnAdapterImageClickListener() {
 			
 			@Override
-			public void onAdapterImageClick(Adapter adapter, View view, ItemData data) {
+			public void onAdapterImageClick(Adapter adapter, View view, NaverMovieItem data) {
 				showImageView.setVisibility(View.VISIBLE);
 				// ...
 				Toast.makeText(MainActivity.this, data.title + " image setting...", Toast.LENGTH_SHORT).show();
@@ -59,7 +64,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
-				ItemData data = mAdapter.getItem(position);
+				NaverMovieItem data = mAdapter.getItem(position);
 				Intent i = new Intent(MainActivity.this, WebBrowserActivity.class);
 				i.putExtra(WebBrowserActivity.PARAM_TITLE, data.title);
 				i.putExtra(WebBrowserActivity.PARAM_URL, data.link);
@@ -77,10 +82,17 @@ public class MainActivity extends Activity {
 					titleView.setText(keyword);
 					
 					// search ...
+					NetworkManager.getInstance().getNaverMovieList(keyword, 1, 10, new NetworkManager.OnSimpleNetworkResultListener() {
+						
+						@Override
+						public void onSuccess(String keyword, NaverMovieList list) {
+							mAdapter.addAll(list.items);
+						}
+					}, mHandler);
 					
-					ArrayList<ItemData> movieList = getDummyList();
-					mAdapter.clear();
-					mAdapter.addAll(movieList);
+//					ArrayList<NaverMovieItem> movieList = getDummyList();
+//					mAdapter.clear();
+//					mAdapter.addAll(movieList);
 				}
 				
 			}
@@ -89,13 +101,13 @@ public class MainActivity extends Activity {
 		
 	}
 
-	private ArrayList<ItemData> getDummyList() {
-		ArrayList<ItemData> list = new ArrayList<ItemData>();
+	private ArrayList<NaverMovieItem> getDummyList() {
+		ArrayList<NaverMovieItem> list = new ArrayList<NaverMovieItem>();
 		for (int i = 0 ; i < 3; i++) {
-			ItemData data = new ItemData();
+			NaverMovieItem data = new NaverMovieItem();
 			data.title = "title" + i;
-			data.author = "author" + i;
-			data.imageUrl = "url" + i;
+			data.director = "author" + i;
+			data.image = "url" + i;
 			data.link = "link" + i;
 		}
 		return list;

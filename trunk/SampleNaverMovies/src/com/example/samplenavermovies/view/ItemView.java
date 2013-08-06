@@ -9,18 +9,19 @@ import android.widget.TextView;
 
 import com.example.samplenavermovies.R;
 import com.example.samplenavermovies.model.ItemData;
+import com.example.samplenavermovies.model.NaverMovieItem;
 
 public class ItemView extends FrameLayout {
 
 	ImageView imageView;
 	TextView movieTitleView;
 	TextView authorView;
-	ItemData mData;
+	NaverMovieItem mData;
 	
 	OnItemImageClickListener mListener;
 	
 	public interface OnItemImageClickListener {
-		public void onItemImageClicked(View view, ItemData data);
+		public void onItemImageClicked(View view, NaverMovieItem data);
 	}
 	
 	public void setOnItemImageClickListener(OnItemImageClickListener listener) {
@@ -46,10 +47,10 @@ public class ItemView extends FrameLayout {
 		});
 	}
 	
-	public void setItemData(ItemData data) {
+	public void setItemData(NaverMovieItem data) {
 		mData = data;
 		movieTitleView.setText(data.title);
-		authorView.setText(data.author);
+		authorView.setText(data.director);
 	}
 
 }
