@@ -9,15 +9,16 @@ import android.widget.Adapter;
 import android.widget.BaseAdapter;
 
 import com.example.samplenavermovies.model.ItemData;
+import com.example.samplenavermovies.model.NaverMovieItem;
 import com.example.samplenavermovies.view.ItemView;
 
 public class MovieAdapter extends BaseAdapter implements ItemView.OnItemImageClickListener {
 	Context mContext;
-	ArrayList<ItemData> mItemList;
+	ArrayList<NaverMovieItem> mItemList;
 	OnAdapterImageClickListener mListener;
 	
 	public interface OnAdapterImageClickListener {
-		public void onAdapterImageClick(Adapter adapter, View view, ItemData data);
+		public void onAdapterImageClick(Adapter adapter, View view, NaverMovieItem data);
 	}
 	
 	public void setOnAdapterImageClickListener(OnAdapterImageClickListener listener) {
@@ -26,15 +27,15 @@ public class MovieAdapter extends BaseAdapter implements ItemView.OnItemImageCli
 	
 	public MovieAdapter(Context context) {
 		mContext = context;
-		mItemList = new ArrayList<ItemData>();
+		mItemList = new ArrayList<NaverMovieItem>();
 	}
 	
-	public void add(ItemData data) {
+	public void add(NaverMovieItem data) {
 		mItemList.add(data);
 		notifyDataSetChanged();
 	}
 	
-	public void addAll(ArrayList<ItemData> list) {
+	public void addAll(ArrayList<NaverMovieItem> list) {
 		mItemList.addAll(list);
 		notifyDataSetChanged();		
 	}
@@ -50,7 +51,7 @@ public class MovieAdapter extends BaseAdapter implements ItemView.OnItemImageCli
 	}
 
 	@Override
-	public ItemData getItem(int position) {
+	public NaverMovieItem getItem(int position) {
 		// TODO Auto-generated method stub
 		return mItemList.get(position);
 	}
@@ -76,7 +77,7 @@ public class MovieAdapter extends BaseAdapter implements ItemView.OnItemImageCli
 	}
 
 	@Override
-	public void onItemImageClicked(View view, ItemData data) {
+	public void onItemImageClicked(View view, NaverMovieItem data) {
 		if (mListener != null) {
 			mListener.onAdapterImageClick(this, view, data);
 		}
