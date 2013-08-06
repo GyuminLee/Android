@@ -12,6 +12,8 @@ import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import com.example.samplenavermovies.parser.InputStreamParserException;
+
 import android.os.Handler;
 
 public class NetworkManager {
@@ -155,7 +157,14 @@ public class NetworkManager {
 	}
 	
 	private NaverMovieList parsing(InputStream is) {
-		// TODO Auto-generated method stub
+		NaverMovieParser parser = new NaverMovieParser();
+		try {
+			parser.doParse(is);
+			return parser.getResult();
+		} catch (InputStreamParserException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return null;
 	}
 }
