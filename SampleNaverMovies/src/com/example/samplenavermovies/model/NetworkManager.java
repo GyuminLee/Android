@@ -118,6 +118,7 @@ public class NetworkManager {
 	
 	public void cancelAll(Context context) {
 		ArrayList<NetworkRequest> list = mRequestMap.get(context);
+		if (list == null) return;
 		for (int i = 0; i < list.size(); i++) {
 			NetworkRequest request = list.get(i);
 			request.cancel();
@@ -136,13 +137,14 @@ public class NetworkManager {
 	public boolean getImageData(ImageRequest request,
 			NetworkRequest.OnCompletedListener listener) {
 		// cache...
+		request.setOnCompletedListener(listener);
+		request.setHandler(mainHandler);
+
 		Bitmap bm = CacheManager.getInstance().getFileCache(request.getKey());
 		if (bm != null) {
 			request.sendResult(bm);
 			return true;
 		}
-		request.setOnCompletedListener(listener);
-		request.setHandler(mainHandler);
 		
 		irm.enqueue(request);
 		
