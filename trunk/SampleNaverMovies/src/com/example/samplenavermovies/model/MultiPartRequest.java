@@ -12,7 +12,7 @@ import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-public abstract class MultiPartRequest extends PostRequest {
+public abstract class MultiPartRequest extends FormRequest {
 
 	private String mBoundary = makeDelimeter();
 
@@ -33,11 +33,10 @@ public abstract class MultiPartRequest extends PostRequest {
 	private String makeDelimeter() {
 		return "----WebKitFormBoundary"+Long.toHexString(System.currentTimeMillis());
 	}
-
+	
 	@Override
-	public void setRequestHeader(HttpURLConnection conn) {
-		super.setRequestHeader(conn);
-		conn.setRequestProperty("Content-Type", "multipart/form-data; boundary=" + mBoundary);		
+	protected String getMessageContentType() {
+		return "multipart/form-data; boundary=" + mBoundary;
 	}
 	
 	@Override

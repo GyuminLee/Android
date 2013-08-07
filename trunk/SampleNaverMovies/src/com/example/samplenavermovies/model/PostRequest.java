@@ -12,20 +12,14 @@ public abstract class PostRequest extends NetworkRequest {
 
 	protected String mCharset = "UTF-8";
 	
-	protected ArrayList<FormData> formdatas = new ArrayList<FormData>();
-	
 	public void setCharset(String charset) {
 		mCharset = charset;
 	}
 	
-	public void addFormData(String key,String value) {
-		addFormData(new FormData(key,value));
+	public String getCharset() {
+		return mCharset;
 	}
 	
-	public void addFormData(FormData formdata) {
-		formdatas.add(formdata);
-	}
-
 	@Override
 	public String getRequestMethod() {
 		return "POST";
@@ -41,31 +35,19 @@ public abstract class PostRequest extends NetworkRequest {
 	@Override
 	public void setRequestHeader(HttpURLConnection conn) {
 		super.setRequestHeader(conn);
-		conn.setRequestProperty("Connection","Keep-Alive");
+		if (isKeepAlive()) {
+			conn.setRequestProperty("Connection","Keep-Alive");
+		} else {
+			conn.setRequestProperty("Connection", "Close");
+		}
 		conn.setRequestProperty("Accept-Charset", mCharset);
-		conn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded;charset=" + mCharset);		
+		conn.setRequestProperty("Content-Type", getMessageContentType());		
 	}
 	
-	@Override
-	public void setOutput(HttpURLConnection conn) {
-		super.setOutput(conn);
-		try {
-			OutputStream output = conn.getOutputStream();
-			StringBuilder sb = new StringBuilder();
-			boolean isAmp = false;
-			for (FormData formdata : formdatas) {
-				if (isAmp) {
-					sb.append("&");
-				}
-				if (formdata.type == FormData.FORM_DATA_TYPE_NORMAL) {
-					sb.append(formdata.key).append("=").append(URLEncoder.encode(formdata.value,mCharset));
-					isAmp = true;
-				}
-			}
-			output.write(sb.toString().getBytes(mCharset));
-			output.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+	protected boolean isKeepAlive() {
+		return true;
 	}
+	
+	protected abstract String getMessageContentType();
+	
 }
