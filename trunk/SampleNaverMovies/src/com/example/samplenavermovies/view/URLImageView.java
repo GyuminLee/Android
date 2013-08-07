@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.util.AttributeSet;
 import android.widget.ImageView;
 
+import com.example.samplenavermovies.R;
 import com.example.samplenavermovies.model.ImageRequest;
 import com.example.samplenavermovies.model.NetworkManager;
 import com.example.samplenavermovies.model.NetworkRequest;
@@ -37,15 +38,18 @@ public class URLImageView extends ImageView {
 			mRequest.cancel();
 			mRequest = null;
 		}
+		// default image
+		setImageResource(R.drawable.ic_launcher);
 		
 		mRequest = new ImageRequest(url);
-		NetworkManager.getInstance().getNetworkData(mRequest, new NetworkRequest.OnCompletedListener() {
+		NetworkManager.getInstance().getImageData(mRequest, new NetworkRequest.OnCompletedListener() {
 			
 			@Override
 			public void onSuccess(NetworkRequest request, Object result) {
 				if (request == mRequest && result != null) {
 					Bitmap bm = (Bitmap)result;
 					setImageBitmap(bm);
+					mRequest = null;
 				}
 			}
 			
@@ -54,7 +58,7 @@ public class URLImageView extends ImageView {
 				// TODO Auto-generated method stub
 				
 			}
-		}, mHandler);
+		});
 	}
 	
 

@@ -1,6 +1,7 @@
 package com.example.samplenavermovies.model;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ImageRequestManager {
 
@@ -27,6 +28,12 @@ public class ImageRequestManager {
 		notify();
 	}
 	
+	public void remove(ImageRequest ir) {
+		mQueue.remove(ir);
+	}
+
+	AtomicInteger mInt = new AtomicInteger();
+	
 	public synchronized ImageRequest dequeue() {
 		ImageRequest r = null;
 		while(mQueue.size() == 0) {
@@ -37,8 +44,12 @@ public class ImageRequestManager {
 				e.printStackTrace();
 			}
 		}
-		r = mQueue.remove(0);
-		mRunningQueue.add(r);
+		if (mQueue.size() > 0) {
+			r = mQueue.remove(0);
+			mRunningQueue.add(r);
+		} else {
+			r = null;
+		}
 		return r;
 	}
 	

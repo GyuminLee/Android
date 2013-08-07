@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 public class ImageRequest extends NetworkRequest {
 
 	String mUrl;
+	boolean addPendingRequest = true;
 	
 	ArrayList<ImageRequest> pendingRequest = new ArrayList<ImageRequest>();
 	
@@ -20,7 +21,7 @@ public class ImageRequest extends NetworkRequest {
 	}
 	
 	public boolean isPendingRequest(ImageRequest request) {
-		if (request.mUrl.equals(mUrl)) {
+		if (request.mUrl.equals(mUrl) && addPendingRequest) {
 			pendingRequest.add(request);
 			return true;
 		} else {
@@ -59,12 +60,12 @@ public class ImageRequest extends NetworkRequest {
 	}
 	
 	@Override
-	public void process(InputStream is) {
-		super.process(is);
+	protected void postProcess(Object result) {
 		mHandler.post(new Runnable() {
 			
 			@Override
 			public void run() {
+				addPendingRequest = false;
 				for (int i = 0; i < pendingRequest.size(); i++) {
 					ImageRequest ir = pendingRequest.get(i);
 					ir.sendResult((Bitmap)getResult());
@@ -74,9 +75,21 @@ public class ImageRequest extends NetworkRequest {
 	}
 	
 	
+	@Override
+	public boolean cancel() {
+		if (pendingRequest.size() > 0) {
+			setCancel(true);
+		} else {
+			super.cancel();
+			NetworkManager.getInstance().removeImageRequest(this);
+		}
+		return true;
+	}
 	public void sendResult(Bitmap bm) {
 		mResult = bm;
-		mListener.onSuccess(this, bm);
+		if (!isCancel()) {
+			mListener.onSuccess(this, bm);
+		}
 	}
 
 }

@@ -8,18 +8,27 @@ import java.net.URL;
 public class ImageDownloader implements Runnable {
 
 
+	boolean isRunning = true;
 	ImageRequestManager requestManager;
 	
 	public ImageDownloader(ImageRequestManager manager) {
 		requestManager = manager;
 	}
 	
+	
+	public void stopThread() {
+		isRunning = false;
+		ImageRequest dummy = new ImageRequest("");
+		requestManager.enqueue(dummy);
+	}
+	
 	@Override
 	public void run() {
-		while(true) {
+		while(isRunning) {
 			ImageRequest request = requestManager.dequeue();
 			if (request == null) continue;
 			URL url = request.getURL();
+			if (url == null) continue;
 			int retry = 0;
 			for (; retry < 3 && !request.isCancel(); retry++) {
 				try {

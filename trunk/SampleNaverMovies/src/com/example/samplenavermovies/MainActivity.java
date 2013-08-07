@@ -25,7 +25,7 @@ import com.example.samplenavermovies.model.NaverMovieRequest;
 import com.example.samplenavermovies.model.NetworkManager;
 import com.example.samplenavermovies.model.NetworkRequest;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ParentActivity {
 
 	EditText keywordView;
 	TextView titleView;
@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
 					
 					
 					NaverMovieRequest request = new NaverMovieRequest(keyword,1, 10);
-					NetworkManager.getInstance().getNetworkData(request, new NetworkRequest.OnCompletedListener() {
+					NetworkManager.getInstance().getNetworkData(MainActivity.this, request, new NetworkRequest.OnCompletedListener() {
 						
 						@Override
 						public void onSuccess(NetworkRequest request, Object result) {
