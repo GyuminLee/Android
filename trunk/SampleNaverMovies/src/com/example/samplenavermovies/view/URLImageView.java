@@ -41,6 +41,8 @@ public class URLImageView extends ImageView {
 		// default image
 		setImageResource(R.drawable.ic_launcher);
 		
+		if (url == null || url.equals("")) return;
+		
 		mRequest = new ImageRequest(url);
 		NetworkManager.getInstance().getImageData(mRequest, new NetworkRequest.OnCompletedListener() {
 			

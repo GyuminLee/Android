@@ -88,7 +88,9 @@ public class ImageRequest extends NetworkRequest {
 	public void sendResult(Bitmap bm) {
 		mResult = bm;
 		if (!isCancel()) {
-			mListener.onSuccess(this, bm);
+			if (mListener != null) {
+				mListener.onSuccess(this, bm);
+			}
 		}
 	}
 
