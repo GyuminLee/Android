@@ -15,7 +15,7 @@ public class GooglePlaceRequest extends NetworkRequest {
 	
 	public GooglePlaceRequest(String keyword, double lat, double lng) {
 		try {
-			urlString = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=500&sensor=false&key=AIzaSyCe72iAyKd1mZ40jpa8v4vnFEG_Z-V6hFY&keyword="+URLEncoder.encode(keyword, "utf-8");
+			urlString = "https://maps.googleapis.com/maps/api/place/nearbysearch/json?location="+lat+","+lng+"&radius=500&sensor=false&key=AIzaSyCe72iAyKd1mZ40jpa8v4vnFEG_Z-V6hFY&name="+URLEncoder.encode(keyword, "utf-8");
 		} catch (UnsupportedEncodingException e) {
 			e.printStackTrace();
 		}
