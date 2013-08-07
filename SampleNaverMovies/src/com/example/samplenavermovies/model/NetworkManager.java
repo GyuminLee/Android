@@ -11,7 +11,10 @@ import java.net.MalformedURLException;
 import java.net.PasswordAuthentication;
 import java.net.URL;
 import java.net.URLEncoder;
+import java.util.ArrayList;
+import java.util.HashMap;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
@@ -24,6 +27,8 @@ public class NetworkManager {
 	private Handler mainHandler;
 	private ImageRequestManager irm;
 	private ImageDownloader[] mImageDownloader;
+	private HashMap<Context,ArrayList<NetworkRequest>> mRequestMap = new HashMap<Context,ArrayList<NetworkRequest>>();
+	
 	
 	public static final int DOWNLOADER_COUNT = 5;
 	
@@ -81,13 +86,24 @@ public class NetworkManager {
 		
 	}
 	
-	public boolean getNetworkData(NetworkRequest request,
+	public boolean removeImageRequest(ImageRequest request) {
+		irm.remove(request);
+		return true;
+	}
+	
+	public boolean getNetworkData(Context context, NetworkRequest request,
 			NetworkRequest.OnCompletedListener listener,
 			Handler handler) {
+		ArrayList<NetworkRequest> list = mRequestMap.get(context);
+		if (list == null) {
+			list = new ArrayList<NetworkRequest>();
+			mRequestMap.put(context, list);
+		}
+		list.add(request);
 		request.setOnCompletedListener(listener);
 		request.setHandler(handler);
 		
-		DataDownloader downloader = new DataDownloader(request);
+		DataDownloader downloader = new DataDownloader(context, request);
 		if (handler != null) {
 			new Thread(downloader).start();
 		} else if (Thread.currentThread() == Looper.getMainLooper().getThread()) {
@@ -99,6 +115,23 @@ public class NetworkManager {
 		return true;
 	}
 	
+	
+	public void cancelAll(Context context) {
+		ArrayList<NetworkRequest> list = mRequestMap.get(context);
+		for (int i = 0; i < list.size(); i++) {
+			NetworkRequest request = list.get(i);
+			request.cancel();
+		}
+		mRequestMap.remove(context);
+	}
+	
+	public void removeRequest(Context context, NetworkRequest request) {
+		ArrayList<NetworkRequest> list = mRequestMap.get(context);
+		list.remove(request);
+		if (list.size() == 0) {
+			mRequestMap.remove(context);
+		}
+	}
 	
 	public boolean getImageData(ImageRequest request,
 			NetworkRequest.OnCompletedListener listener) {

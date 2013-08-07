@@ -5,11 +5,15 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import android.content.Context;
+
 public class DataDownloader implements Runnable {
 
 	NetworkRequest mRequest;
+	Context mContext;
 	
-	public DataDownloader(NetworkRequest request) {
+	public DataDownloader(Context context, NetworkRequest request) {
+		mContext = context;
 		mRequest = request;
 	}
 	
@@ -25,10 +29,14 @@ public class DataDownloader implements Runnable {
 				mRequest.setConnectionConfig(conn);
 				mRequest.setRequestHeader(conn);
 				mRequest.setOutput(conn);
-				if (mRequest.isCancel()) return;
+				if (mRequest.isCancel()) {
+					NetworkManager.getInstance().removeRequest(mContext, mRequest);
+					return;
+				}
 				int responseCode = conn.getResponseCode();
 				if (mRequest.isCancel()) {
 					conn.disconnect();
+					NetworkManager.getInstance().removeRequest(mContext, mRequest);
 					return;
 				}
 				mRequest.setConnection(conn);
@@ -50,6 +58,8 @@ public class DataDownloader implements Runnable {
 			// error ....
 			mRequest.sendError(0, "....");
 		}
+		
+		NetworkManager.getInstance().removeRequest(mContext, mRequest);
 		
 	}
 

@@ -92,7 +92,16 @@ public class CacheManager {
 		File f = new File(cache,key);
 		try {
 			FileOutputStream fos = new FileOutputStream(f);
+			byte[] buffer = new byte[4096];
+			int length;
+			while((length = is.read(buffer)) != -1) {
+				if (length > 0) {
+					fos.write(buffer, 0, length);
+				}
+			}
+			fos.flush();
 			fos.close();
+			is.close();
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

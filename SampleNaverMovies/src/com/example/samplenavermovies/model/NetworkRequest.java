@@ -72,6 +72,11 @@ public abstract class NetworkRequest {
 		return true;
 	}
 	
+	
+	protected void setCancel(boolean isCancel) {
+		bCancel = isCancel;
+	}
+	
 	public void setConnection(HttpURLConnection conn) {
 		mConn = conn;
 	}
@@ -81,6 +86,8 @@ public abstract class NetworkRequest {
 	}
 	
 	public void process(InputStream is) {
+		
+		is = preProcess(is);
 		mResult = parse(is);
 		if (mHandler != null) {
 			mHandler.post(new Runnable() {
@@ -97,7 +104,17 @@ public abstract class NetworkRequest {
 			if (mListener != null && !bCancel) {
 				mListener.onSuccess(NetworkRequest.this, mResult);
 			}
-		}		
+		}
+		
+		postProcess(mResult);
+	}
+	
+	protected InputStream preProcess(InputStream is) {
+		return is;
+	}
+	
+	protected void postProcess(Object result) {
+		
 	}
 	
 	abstract Object parse(InputStream is);
