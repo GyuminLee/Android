@@ -118,7 +118,15 @@ public class MainActivity extends ParentActivity {
 			}
 		});
 		
-		
+		btn = (Button)findViewById(R.id.showGoogle);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainActivity.this, ShowGoogleActivity.class);
+				startActivity(i);
+			}
+		});
 	}
 
 	private ArrayList<NaverMovieItem> getDummyList() {
