@@ -11,10 +11,13 @@ import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.RosterListener;
+import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smackx.Form;
+import org.jivesoftware.smackx.muc.MultiUserChat;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -48,6 +51,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		SmackAndroid.init(this);
 		userIdView = (EditText)findViewById(R.id.userid);
 		passwordView = (EditText)findViewById(R.id.password);
 		messageView = (EditText)findViewById(R.id.message);
@@ -220,6 +224,17 @@ public class MainActivity extends Activity {
 		mConn = new XMPPConnection(config);
 	}
 	
+	private void createGroupChat() {
+		MultiUserChat muc = new MultiUserChat(mConn, "dongja@conference.jabber.org");
+		try {
+			muc.create("dongja94");
+			muc.sendConfigurationForm(new Form(Form.TYPE_SUBMIT));
+		} catch (XMPPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
 	
 	private void addAccount(String userid, String password) {
 		try {
