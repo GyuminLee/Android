@@ -1,6 +1,7 @@
 package com.example.samplexmpp;
 
 import java.util.ArrayList;
+import java.util.Collection;
 
 import org.jivesoftware.smack.AccountManager;
 import org.jivesoftware.smack.Chat;
@@ -9,9 +10,11 @@ import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
 import org.jivesoftware.smack.Roster;
 import org.jivesoftware.smack.RosterEntry;
+import org.jivesoftware.smack.RosterListener;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Presence;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -104,6 +107,34 @@ public class MainActivity extends Activity {
 		});
 	}
 	
+	
+	private void notifyRosterChanged() {
+		Roster roster = mConn.getRoster();
+		roster.addRosterListener(new RosterListener() {
+			
+			@Override
+			public void presenceChanged(Presence presence) {
+				if (presence.getFrom().equals("xxx")) {
+					//
+				}
+			}
+			
+			@Override
+			public void entriesUpdated(Collection<String> arg0) {
+				
+			}
+			
+			@Override
+			public void entriesDeleted(Collection<String> arg0) {
+				
+			}
+			
+			@Override
+			public void entriesAdded(Collection<String> arg0) {
+				
+			}
+		});
+	}
 	
 	private void addFriend(String userid, String name, String... groups) {
 		Roster roster = mConn.getRoster();
