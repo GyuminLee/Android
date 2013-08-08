@@ -7,11 +7,16 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.ChatManagerListener;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.MessageListener;
+import org.jivesoftware.smack.Roster;
+import org.jivesoftware.smack.RosterEntry;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Message;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -81,6 +86,85 @@ public class MainActivity extends Activity {
 				}).start();
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btnUserList);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						getRoster();
+					}
+				}).start();
+			}
+		});
+	}
+	
+	
+	private void addFriend(String userid, String name, String... groups) {
+		Roster roster = mConn.getRoster();
+		try {
+			roster.createEntry(userid, name, groups);
+		} catch (XMPPException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	
+	String[] mList;
+	
+	private void getRoster() {
+		if (mConn.isConnected()) {
+			Roster roster = mConn.getRoster();
+			final ArrayList<String> userlist = new ArrayList<String>();
+			for (RosterEntry entry : roster.getEntries() ) {
+				userlist.add(entry.getUser());
+			}
+			
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+					builder.setTitle("Friend List");
+					String[] list = new String[userlist.size()];
+					for (int i = 0; i < userlist.size(); i++) {
+						list[i] = userlist.get(i);
+					}
+					mList = list;
+					builder.setItems(list, new OnClickListener() {
+						
+						@Override
+						public void onClick(DialogInterface dialog, int which) {
+							mChat = mConn.getChatManager().createChat(mList[which], new MessageListener() {
+								
+								@Override
+								public void processMessage(Chat chat, Message message) {
+									final String msg = message.getBody();
+									runOnUiThread(new Runnable() {
+										
+										@Override
+										public void run() {
+											mAdapter.add("remote : " + msg);
+										}
+									});
+								}
+							});
+							
+//							String status = mConn.getRoster().getPresence(mList[which]).toString();
+						}
+					});
+					
+					builder.create().show();
+				}
+			});
+		}
 	}
 	
 	private void sendMessage(final String message) {
@@ -135,6 +219,8 @@ public class MainActivity extends Activity {
 				
 				@Override
 				public void chatCreated(Chat chat, boolean local) {
+					
+					if (local) return;
 					
 					mChat = chat;
 					
