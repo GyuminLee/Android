@@ -29,6 +29,8 @@
         </activity>
         <activity android:name="WebBrowserActivity"></activity>
         <activity android:name="ShowGoogleActivity"></activity>
+        <activity android:name="GoogleAtomFeedActivity"></activity>
+        <activity android:name="InAppBrowser"></activity>
     </application>
 
 </manifest>
