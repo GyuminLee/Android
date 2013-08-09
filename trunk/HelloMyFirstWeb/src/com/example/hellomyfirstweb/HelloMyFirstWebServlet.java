@@ -15,18 +15,21 @@ import com.example.shared.MyWebInterface;
 @SuppressWarnings("serial")
 public class HelloMyFirstWebServlet extends HttpServlet {
 	JsonRpcExecutor executor;
+	MyWebInterfaceImpl mImpl;
 	
 	public HelloMyFirstWebServlet() {
 		executor = new JsonRpcExecutor();
-		MyWebInterface inter = new MyWebInterfaceImpl();
+		mImpl = new MyWebInterfaceImpl();
+		MyWebInterface inter = mImpl;
 		executor.addHandler("myweb", inter, MyWebInterface.class);
 	}
 	
 	
 	public void doGet(HttpServletRequest req, HttpServletResponse resp)
-			throws IOException {
+			throws IOException {		
+		mImpl.sendAll();
 		resp.setContentType("text/plain");
-		resp.getWriter().println("Hello, world");
+		resp.getWriter().println("Sended All Message");
 	}
 	
 	@Override
