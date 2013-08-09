@@ -95,8 +95,12 @@ public class MainActivity extends Activity {
 				JsonRpcInvoker invoker = new JsonRpcInvoker();
 				MyWebInterface inter = invoker.get(transport, "myweb",
 						MyWebInterface.class);
-				final ArrayList<String> list = inter.getUserList();
-				return list;
+				final String[] list = inter.getUserList();
+				ArrayList<String> l = new ArrayList<String>();
+				for (String str : list) {
+					l.add(str);
+				}
+				return l;
 			} catch (MalformedURLException e) {
 				e.printStackTrace();
 			}
