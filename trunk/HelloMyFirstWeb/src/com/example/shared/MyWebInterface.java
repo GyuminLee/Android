@@ -7,6 +7,6 @@ public interface MyWebInterface {
 	public void add(MyData data);
 	public MyData get(String name);
 	public void register(String name, String regId);
-	public ArrayList<String> getUserList();
+	public String[] getUserList();
 	public void sendMessage(String name,String message);
 }
