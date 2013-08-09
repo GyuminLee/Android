@@ -48,13 +48,13 @@ public class MyWebInterfaceImpl implements MyWebInterface {
 		}
 	}
 	
-	public ArrayList<String> getUserList() {
+	public String[] getUserList() {
 		Set<String> keys = mRegisterMap.keySet();
 		ArrayList<String> userList = new ArrayList<String>();
 		for(String key : keys) {
 			userList.add(key);
 		}
-		return userList;
+		return (String[])userList.toArray();
 	}
 	
 	public ArrayList<String> getRegistrationIds() {
@@ -82,7 +82,6 @@ public class MyWebInterfaceImpl implements MyWebInterface {
 					// ...
 				}
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
