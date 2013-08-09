@@ -72,40 +72,45 @@ public class MyWebInterfaceImpl implements MyWebInterface {
 	}
 	
 	public void sendAll() {
-		Message.Builder builder = new Message.Builder();
-		builder.addData("message", "Hi GCM");
-		try {
-			MulticastResult mresult = mSender.send(builder.build(), getRegistrationIds(), 3);
-			for (Result result : mresult.getResults()) {
-				// ...
+		ArrayList<String> regIds = getRegistrationIds();
+		if (regIds.size() > 0) {
+			Message.Builder builder = new Message.Builder();
+			builder.addData("message", "Hi GCM");
+			try {
+				MulticastResult mresult = mSender.send(builder.build(), getRegistrationIds(), 3);
+				for (Result result : mresult.getResults()) {
+					// ...
+				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 
 	@Override
 	public void sendMessage(String name, String message) {
 		String regId = getRegistrationId(name);
-		Message.Builder builder = new Message.Builder();
-		builder.addData("message", message);
-		builder.delayWhileIdle(false);
-		builder.collapseKey("news");
-		try {
-			Result result = mSender.sendNoRetry(builder.build(), regId);
-			if (result.getMessageId() == null) {
-				// fail...
-			} else {
-				if (result.getCanonicalRegistrationId() != null) {
-					// db update
+		if (regId != null) {
+			Message.Builder builder = new Message.Builder();
+			builder.addData("message", message);
+			builder.delayWhileIdle(false);
+			builder.collapseKey("news");
+			try {
+				Result result = mSender.sendNoRetry(builder.build(), regId);
+				if (result.getMessageId() == null) {
+					// fail...
 				} else {
-					// success
+					if (result.getCanonicalRegistrationId() != null) {
+						// db update
+					} else {
+						// success
+					}
 				}
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
 		}
 	}
 }
