@@ -32,6 +32,9 @@ public class MainActivity extends Activity {
 
 	LocationManager mLM;
 
+	boolean isRemove = false;
+	
+
 	LocationListener mListener = new LocationListener() {
 
 		@Override
@@ -103,6 +106,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view, int position,
 					long id) {
+				
+				
 				Address addr = mAdapter.getItem(position);
 				
 				Intent i = new Intent(MainActivity.this, ProximityService.class);
@@ -110,10 +115,19 @@ public class MainActivity extends Activity {
 				
 				PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, i, 0);
 				
-				mLM.addProximityAlert(addr.getLatitude(), addr.getLongitude(), 500, -1, pi);
+				if (isRemove) {
+					SaveAddress.getInstance().remove(addr);
+					mLM.removeProximityAlert(pi);
+				} else {
+				
+					SaveAddress.getInstance().add(addr);
+				
+					mLM.addProximityAlert(addr.getLatitude(), addr.getLongitude(), 500, -1, pi);
+				}
 				
 			}
 		});
+		
 		Button btn = (Button) findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 
