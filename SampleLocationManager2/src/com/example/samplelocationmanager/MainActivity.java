@@ -6,7 +6,9 @@ import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.location.Address;
 import android.location.Criteria;
 import android.location.Geocoder;
@@ -16,6 +18,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -54,7 +58,10 @@ public class MainActivity extends Activity {
 							.getFromLocation(location.getLatitude(),
 									location.getLongitude(), 10);
 					mAdapter.clear();
-					mAdapter.addAll(list);
+					for (Address addr : list) {
+						mAdapter.add(addr);
+					}
+//					mAdapter.addAll(list);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -91,6 +98,22 @@ public class MainActivity extends Activity {
 		mAdapter = new ArrayAdapter<Address>(this,
 				android.R.layout.simple_list_item_1, new ArrayList<Address>());
 		listView.setAdapter(mAdapter);
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				Address addr = mAdapter.getItem(position);
+				
+				Intent i = new Intent(MainActivity.this, ProximityService.class);
+				i.putExtra(ProximityService.PARAM_ADDRESS, addr);
+				
+				PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, i, 0);
+				
+				mLM.addProximityAlert(addr.getLatitude(), addr.getLongitude(), 500, -1, pi);
+				
+			}
+		});
 		Button btn = (Button) findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 
@@ -103,7 +126,10 @@ public class MainActivity extends Activity {
 						try {
 							List<Address> list = geo.getFromLocationName(keyword, 10);
 							mAdapter.clear();
-							mAdapter.addAll(list);
+							for (Address addr : list) {
+								mAdapter.add(addr);
+							}
+//							mAdapter.addAll(list);
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
