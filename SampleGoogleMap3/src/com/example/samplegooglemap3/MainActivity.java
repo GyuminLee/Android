@@ -1,5 +1,7 @@
 package com.example.samplegooglemap3;
 
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -32,11 +34,19 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Tile;
+import com.google.android.gms.maps.model.TileOverlayOptions;
+import com.google.android.gms.maps.model.TileProvider;
+import com.google.android.gms.maps.model.UrlTileProvider;
 
 public class MainActivity extends FragmentActivity implements 
 	GoogleMap.OnMapClickListener,
 	GoogleMap.OnMarkerClickListener,
-	GoogleMap.OnInfoWindowClickListener {
+	GoogleMap.OnInfoWindowClickListener,
+	GoogleMap.OnCameraChangeListener {
+
+    private static final String MOON_MAP_URL_FORMAT =
+            "http://mw1.google.com/mw-planetary/lunar/lunarmaps_v1/clem_bw/%d/%d/%d.jpg";
 
     private static final LatLng NEWARK = new LatLng(40.714086, -74.228697);
 	
@@ -201,6 +211,8 @@ public class MainActivity extends FragmentActivity implements
 
 	private void setUpMap() {
 //		mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+		mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+//		mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		mMap.setMyLocationEnabled(true);
 //		mMap.setTrafficEnabled(true);
 		mMap.getUiSettings().setZoomControlsEnabled(false);
@@ -213,6 +225,41 @@ public class MainActivity extends FragmentActivity implements
 		
 		mMap.setLocationSource(mLocationSource);
 		mMap.setOnMapLongClickListener(mLocationSource);
+		
+		UrlTileProvider provider = new UrlTileProvider(256,256) {
+			
+			@Override
+			public URL getTileUrl(int x, int y, int zoom) {
+				
+				int reservedY = (1 << zoom) - y - 1;
+				String url = String.format(MOON_MAP_URL_FORMAT, zoom,x, reservedY);
+				try {
+					return new URL(url);
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				return null;
+			}
+		};
+		
+//		TileProvider p = new TileProvider() {
+//			
+//			@Override
+//			public Tile getTile(int x, int y, int zoom) {
+//				byte[] data = null;
+//				// zoom, z, y file / resource
+//				if (zoom > 3) {
+//					return null;
+//				}
+//				Tile tile = new Tile(256, 256, data);
+//				return tile;
+//			}
+//		};
+		
+		TileOverlayOptions options = new TileOverlayOptions();
+		options.tileProvider(provider);
+		mMap.addTileOverlay(options);
 	}
 	
 	
@@ -347,6 +394,11 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	public void onInfoWindowClick(Marker marker) {
 		// ...
+	}
+
+	@Override
+	public void onCameraChange(CameraPosition position) {
+		
 	}
 	
 	
