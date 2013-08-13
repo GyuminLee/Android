@@ -210,6 +210,9 @@ public class MainActivity extends Activity implements
 		protected void onPostExecute(ArrayList<TMapPOIItem> result) {
 			if (result != null && result.size() > 0) {
 				mMapView.addTMapPOIItem(result);
+				mMapView.setCenterPoint(result.get(0).getPOIPoint().getLongitude(), result.get(0).getPOIPoint().getLatitude());
+			} else {
+				Toast.makeText(MainActivity.this, "no result ", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
