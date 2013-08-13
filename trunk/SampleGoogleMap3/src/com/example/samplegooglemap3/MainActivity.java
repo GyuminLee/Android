@@ -1,5 +1,7 @@
 package com.example.samplegooglemap3;
 
+import java.util.HashMap;
+
 import android.content.Context;
 import android.location.Location;
 import android.location.LocationListener;
@@ -7,18 +9,28 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends FragmentActivity implements 
+	GoogleMap.OnMapClickListener,
+	GoogleMap.OnMarkerClickListener {
 
 	GoogleMap mMap;
 	LocationManager mLM;
+	HashMap<String, MyData> mValueResolve = new HashMap<String, MyData>();
+	HashMap<MyData, Marker> mMarkerResolve = new HashMap<MyData, Marker>();
+
+	int mIndex = 0;
 	
 	LocationListener mListener = new LocationListener() {
 		
@@ -87,18 +99,48 @@ public class MainActivity extends FragmentActivity {
 	}
 
 	private void setUpMap() {
-		mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+//		mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
 		mMap.setMyLocationEnabled(true);
-		mMap.setTrafficEnabled(true);
+//		mMap.setTrafficEnabled(true);
 		mMap.getUiSettings().setZoomControlsEnabled(false);
 		mMap.getUiSettings().setCompassEnabled(true);
+		
+		mMap.setOnMapClickListener(this);
+		mMap.setOnMarkerClickListener(this);
 	}
 	
 	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
+		return true;
+	}
+
+	@Override
+	public void onMapClick(LatLng latLng) {
+		MarkerOptions options = new MarkerOptions();
+		options.position(latLng);
+		options.title("MyMarker" + mIndex);
+		options.snippet("description");
+		options.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE));
+		options.anchor(0.5f, 1.0f);
+		
+		Marker marker = mMap.addMarker(options);
+		MyData data = new MyData();
+		data.mIndex = mIndex;
+		data.name = "MyMarker" + mIndex;
+		mValueResolve.put(marker.getId(), data);
+		mMarkerResolve.put(data, marker);
+		
+		mIndex++;
+		
+	}
+
+	@Override
+	public boolean onMarkerClick(Marker marker) {
+		MyData value = mValueResolve.get(marker.getId());
+		Toast.makeText(this, "marker clicked : " + marker.getTitle() + ", value : " + value.mIndex, Toast.LENGTH_SHORT).show();
+		marker.showInfoWindow();
 		return true;
 	}
 
