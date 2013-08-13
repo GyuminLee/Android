@@ -9,6 +9,8 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
@@ -66,6 +68,40 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 		setUpMapIfNeeded();
 		mLM = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		
+		
+		Button btn = (Button)findViewById(R.id.zoomIn);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				CameraUpdate update = CameraUpdateFactory.zoomIn();
+				mMap.animateCamera(update);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.zoomOut);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				CameraUpdate update = CameraUpdateFactory.zoomOut();
+				mMap.animateCamera(update);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.addMarker);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				CameraPosition pos = mMap.getCameraPosition();
+				LatLng latLng = pos.target;
+				
+				// addMarker...
+				
+			}
+		});
 	}
 	
 	@Override
