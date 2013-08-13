@@ -239,7 +239,7 @@ public class MainActivity extends FragmentActivity implements
 	public class MyLocationSource implements LocationSource, GoogleMap.OnMapLongClickListener {
 		
 		OnLocationChangedListener mChangedListener;
-		boolean bResumed = false;
+		boolean bResumed = true;
 
 		@Override
 		public void activate(OnLocationChangedListener listener) {
