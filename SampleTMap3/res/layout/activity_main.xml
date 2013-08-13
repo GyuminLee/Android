@@ -59,6 +59,33 @@
             android:layout_height="wrap_content"
             android:text="Add" />
 
+        <Button
+            android:id="@+id/start"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="S" />
+
+        <Button
+            android:id="@+id/end"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="E" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/pathSearch"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Path Search" />
+
     </LinearLayout>
 
     <com.skp.Tmap.TMapView
