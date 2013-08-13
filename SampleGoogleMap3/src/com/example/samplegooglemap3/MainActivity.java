@@ -1,36 +1,45 @@
 package com.example.samplegooglemap3;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends FragmentActivity implements 
 	GoogleMap.OnMapClickListener,
-	GoogleMap.OnMarkerClickListener {
+	GoogleMap.OnMarkerClickListener,
+	GoogleMap.OnInfoWindowClickListener {
 
 	GoogleMap mMap;
 	LocationManager mLM;
 	HashMap<String, MyData> mValueResolve = new HashMap<String, MyData>();
 	HashMap<MyData, Marker> mMarkerResolve = new HashMap<MyData, Marker>();
+	ArrayList<Marker> mMarkerList = new ArrayList<Marker>();
 
 	int mIndex = 0;
 	
@@ -99,7 +108,32 @@ public class MainActivity extends FragmentActivity implements
 				LatLng latLng = pos.target;
 				
 				// addMarker...
-				
+				boolean bAdd = true;
+				for (Marker marker : mMarkerList) {
+					float[] results = new float[2];
+					Location.distanceBetween(latLng.latitude, latLng.longitude, marker.getPosition().latitude, marker.getPosition().longitude, results);
+					if (results[0] < 50) {
+						bAdd = false;
+						break;
+					}
+				}
+				if (bAdd) {
+					// add Marker
+				}
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.showInfo);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				LatLng farLeft = mMap.getProjection().getVisibleRegion().farLeft;
+				LatLng farRight = mMap.getProjection().getVisibleRegion().farRight;
+				LatLng nearLeft = mMap.getProjection().getVisibleRegion().nearLeft;
+				LatLng nearRight = mMap.getProjection().getVisibleRegion().nearRight;
+				LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
 			}
 		});
 	}
@@ -141,6 +175,8 @@ public class MainActivity extends FragmentActivity implements
 		mMap.getUiSettings().setZoomControlsEnabled(false);
 		mMap.getUiSettings().setCompassEnabled(true);
 		
+		mMap.setInfoWindowAdapter(new MyInfoWindowAdapter(this));
+		
 		mMap.setOnMapClickListener(this);
 		mMap.setOnMarkerClickListener(this);
 	}
@@ -170,6 +206,10 @@ public class MainActivity extends FragmentActivity implements
 		
 		mIndex++;
 		
+		Point point = new Point();
+		point = mMap.getProjection().toScreenLocation(latLng);
+		LatLng ll = mMap.getProjection().fromScreenLocation(point);
+		
 	}
 
 	@Override
@@ -179,5 +219,55 @@ public class MainActivity extends FragmentActivity implements
 		marker.showInfoWindow();
 		return true;
 	}
+	
+	public class MyInfoWindowAdapter implements InfoWindowAdapter {
+
+		Context mContext;
+		View mInfoContentView;
+		ImageView imageView;
+		TextView mTitleView;
+		TextView mSnippentView;
+		TextView mIndexView;
+		
+		public MyInfoWindowAdapter(Context context) {
+			LayoutInflater inflater = LayoutInflater.from(context);
+			mInfoContentView = inflater.inflate(R.layout.info_layout, null);
+			imageView = (ImageView)mInfoContentView.findViewById(R.id.icon);
+			mTitleView = (TextView)mInfoContentView.findViewById(R.id.title);
+			mSnippentView = (TextView)mInfoContentView.findViewById(R.id.snippet);
+			mIndexView = (TextView)mInfoContentView.findViewById(R.id.index);
+			imageView.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Marker m = (Marker)v.getTag();
+					
+				}
+			});
+		}
+		
+		@Override
+		public View getInfoContents(Marker marker) {
+			MyData value = mValueResolve.get(marker.getId());
+			mTitleView.setText(marker.getTitle());
+			mSnippentView.setText(marker.getSnippet());
+			mIndexView.setText("index : " + value.mIndex);
+			imageView.setTag(marker);
+			return mInfoContentView;
+		}
+
+		@Override
+		public View getInfoWindow(Marker marker) {
+			return null;
+		}
+		
+	}
+
+	@Override
+	public void onInfoWindowClick(Marker marker) {
+		// ...
+	}
+	
+	
 
 }
