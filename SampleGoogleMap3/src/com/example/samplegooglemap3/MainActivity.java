@@ -22,6 +22,7 @@ import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
+import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -68,6 +69,8 @@ public class MainActivity extends FragmentActivity implements
 			CameraPosition pos = builder.build();
 			CameraUpdate update = CameraUpdateFactory.newCameraPosition(pos);
 			mMap.animateCamera(update);
+			
+			mLocationSource.setMyLocation(location);
 		}
 	};
 	
@@ -158,7 +161,14 @@ public class MainActivity extends FragmentActivity implements
 	@Override
 	protected void onResume() {
 		setUpMapIfNeeded();
+		mLocationSource.onResumed();
 		super.onResume();
+	}
+	
+	@Override
+	protected void onPause() {
+		mLocationSource.onPaused();
+		super.onPause();
 	}
 	
 	private void setUpMapIfNeeded() {
@@ -179,6 +189,9 @@ public class MainActivity extends FragmentActivity implements
 		
 		mMap.setOnMapClickListener(this);
 		mMap.setOnMarkerClickListener(this);
+		
+		mMap.setLocationSource(mLocationSource);
+		mMap.setOnMapLongClickListener(mLocationSource);
 	}
 	
 	
@@ -188,6 +201,7 @@ public class MainActivity extends FragmentActivity implements
 		return true;
 	}
 
+	
 	@Override
 	public void onMapClick(LatLng latLng) {
 		MarkerOptions options = new MarkerOptions();
@@ -220,6 +234,52 @@ public class MainActivity extends FragmentActivity implements
 		return true;
 	}
 	
+	MyLocationSource mLocationSource = new MyLocationSource();
+	
+	public class MyLocationSource implements LocationSource, GoogleMap.OnMapLongClickListener {
+		
+		OnLocationChangedListener mChangedListener;
+		boolean bResumed = false;
+
+		@Override
+		public void activate(OnLocationChangedListener listener) {
+			mChangedListener = listener;
+			
+		}
+
+		@Override
+		public void deactivate() {
+			mChangedListener = null;
+		}
+		
+		public void onResumed() {
+			bResumed = true;
+		}
+		
+		public void onPaused() {
+			bResumed = false;
+		}
+
+		@Override
+		public void onMapLongClick(LatLng latLng) {
+			
+			if (mChangedListener != null && bResumed) {
+			
+				Location location = new Location("MyLocation");
+				location.setLatitude(latLng.latitude);
+				location.setLongitude(latLng.longitude);
+				location.setAccuracy(50);
+				mChangedListener.onLocationChanged(location);
+			}
+		}
+
+		public void setMyLocation(Location location) {
+			if (mChangedListener != null && bResumed) {
+				mChangedListener.onLocationChanged(location);
+			}
+		}
+	}
+	
 	public class MyInfoWindowAdapter implements InfoWindowAdapter {
 
 		Context mContext;
@@ -241,24 +301,24 @@ public class MainActivity extends FragmentActivity implements
 				@Override
 				public void onClick(View v) {
 					Marker m = (Marker)v.getTag();
-					
+					Toast.makeText(MainActivity.this, "Tost...", Toast.LENGTH_SHORT).show();
 				}
 			});
 		}
 		
 		@Override
 		public View getInfoContents(Marker marker) {
+			return null;
+		}
+
+		@Override
+		public View getInfoWindow(Marker marker) {
 			MyData value = mValueResolve.get(marker.getId());
 			mTitleView.setText(marker.getTitle());
 			mSnippentView.setText(marker.getSnippet());
 			mIndexView.setText("index : " + value.mIndex);
 			imageView.setTag(marker);
 			return mInfoContentView;
-		}
-
-		@Override
-		public View getInfoWindow(Marker marker) {
-			return null;
 		}
 		
 	}
