@@ -1,7 +1,14 @@
 package com.example.sampletmap3;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -16,8 +23,10 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
+import com.skp.Tmap.TMapData;
 import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
@@ -32,6 +41,7 @@ public class MainActivity extends Activity implements
 	boolean isInitialized = false;
 	LocationManager mLM;
 	Location mCacheLocation;
+	EditText keywordView;
 	
 	HashMap<String,MyData> mValueResolver = new HashMap<String, MyData>();
 	HashMap<MyData,String> mKeyResolver = new HashMap<MyData, String>();
@@ -150,7 +160,78 @@ public class MainActivity extends Activity implements
 			}
 		});
 		
+		keywordView = (EditText)findViewById(R.id.keywor);
+		btn = (Button)findViewById(R.id.search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					new KeywordAllSearch().execute(keyword);
+				}
+			}
+		});
 	}
+
+	
+	public class KeywordAllSearch extends AsyncTask<String, Integer, ArrayList<TMapPOIItem>> {
+
+		@Override
+		protected ArrayList<TMapPOIItem> doInBackground(String... params) {
+			if (params.length > 0 && !params[0].equals("")) {
+				String keyword = params[0];
+				TMapData data = new TMapData();
+				try {
+					ArrayList<TMapPOIItem> items = data.findAllPOI(keyword);
+					return items;
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (FactoryConfigurationError e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(ArrayList<TMapPOIItem> result) {
+			if (result != null && result.size() > 0) {
+				mMapView.addTMapPOIItem(result);
+			}
+		}
+	}
+	
+	private void useDot() {
+		putString("a");
+		putString("a","b");
+		putString("a", "b" , "c");
+	}
+	
+	private void putString(String... strings) {
+		for (String str : strings) {
+			// ...
+		}
+		
+		for (int i = 0; i < strings.length; i++) {
+			String str = strings[i];
+			// ...
+		}
+	}
+	
+	
 	
 	
 	@Override
