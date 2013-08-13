@@ -26,6 +26,8 @@ import com.google.android.gms.maps.LocationSource;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.GroundOverlay;
+import com.google.android.gms.maps.model.GroundOverlayOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
@@ -36,6 +38,8 @@ public class MainActivity extends FragmentActivity implements
 	GoogleMap.OnMarkerClickListener,
 	GoogleMap.OnInfoWindowClickListener {
 
+    private static final LatLng NEWARK = new LatLng(40.714086, -74.228697);
+	
 	GoogleMap mMap;
 	LocationManager mLM;
 	HashMap<String, MyData> mValueResolve = new HashMap<String, MyData>();
@@ -137,6 +141,23 @@ public class MainActivity extends FragmentActivity implements
 				LatLng nearLeft = mMap.getProjection().getVisibleRegion().nearLeft;
 				LatLng nearRight = mMap.getProjection().getVisibleRegion().nearRight;
 				LatLngBounds bounds = mMap.getProjection().getVisibleRegion().latLngBounds;
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.groundOVerlay);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				GroundOverlayOptions options = new GroundOverlayOptions();
+				options.image(BitmapDescriptorFactory.fromResource(R.drawable.newark_nj_1922));
+				options.position(NEWARK, 8600f, 6500f);
+				options.anchor(0.0f, 1.0f);
+				
+				GroundOverlay overlay = mMap.addGroundOverlay(options);
+				overlay.setTransparency(0.5f);
+				CameraUpdate update = CameraUpdateFactory.newLatLng(NEWARK);
+				mMap.animateCamera(update);
 			}
 		});
 	}
