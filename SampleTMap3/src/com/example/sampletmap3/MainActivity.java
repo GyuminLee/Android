@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.skp.Tmap.TMapMarkerItem;
+import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
 
 public class MainActivity extends Activity {
@@ -94,6 +96,37 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.addMarker);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (isInitialized) {
+					TMapPoint point = mMapView.getCenterPoint();
+					
+					TMapPoint pt = new TMapPoint(point.getLatitude(), point.getLongitude());
+					
+					TMapMarkerItem item = new TMapMarkerItem();
+					item.setTMapPoint(pt);
+					item.setPosition(0.5f, 0.5f);
+					Bitmap bitmap = ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap();
+					item.setIcon(bitmap);
+					
+					item.setCalloutTitle("MyMarker");
+					item.setCalloutSubTitle("marker text");
+					item.setCalloutLeftImage(bitmap);
+					item.setCalloutRightButtonImage(bitmap);
+					item.setCanShowCallout(true);
+					
+					mMapView.addMarkerItem("markerId", item);
+					
+					
+				}
+				
+			}
+		});
+		
 	}
 	
 	

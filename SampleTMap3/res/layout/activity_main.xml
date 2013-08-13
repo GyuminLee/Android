@@ -33,6 +33,13 @@
             android:layout_height="wrap_content"
             android:text="Zoom Out" />
 
+        <Button
+            android:id="@+id/addMarker"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add" />
+
     </LinearLayout>
 
     <com.skp.Tmap.TMapView
