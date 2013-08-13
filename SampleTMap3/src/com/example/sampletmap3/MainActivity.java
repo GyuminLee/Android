@@ -1,8 +1,12 @@
 package com.example.sampletmap3;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
@@ -15,16 +19,25 @@ import android.widget.Button;
 import android.widget.Toast;
 
 import com.skp.Tmap.TMapMarkerItem;
+import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
 
-public class MainActivity extends Activity {
+public class MainActivity extends Activity implements 
+	TMapView.OnClickListenerCallback,
+	TMapView.OnCalloutRightButtonClickCallback {
 
 	TMapView mMapView;
 	public static final String API_KEY = "458a10f5-c07e-34b5-b2bd-4a891e024c2a";
 	boolean isInitialized = false;
 	LocationManager mLM;
 	Location mCacheLocation;
+	
+	HashMap<String,MyData> mValueResolver = new HashMap<String, MyData>();
+	HashMap<MyData,String> mKeyResolver = new HashMap<MyData, String>();
+	
+	
+	int mIndex = 0;
 	
 	LocationListener mListener = new LocationListener() {
 		
@@ -119,7 +132,17 @@ public class MainActivity extends Activity {
 					item.setCalloutRightButtonImage(bitmap);
 					item.setCanShowCallout(true);
 					
-					mMapView.addMarkerItem("markerId", item);
+					String markerId = "markerId" + mIndex;
+					
+					mMapView.addMarkerItem(markerId, item);
+					
+					MyData value = new MyData();
+					value.mIndex = mIndex;
+					value.name = "name" + mIndex;
+					mValueResolver.put(markerId, value);
+					mKeyResolver.put(value,markerId);
+					
+					mIndex++;
 					
 					
 				}
@@ -175,6 +198,8 @@ public class MainActivity extends Activity {
 		mMapView.setCompassMode(false);
 		mMapView.setSightVisible(true);
 		
+		mMapView.setOnClickListenerCallBack(this);
+		
 		if (mCacheLocation != null) {
 			moveLocation(mCacheLocation);
 			setMyLocation(mCacheLocation);
@@ -188,6 +213,32 @@ public class MainActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.main, menu);
 		return true;
+	}
+
+	@Override
+	public boolean onPressEvent(ArrayList<TMapMarkerItem> markers,
+			ArrayList<TMapPOIItem> pois, TMapPoint point, PointF pointf) {
+		if (markers != null && markers.size() > 0) {
+			for (TMapMarkerItem item : markers) {
+				MyData value = mValueResolver.get(item.getID());
+				// ...
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public boolean onPressUpEvent(ArrayList<TMapMarkerItem> markers,
+			ArrayList<TMapPOIItem> pois, TMapPoint point, PointF pointf) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public void onCalloutRightButton(TMapMarkerItem marker) {
+		MyData value = mValueResolver.get(marker.getID());
+		// ...
+		
 	}
 
 }
