@@ -2,6 +2,8 @@ package com.example.sampletmap3;
 
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -10,6 +12,7 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.skp.Tmap.TMapView;
 
@@ -39,6 +42,7 @@ public class MainActivity extends Activity {
 		public void onLocationChanged(Location location) {
 			if (isInitialized) {
 				moveLocation(location);
+				setMyLocation(location);
 			} else {
 				mCacheLocation = location;
 			}
@@ -47,7 +51,14 @@ public class MainActivity extends Activity {
 	
 	private void moveLocation(Location location) {
 		mMapView.setCenterPoint(location.getLongitude(), location.getLatitude());
-		mMapView.setZoom(15.5f);
+		mMapView.setZoom(15);
+	}
+	
+	private void setMyLocation(Location location) {
+		mMapView.setLocationPoint(location.getLongitude(), location.getLatitude());
+		Bitmap icon = ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap();
+		mMapView.setIcon(icon);
+		mMapView.setIconVisibility(true);
 	}
 	
 	@Override
@@ -75,7 +86,11 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				if (isInitialized) {
 					int zoom = mMapView.getZoom();
-					mMapView.MapZoomOut();
+					if (zoom > 7) {
+						mMapView.MapZoomOut();
+					} else {
+						Toast.makeText(MainActivity.this, "can't zoom out", Toast.LENGTH_SHORT).show();
+					}
 				}
 			}
 		});
@@ -129,6 +144,7 @@ public class MainActivity extends Activity {
 		
 		if (mCacheLocation != null) {
 			moveLocation(mCacheLocation);
+			setMyLocation(mCacheLocation);
 		}
 		
 		isInitialized = true;
