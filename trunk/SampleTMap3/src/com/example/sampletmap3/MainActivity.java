@@ -27,9 +27,11 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapData.TMapPathType;
 import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapPolyLine;
 import com.skp.Tmap.TMapView;
 
 public class MainActivity extends Activity implements 
@@ -42,6 +44,9 @@ public class MainActivity extends Activity implements
 	LocationManager mLM;
 	Location mCacheLocation;
 	EditText keywordView;
+	TMapPoint selectedPoint;
+	TMapPoint startPoint;
+	TMapPoint endPoint;
 	
 	HashMap<String,MyData> mValueResolver = new HashMap<String, MyData>();
 	HashMap<MyData,String> mKeyResolver = new HashMap<MyData, String>();
@@ -172,8 +177,101 @@ public class MainActivity extends Activity implements
 				}
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.start);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				if (selectedPoint != null) {
+					startPoint = selectedPoint;
+					selectedPoint = null;
+				} else {
+					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.end);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (selectedPoint != null) {
+					endPoint = selectedPoint;
+					selectedPoint = null;
+				} else {
+					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.pathSearch);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (startPoint != null && endPoint != null) {
+					new KeywordPathSearch().execute(startPoint, endPoint);
+					startPoint = null;
+					endPoint = null;
+				} else {
+					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+				}
+				
+			}
+		});
 	}
 
+	
+	
+	public class KeywordPathSearch extends AsyncTask<TMapPoint, Integer, TMapPolyLine> {
+
+		@Override
+		protected TMapPolyLine doInBackground(TMapPoint... params) {
+			
+			if (params != null && params.length >= 2) {
+				TMapPoint start = params[0];
+				TMapPoint end = params[1];
+				TMapData data = new TMapData();
+				try {
+					TMapPolyLine path = data.findPathData(start, end);
+//					TMapPolyLine path = data.findPathDataWithType(TMapPathType.BICYCLE_PATH, start, end);
+					return path;
+				} catch (MalformedURLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (ParserConfigurationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (FactoryConfigurationError e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SAXException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(TMapPolyLine result) {
+			// TODO Auto-generated method stub
+			if (result != null) {
+				mMapView.addTMapPath(result);
+				Bitmap bm = ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap();
+				mMapView.setTMapPathIcon(bm, bm);
+			}
+		}
+	}
+	
 	
 	public class KeywordAllSearch extends AsyncTask<String, Integer, ArrayList<TMapPOIItem>> {
 
@@ -183,7 +281,9 @@ public class MainActivity extends Activity implements
 				String keyword = params[0];
 				TMapData data = new TMapData();
 				try {
+					TMapPoint point = mMapView.getCenterPoint();
 					ArrayList<TMapPOIItem> items = data.findAllPOI(keyword);
+//					ArrayList<TMapPOIItem> items = data.findAroundNamePOI(point, keyword);
 					return items;
 				} catch (MalformedURLException e) {
 					// TODO Auto-generated catch block
@@ -306,6 +406,13 @@ public class MainActivity extends Activity implements
 			for (TMapMarkerItem item : markers) {
 				MyData value = mValueResolver.get(item.getID());
 				// ...
+				selectedPoint = item.getTMapPoint();
+			}
+		}
+		
+		if (pois != null  && pois.size() > 0) {
+			for (TMapPOIItem item : pois) {
+				selectedPoint = item.getPOIPoint();
 			}
 		}
 		return false;
