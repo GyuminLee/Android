@@ -91,6 +91,7 @@ public class JSONRoadRequest implements Runnable {
 				JSONObject jobject = new JSONObject(sb.toString());
 
 				mResult = new RoadSearchResult();
+				mResult.parseJson(jobject);
 				
 //				Gson gson = new Gson();
 //				mResult = gson.fromJson(isr, RoadSearchResult.class);
