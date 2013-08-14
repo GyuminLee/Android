@@ -1,7 +1,5 @@
 package com.example.samplegooglemap3;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -18,11 +16,15 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.samplegooglemap3.network.Feature;
+import com.example.samplegooglemap3.network.GooglePlace;
+import com.example.samplegooglemap3.network.GooglePlaceList;
+import com.example.samplegooglemap3.network.GooglePlaceRequest;
 import com.example.samplegooglemap3.network.JSONRoadRequest;
 import com.example.samplegooglemap3.network.RoadSearchResult;
 import com.google.android.gms.maps.CameraUpdate;
@@ -40,8 +42,6 @@ import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.PolylineOptions;
-import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.android.gms.maps.model.UrlTileProvider;
 
 public class MainActivity extends FragmentActivity implements 
 	GoogleMap.OnMapClickListener,
@@ -66,6 +66,8 @@ public class MainActivity extends FragmentActivity implements
 	LatLng startPoint;
 	LatLng endPoint;
 	Handler mHandler = new Handler();
+	
+	EditText keywordView;
 	
 	LocationListener mListener = new LocationListener() {
 		
@@ -103,6 +105,8 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 		setUpMapIfNeeded();
 		mLM = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		keywordView = (EditText)findViewById(R.id.keyword);
+		
 		
 		
 		Button btn = (Button)findViewById(R.id.zoomIn);
@@ -214,7 +218,7 @@ public class MainActivity extends FragmentActivity implements
 			
 			@Override
 			public void onClick(View v) {
-//				if (startPoint != null && endPoint != null) {
+				if (startPoint != null && endPoint != null) {
 					JSONRoadRequest request = new JSONRoadRequest(startPoint.latitude, startPoint.longitude, endPoint.latitude, endPoint.longitude);
 					request.start(mHandler, new JSONRoadRequest.OnDownloadCompleteListener() {
 						
@@ -247,10 +251,53 @@ public class MainActivity extends FragmentActivity implements
 							
 						}
 					});
-//				} else {
-//					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
-//				}
+				} else {
+					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+				}
 				
+			}
+		});
+		
+		
+		btn = (Button)findViewById(R.id.poiSearch);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				LatLng latLng = mMap.getCameraPosition().target;
+				String name = keywordView.getText().toString();
+				GooglePlaceRequest request = new GooglePlaceRequest(latLng.latitude, latLng.longitude, name);
+				request.start(mHandler, new GooglePlaceRequest.OnDownloadCompleteListener() {
+					
+					@Override
+					public void onCompleted(GooglePlaceRequest request) {
+						GooglePlaceList list = request.getResult();
+						if (list == null || list.results == null || list.results.size() == 0 || !list.status.equals("OK")) {
+							Toast.makeText(MainActivity.this, "no result", Toast.LENGTH_SHORT).show();
+						}
+						for (GooglePlace place : list.results) {
+							MarkerOptions options = new MarkerOptions();
+							options.position(new LatLng(place.geometry.location.lat, place.geometry.location.lng));
+							options.title(place.name);
+							options.snippet(place.vicinity);
+							options.icon(BitmapDescriptorFactory.defaultMarker());
+							options.anchor(0.5f, 0.5f);
+							Marker marker = mMap.addMarker(options);
+							MyData data = new MyData();
+							data.mIndex = -1;
+							data.name = place.name;
+							data.place = place;
+							mValueResolve.put(marker.getId(), data);
+							mMarkerResolve.put(data, marker);
+						}
+						
+						if (list.results.size() > 0) {
+							GooglePlace place = list.results.get(0);
+							CameraUpdate update = CameraUpdateFactory.newLatLng(new LatLng(place.geometry.location.lat, place.geometry.location.lng));
+							mMap.animateCamera(update);
+						}
+					}
+				});
 			}
 		});
 	}
