@@ -6,6 +6,10 @@ import java.util.HashMap;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Point;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -69,6 +73,8 @@ public class MainActivity extends FragmentActivity implements
 	
 	EditText keywordView;
 	
+	SensorManager mSensorManager;
+	
 	LocationListener mListener = new LocationListener() {
 		
 		@Override
@@ -90,12 +96,71 @@ public class MainActivity extends FragmentActivity implements
 		public void onLocationChanged(Location location) {
 			LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
 			CameraPosition.Builder builder = new CameraPosition.Builder();
-			builder.target(latLng).zoom(15.5f).bearing(30).tilt(22);
+			builder.target(latLng).zoom(15.5f).bearing(-mBearing);
 			CameraPosition pos = builder.build();
 			CameraUpdate update = CameraUpdateFactory.newCameraPosition(pos);
-			mMap.animateCamera(update);
+			mMap.moveCamera(update);
 			
 			mLocationSource.setMyLocation(location);
+		}
+	};
+	
+	Sensor mAccSensor;
+	Sensor mMagSensor;
+	
+	float mBearing;
+	
+	public static final int UPDATE_INTERVAL = 200;
+	
+	Runnable updateRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			CameraPosition.Builder builder = new CameraPosition.Builder();
+			CameraPosition cPos = mMap.getCameraPosition();
+			builder.target(cPos.target).zoom(cPos.zoom).bearing(-mBearing).tilt(cPos.tilt);
+			CameraUpdate update = CameraUpdateFactory.newCameraPosition(builder.build());
+			mMap.moveCamera(update);
+			mHandler.postDelayed(this, UPDATE_INTERVAL);
+		}
+	};
+	
+	
+	SensorEventListener mSenserListener = new SensorEventListener() {
+		float[] mAccValue = new float[3];
+		float[] mMagValue = new float[3];
+		float[] mR = new float[9];
+		float[] mI = new float[9];
+		
+		float[] mRotate = new float[3];
+		
+		@Override
+		public void onSensorChanged(SensorEvent event) {
+			switch(event.sensor.getType()) {
+				case Sensor.TYPE_ACCELEROMETER :
+					mAccValue[0] = event.values[0];
+					mAccValue[1] = event.values[1];
+					mAccValue[2] = event.values[2];
+					break;
+				case Sensor.TYPE_MAGNETIC_FIELD :
+					mMagValue[0] = event.values[0];
+					mMagValue[1] = event.values[1];
+					mMagValue[2] = event.values[2];
+					break;
+			}
+			
+			SensorManager.getRotationMatrix(mR, mI, mAccValue, mMagValue);
+			
+			SensorManager.getOrientation(mR, mRotate);
+			
+			
+			mBearing = (float)Math.toDegrees((double)mRotate[0]);
+		}
+		
+		@Override
+		public void onAccuracyChanged(Sensor sensor, int accuracy) {
+			// TODO Auto-generated method stub
+			
 		}
 	};
 	
@@ -105,6 +170,11 @@ public class MainActivity extends FragmentActivity implements
 		setContentView(R.layout.activity_main);
 		setUpMapIfNeeded();
 		mLM = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		mSensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
+
+		mAccSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+		mMagSensor = mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
+		
 		keywordView = (EditText)findViewById(R.id.keyword);
 		
 		
@@ -309,12 +379,15 @@ public class MainActivity extends FragmentActivity implements
 			mListener.onLocationChanged(location);
 		}
 		mLM.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 0, mListener);
+		mSensorManager.registerListener(mSenserListener, mAccSensor, SensorManager.SENSOR_DELAY_GAME);
+		mSensorManager.registerListener(mSenserListener, mMagSensor, SensorManager.SENSOR_DELAY_GAME);
 		super.onStart();
 	}
 	
 	@Override
 	protected void onStop() {
 		mLM.removeUpdates(mListener);
+		mSensorManager.unregisterListener(mSenserListener);
 		super.onStop();
 	}
 	
@@ -323,12 +396,14 @@ public class MainActivity extends FragmentActivity implements
 	protected void onResume() {
 		setUpMapIfNeeded();
 		mLocationSource.onResumed();
+		mHandler.post(updateRunnable);
 		super.onResume();
 	}
 	
 	@Override
 	protected void onPause() {
 		mLocationSource.onPaused();
+		mHandler.removeCallbacks(updateRunnable);
 		super.onPause();
 	}
 	
