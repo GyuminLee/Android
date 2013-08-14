@@ -6,11 +6,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.graphics.Point;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -20,6 +22,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.samplegooglemap3.network.Feature;
+import com.example.samplegooglemap3.network.JSONRoadRequest;
+import com.example.samplegooglemap3.network.RoadSearchResult;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,9 +39,8 @@ import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.Tile;
+import com.google.android.gms.maps.model.PolylineOptions;
 import com.google.android.gms.maps.model.TileOverlayOptions;
-import com.google.android.gms.maps.model.TileProvider;
 import com.google.android.gms.maps.model.UrlTileProvider;
 
 public class MainActivity extends FragmentActivity implements 
@@ -57,6 +61,11 @@ public class MainActivity extends FragmentActivity implements
 	ArrayList<Marker> mMarkerList = new ArrayList<Marker>();
 
 	int mIndex = 0;
+	
+	LatLng selectedPoint;
+	LatLng startPoint;
+	LatLng endPoint;
+	Handler mHandler = new Handler();
 	
 	LocationListener mListener = new LocationListener() {
 		
@@ -170,6 +179,80 @@ public class MainActivity extends FragmentActivity implements
 				mMap.animateCamera(update);
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.start);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (selectedPoint != null) {
+					startPoint = selectedPoint;
+					selectedPoint = null;
+				} else {
+					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+				}
+				
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.end);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (selectedPoint != null) {
+					endPoint = selectedPoint;
+					selectedPoint = null;
+				} else {
+					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+//				if (startPoint != null && endPoint != null) {
+					JSONRoadRequest request = new JSONRoadRequest(startPoint.latitude, startPoint.longitude, endPoint.latitude, endPoint.longitude);
+					request.start(mHandler, new JSONRoadRequest.OnDownloadCompleteListener() {
+						
+						@Override
+						public void onCompleted(JSONRoadRequest request) {
+							RoadSearchResult result = request.getResult();
+							// result.... 
+							PolylineOptions options = new PolylineOptions();
+							
+							for (Feature f : result.features) {
+								if (f.geometry.type.equals("LineString")) {
+									double[] coord = f.geometry.coordinates;
+									for (int i = 0; i < coord.length; i+=2) {
+										LatLng point = new LatLng(coord[i+1],coord[i]);
+										options.add(point);
+									}
+								}
+								
+								if (f.properties.index == 0) {
+									int totalTime = f.properties.totalTime;
+									int totalDistance = f.properties.totalDistance;
+									Toast.makeText(MainActivity.this, "total Time : " + totalTime, Toast.LENGTH_SHORT).show();
+								}
+							}
+							
+							options.color(Color.RED);
+							options.width(10);
+							mMap.addPolyline(options);
+							
+							
+						}
+					});
+//				} else {
+//					Toast.makeText(MainActivity.this, "not selected", Toast.LENGTH_SHORT).show();
+//				}
+				
+			}
+		});
 	}
 	
 	@Override
@@ -211,8 +294,8 @@ public class MainActivity extends FragmentActivity implements
 
 	private void setUpMap() {
 //		mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
-		mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
-//		mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+//		mMap.setMapType(GoogleMap.MAP_TYPE_NONE);
+		mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		mMap.setMyLocationEnabled(true);
 //		mMap.setTrafficEnabled(true);
 		mMap.getUiSettings().setZoomControlsEnabled(false);
@@ -226,22 +309,22 @@ public class MainActivity extends FragmentActivity implements
 		mMap.setLocationSource(mLocationSource);
 		mMap.setOnMapLongClickListener(mLocationSource);
 		
-		UrlTileProvider provider = new UrlTileProvider(256,256) {
-			
-			@Override
-			public URL getTileUrl(int x, int y, int zoom) {
-				
-				int reservedY = (1 << zoom) - y - 1;
-				String url = String.format(MOON_MAP_URL_FORMAT, zoom,x, reservedY);
-				try {
-					return new URL(url);
-				} catch (MalformedURLException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-				return null;
-			}
-		};
+//		UrlTileProvider provider = new UrlTileProvider(256,256) {
+//			
+//			@Override
+//			public URL getTileUrl(int x, int y, int zoom) {
+//				
+//				int reservedY = (1 << zoom) - y - 1;
+//				String url = String.format(MOON_MAP_URL_FORMAT, zoom,x, reservedY);
+//				try {
+//					return new URL(url);
+//				} catch (MalformedURLException e) {
+//					// TODO Auto-generated catch block
+//					e.printStackTrace();
+//				}
+//				return null;
+//			}
+//		};
 		
 //		TileProvider p = new TileProvider() {
 //			
@@ -257,9 +340,9 @@ public class MainActivity extends FragmentActivity implements
 //			}
 //		};
 		
-		TileOverlayOptions options = new TileOverlayOptions();
-		options.tileProvider(provider);
-		mMap.addTileOverlay(options);
+//		TileOverlayOptions options = new TileOverlayOptions();
+//		options.tileProvider(provider);
+//		mMap.addTileOverlay(options);
 	}
 	
 	
@@ -298,7 +381,8 @@ public class MainActivity extends FragmentActivity implements
 	public boolean onMarkerClick(Marker marker) {
 		MyData value = mValueResolve.get(marker.getId());
 		Toast.makeText(this, "marker clicked : " + marker.getTitle() + ", value : " + value.mIndex, Toast.LENGTH_SHORT).show();
-		marker.showInfoWindow();
+//		marker.showInfoWindow();
+		selectedPoint = marker.getPosition();
 		return true;
 	}
 	
