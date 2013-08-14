@@ -28,7 +28,7 @@ public class GooglePlaceRequest implements Runnable {
 	
 	public GooglePlaceRequest(double lat, double lng, String name) {
 		if(name == null || name.equals("")) {
-			urlString = String.format(URL_STRING_FORMAT_TYPE, lat,lng, 500);
+			urlString = String.format(URL_STRING_FORMAT_TYPE, lat,lng, 5000);
 		} else {
 			String encodedName = null;
 			try {
@@ -37,7 +37,7 @@ public class GooglePlaceRequest implements Runnable {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			urlString = String.format(URL_STRING_FORMAT, lat, lng, 500, encodedName);
+			urlString = String.format(URL_STRING_FORMAT, lat, lng, 5000, encodedName);
 		}
 	}
 	
