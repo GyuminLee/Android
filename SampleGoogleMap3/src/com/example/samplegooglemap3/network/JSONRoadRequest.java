@@ -127,6 +127,8 @@ public class JSONRoadRequest implements Runnable {
 	
 	private void setRequestHeader(HttpURLConnection conn) {
 		try {
+			conn.setDoInput(true);
+			conn.setDoOutput(true);
 			conn.setRequestMethod("POST");
 			conn.setRequestProperty(FIELD_CONTENT_TYPE, CONTENT_TYPE);
 			conn.setRequestProperty(FIELD_ACCEPT, ACCEPT);
