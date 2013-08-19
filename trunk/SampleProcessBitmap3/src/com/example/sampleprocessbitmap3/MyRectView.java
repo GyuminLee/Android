@@ -47,13 +47,15 @@ public class MyRectView extends View {
 		for (int i = 0; i < size; i++) {
 			PointF point = new PointF();
 			faces[i].getMidPoint(point);
-			Rect rect = rects[i];
+			Rect rect = new Rect();
+			
 			float distance = faces[i].eyesDistance();
 			
-			rect.left = (int)(point.x - distance * 2);
-			rect.right = (int)(point.x + distance * 2);
-			rect.top = (int)(point.y - distance);
-			rect.bottom = (int)(point.y + distance * 3);
+			rect.left = (int)(point.x - distance * 1);
+			rect.right = (int)(point.x + distance * 1);
+			rect.top = (int)(point.y - distance * 0.5);
+			rect.bottom = (int)(point.y + distance * 1.5);
+			rects[i] = rect;
 		}
 		bm565.recycle();
 		mBitmap = bitmap;
