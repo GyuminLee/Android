@@ -21,14 +21,14 @@ import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
-	ImageView imageView;
+	MyRectView imageView;
 	public static final int REQUEST_CODE_GET_IMAGE = 0;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		imageView = (ImageView)findViewById(R.id.showImage);
+		imageView = (MyRectView)findViewById(R.id.showImage);
 		Button btn = (Button)findViewById(R.id.getImage);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -60,31 +60,33 @@ public class MainActivity extends Activity {
 				Bitmap scaleBitmap = Bitmap.createScaledBitmap(bm, 400, 400, false);
 				bm.recycle();
 
-				Bitmap bm565 = Bitmap.createBitmap(scaleBitmap.getWidth(), scaleBitmap.getHeight(), Bitmap.Config.RGB_565);
-				Canvas canvas = new Canvas(bm565);
-				canvas.drawBitmap(scaleBitmap, 0, 0, null);
-
-				FaceDetector detector = new FaceDetector(400, 400, 10);
-				Face[] faces = new Face[10];
-				int size = detector.findFaces(bm565, faces);
-				for (int i = 0; i < size; i++) {
-					PointF point = new PointF();
-					faces[i].getMidPoint(point);
-					float distance = faces[i].eyesDistance();
-					
-					float left = point.x - distance * 2;
-					float right = point.x + distance * 2;
-					float top = point.y - distance;
-					float bottom = point.y + distance * 3;
-					Toast.makeText(MainActivity.this, 
-							"left : " + left +
-							"\nright : " + right + 
-							"\ntop : " + top +
-							"\nbottom : " + bottom, Toast.LENGTH_SHORT).show();
-				}
-				bm565.recycle();
+				imageView.setBitmap(scaleBitmap);
 				
-				imageView.setImageBitmap(scaleBitmap);
+//				Bitmap bm565 = Bitmap.createBitmap(scaleBitmap.getWidth(), scaleBitmap.getHeight(), Bitmap.Config.RGB_565);
+//				Canvas canvas = new Canvas(bm565);
+//				canvas.drawBitmap(scaleBitmap, 0, 0, null);
+//
+//				FaceDetector detector = new FaceDetector(400, 400, 10);
+//				Face[] faces = new Face[10];
+//				int size = detector.findFaces(bm565, faces);
+//				for (int i = 0; i < size; i++) {
+//					PointF point = new PointF();
+//					faces[i].getMidPoint(point);
+//					float distance = faces[i].eyesDistance();
+//					
+//					float left = point.x - distance * 2;
+//					float right = point.x + distance * 2;
+//					float top = point.y - distance;
+//					float bottom = point.y + distance * 3;
+//					Toast.makeText(MainActivity.this, 
+//							"left : " + left +
+//							"\nright : " + right + 
+//							"\ntop : " + top +
+//							"\nbottom : " + bottom, Toast.LENGTH_SHORT).show();
+//				}
+//				bm565.recycle();
+//				
+//				imageView.setImageBitmap(scaleBitmap);
 			} catch (FileNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
