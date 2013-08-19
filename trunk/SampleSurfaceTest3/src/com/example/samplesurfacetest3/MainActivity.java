@@ -12,12 +12,14 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
 	SurfaceView surfaceView;
 	Camera mCamera;
+	LinearLayout menuLayout;
 //	ImageProcessHandler mImageProcessHandler;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,6 +32,8 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 
 		mCamera = Camera.open();
 		
+		menuLayout = (LinearLayout)findViewById(R.id.menuLayout);
+		menuLayout.setVisibility(View.GONE);
 		Button btn = (Button)findViewById(R.id.btnMenu);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -45,6 +49,18 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 			@Override
 			public void onClick(View v) {
 				Toast.makeText(MainActivity.this, "Show Button cliecked", Toast.LENGTH_SHORT).show();
+				menuLayout.setVisibility(View.GONE);
+			}
+		});
+		surfaceView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (menuLayout.getVisibility() == View.GONE) {
+					menuLayout.setVisibility(View.VISIBLE);
+				} else {
+					menuLayout.setVisibility(View.GONE);
+				}
 			}
 		});
 //		HandlerThread imageProcessThread = new HandlerThread("imagethread");
