@@ -70,8 +70,7 @@ public class MyRectView extends View {
 		}
 		int width = mBitmap.getWidth();
 		int height = mBitmap.getHeight();
-		setMeasuredDimension(MeasureSpec.makeMeasureSpec(width, widthMeasureSpec), 
-				MeasureSpec.makeMeasureSpec(height, heightMeasureSpec));
+		setMeasuredDimension(width, height);
 	}
 	
 	@Override
