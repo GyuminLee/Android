@@ -7,6 +7,7 @@ import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 
 public class MainActivity extends Activity {
@@ -15,12 +16,21 @@ public class MainActivity extends Activity {
 
 	SensorManager mSensorManager;
 	Sensor mGravitySensor;
-	Sensor mMageticSensor;
+	Sensor mMagenticSensor;
+	
+	public static final int DRAWING_INTERVAL = 100;
+	
+	Handler mHandler = new Handler();
+	
+	float mBearing = 0;
 
 	SensorEventListener mListener = new SensorEventListener() {
 
 		float[] mGravityValues = new float[3];
 		float[] mMagenticValues = new float[3];
+		float[] mR = new float[9];
+		float[] mI = new float[9];
+		float[] mOrientation = new float[3];
 		
 		@Override
 		public void onSensorChanged(SensorEvent event) {
@@ -39,8 +49,9 @@ public class MainActivity extends Activity {
 				break;
 			}
 			
-			
-
+			SensorManager.getRotationMatrix(mR, mI, mGravityValues, mMagenticValues);
+			SensorManager.getOrientation(mR, mOrientation);
+			mBearing = (float)Math.toDegrees(mOrientation[0]);
 		}
 
 		@Override
@@ -57,7 +68,7 @@ public class MainActivity extends Activity {
 		mSensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		mGravitySensor = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
-		mMageticSensor = mSensorManager
+		mMagenticSensor = mSensorManager
 				.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 	}
 
@@ -65,17 +76,30 @@ public class MainActivity extends Activity {
 	protected void onResume() {
 		mSensorManager.registerListener(mListener, mGravitySensor,
 				SensorManager.SENSOR_DELAY_GAME);
-		mSensorManager.registerListener(mListener, mMageticSensor,
+		mSensorManager.registerListener(mListener, mMagenticSensor,
 				SensorManager.SENSOR_DELAY_GAME);
+		mHandler.post(compassUpdateRunnable);
 		super.onResume();
 	}
 
 	@Override
 	protected void onPause() {
 		mSensorManager.unregisterListener(mListener);
+		mHandler.removeCallbacks(compassUpdateRunnable);
 		super.onPause();
 	}
+	
+	
 
+	Runnable compassUpdateRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			compassView.setDegree(mBearing);
+			mHandler.postDelayed(this, DRAWING_INTERVAL);
+		}
+	};
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
