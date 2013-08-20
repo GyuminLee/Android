@@ -32,6 +32,13 @@ public class MainActivity extends Activity {
 		float[] mI = new float[9];
 		float[] mOrientation = new float[3];
 		
+		public static final int TOTAL = 30;
+		
+		float[][] mAverage = new float[TOTAL][9];
+		int mIndex = 0;
+		
+		float[] mAverageR = new float[9];
+		
 		@Override
 		public void onSensorChanged(SensorEvent event) {
 			switch (event.sensor.getType()) {
@@ -50,9 +57,27 @@ public class MainActivity extends Activity {
 			}
 			
 			SensorManager.getRotationMatrix(mR, mI, mGravityValues, mMagenticValues);
-			SensorManager.getOrientation(mR, mOrientation);
+			
+			average(mR);
+
+			SensorManager.getOrientation(mAverageR, mOrientation);
 			mBearing = (float)Math.toDegrees(mOrientation[0]);
 		}
+		
+		private void average(float[] r) {
+			for (int i = 0; i < 9; i ++) {
+				mAverage[mIndex][i] = r[i];
+			}
+			mIndex = (mIndex + 1) % TOTAL;
+			for (int i = 0; i < 9; i++) {
+				mAverageR[i] = 0;
+				for (int j = 0; j < TOTAL; j++) {
+					mAverageR[i] += mAverage[j][i];
+				}
+				mAverageR[i] /= TOTAL;
+			}
+		}
+		
 
 		@Override
 		public void onAccuracyChanged(Sensor sensor, int accuracy) {
