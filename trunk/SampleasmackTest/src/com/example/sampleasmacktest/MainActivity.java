@@ -3,6 +3,7 @@ package com.example.sampleasmacktest;
 import java.util.List;
 
 import org.jivesoftware.smack.Chat;
+import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
 
@@ -37,6 +38,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		Button btn = (Button)findViewById(R.id.button1);
+		SmackAndroid.init(this);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
