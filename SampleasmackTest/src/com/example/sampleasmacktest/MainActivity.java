@@ -6,6 +6,7 @@ import org.jivesoftware.smack.Chat;
 import org.jivesoftware.smack.SmackAndroid;
 import org.jivesoftware.smack.XMPPConnection;
 import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smackx.filetransfer.FileTransfer;
 
 import android.app.Activity;
 import android.content.Intent;

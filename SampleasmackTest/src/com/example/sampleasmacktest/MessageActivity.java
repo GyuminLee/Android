@@ -52,7 +52,7 @@ public class MessageActivity extends Activity {
 					@Override
 					public void onMessageSendSuccess(Chat chat, String message) {
 						// TODO Auto-generated method stub
-						mAdapter.add(mUser + ":" + message);
+						mAdapter.add("Me" + ":" + message);
 					}
 					
 					@Override
