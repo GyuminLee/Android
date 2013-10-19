@@ -8,6 +8,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.example.samplecustomlisttest.MyItemAdapter.OnAdapterImageClickListener;
 
@@ -55,7 +56,7 @@ public class MainActivity extends Activity {
 			}
 		});
 		list.setAdapter(mAdapter);
-		
+				
 		showImageView = (ImageView)findViewById(R.id.showImage);
 		showImageView.setOnClickListener(new View.OnClickListener() {
 			
