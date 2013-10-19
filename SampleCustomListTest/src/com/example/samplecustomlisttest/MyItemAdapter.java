@@ -54,15 +54,28 @@ public class MyItemAdapter extends BaseAdapter implements ItemView.OnItemImageCl
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		
-		ItemView v;
-		if (convertView == null) {
-			v = new ItemView(mContext);
-			v.setOnItemImageClickListener(this);
-		} else {
-			v = (ItemView)convertView;
+		switch(getItemViewType(position)) {
+		case ITEM_TYPE_ONE :
+			ItemView v;
+			if (convertView == null) {
+				v = new ItemView(mContext);
+				v.setOnItemImageClickListener(this);
+			} else {
+				v = (ItemView)convertView;
+			}
+			v.setData(getItem(position));
+			return v;
+		case ITEM_TYPE_TWO :
+			ItemViewRight vr;
+			if (convertView == null) {
+				vr = new ItemViewRight(mContext);
+			} else {
+				vr = (ItemViewRight)convertView;
+			}
+			vr.setData(getItem(position));
+			return vr;
 		}
-		v.setData(getItem(position));
-		return v;
+		return null;
 	}
 
 	@Override
@@ -72,4 +85,23 @@ public class MyItemAdapter extends BaseAdapter implements ItemView.OnItemImageCl
 		}
 	}
 
+	public static final int ITEM_VIEW_TYPE_COUNT = 2;
+	
+	@Override
+	public int getViewTypeCount() {
+		// TODO Auto-generated method stub
+		return ITEM_VIEW_TYPE_COUNT;
+	}
+
+	public static final int ITEM_TYPE_ONE = 0;
+	public static final int ITEM_TYPE_TWO = 1;
+	
+	@Override
+	public int getItemViewType(int position) {
+		if (position % 2 == 0) {
+			return ITEM_TYPE_ONE;
+		} else {
+			return ITEM_TYPE_TWO;
+		}
+	}
 }
