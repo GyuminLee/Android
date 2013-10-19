@@ -5,12 +5,17 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.ImageView;
 import android.widget.ListView;
+
+import com.example.samplecustomlisttest.MyItemAdapter.OnAdapterImageClickListener;
 
 public class MainActivity extends Activity {
 
 	ListView list;
 	MyItemAdapter mAdapter;
+	ImageView showImageView;
 	 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +45,25 @@ public class MainActivity extends Activity {
 		
 		mAdapter = new MyItemAdapter(this,data);
 		
+		mAdapter.setOnAdapterImageClickListener(new OnAdapterImageClickListener() {
+			
+			@Override
+			public void onAdapterImageClicked(MyItemAdapter adapter, ItemView view,
+					ItemData item) {
+				showImageView.setImageResource(item.imageId);
+				showImageView.setVisibility(View.VISIBLE);
+			}
+		});
 		list.setAdapter(mAdapter);
+		
+		showImageView = (ImageView)findViewById(R.id.showImage);
+		showImageView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				showImageView.setVisibility(View.GONE);
+			}
+		});
 	}
 
 	@Override
