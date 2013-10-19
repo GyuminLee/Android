@@ -16,10 +16,24 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
-    <ListView
-        android:id="@+id/listView1"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
-    </ListView>
+        android:layout_height="match_parent" >
+
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" >
+        </ListView>
+
+        <ImageView
+            android:id="@+id/showImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|center_horizontal"
+            android:src="@drawable/ic_launcher"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </LinearLayout>
