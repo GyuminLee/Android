@@ -7,8 +7,13 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
+	
+	public static final int REQUEST_MY_ACTIVITY = 0;
+	public static final int REQUEST_IMAGE = 1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +45,9 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent intent = new Intent(MainActivity.this, MyActivity.class);
-				startActivity(intent);
+				intent.putExtra(MyActivity.PARAM_NAME, "ysi");
+				intent.putExtra(MyActivity.PARAM_AGE, 39);
+				startActivityForResult(intent, REQUEST_MY_ACTIVITY);
 			}
 		});
 		
@@ -51,11 +58,23 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
 				intent.setType("image/*");
-				startActivity(intent);
+				startActivityForResult(intent,REQUEST_IMAGE);
 			}
 		});
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		if (requestCode == REQUEST_MY_ACTIVITY && resultCode == RESULT_OK) {
+			int resultAge = data.getIntExtra(MyActivity.RESULT_AGE, 0);
+			Toast.makeText(this, "result : " + resultAge, Toast.LENGTH_SHORT).show();
+		} else if (requestCode == REQUEST_IMAGE && resultCode == RESULT_OK) {
+			ImageView iv = (ImageView)findViewById(R.id.imageView1);
+			Uri imageUri = data.getData();
+			iv.setImageURI(imageUri);
+		}
+	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
