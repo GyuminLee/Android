@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="helloAndroid">안녕! 안드로이드</string>
+    <string name="buttonOK">확인</string>
+    
+</resources>
