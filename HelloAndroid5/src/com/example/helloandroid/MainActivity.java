@@ -1,6 +1,8 @@
 package com.example.helloandroid;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -12,20 +14,51 @@ public class MainActivity extends Activity {
 
 	TextView messageView;
 	EditText keywordView;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		messageView = (TextView)findViewById(R.id.message);
-		keywordView = (EditText)findViewById(R.id.keyword);
-		Button btn = (Button)findViewById(R.id.btnOk);
+		messageView = (TextView) findViewById(R.id.message);
+		keywordView = (EditText) findViewById(R.id.keyword);
+		Button btn = (Button) findViewById(R.id.btnOk);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				String text = keywordView.getText().toString();
 				messageView.setText(text);
+			}
+		});
+
+		btn = (Button) findViewById(R.id.btnNewActivity);
+		btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainActivity.this, MyActivity.class);
+				startActivity(i);
+			}
+		});
+		btn = (Button) findViewById(R.id.btnBrowser);
+		btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri
+						.parse("http://www.google.com"));
+				startActivity(i);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btnGetImage);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+				i.setType("image/*");
+				startActivity(i);
 			}
 		});
 	}

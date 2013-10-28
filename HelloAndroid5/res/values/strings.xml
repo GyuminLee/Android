@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="helloAndroid">Hello Android</string>
     <string name="buttonOK">OK</string>
+    <string name="callActivity">Call Activity</string>
 
 </resources>
