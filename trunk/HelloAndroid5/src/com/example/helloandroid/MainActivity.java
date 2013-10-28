@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -50,15 +51,26 @@ public class MainActivity extends Activity {
 				startActivity(i);
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.btnGetImage);
+
+		btn = (Button) findViewById(R.id.btnGetImage);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(Intent.ACTION_GET_CONTENT);
 				i.setType("image/*");
 				startActivity(i);
+			}
+		});
+
+		btn = (Button) findViewById(R.id.btnShowToast);
+		btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(MainActivity.this, "Call Toast Popup",
+						Toast.LENGTH_SHORT).show();
+
 			}
 		});
 	}
