@@ -22,7 +22,9 @@
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/buttonOK" />
+        android:background="@drawable/btn_selector"
+        android:text="@string/buttonOK"
+        android:textColor="@color/textColor" />
 
     <EditText
         android:id="@+id/keyword"
@@ -33,26 +35,31 @@
         <requestFocus />
     </EditText>
 
-    <Button
-        android:id="@+id/btnNewActivity"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/callActivity" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
 
-    <Button
-        android:id="@+id/btnBrowser"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Browser" />
+        <Button
+            android:id="@+id/btnNewActivity"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/callActivity" />
 
-    <Button
-        android:id="@+id/btnGetImage"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Get Image" />
+        <Button
+            android:id="@+id/btnBrowser"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Browser" />
+
+        <Button
+            android:id="@+id/btnGetImage"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Get Image" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnShowToast"
@@ -60,5 +67,51 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Show Toast" />
+
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="CheckBox" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="225dp"
+        android:layout_height="wrap_content" >
+
+        <RadioButton
+            android:id="@+id/radio0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="RadioButton" />
+
+        <RadioButton
+            android:id="@+id/radio1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RadioButton" />
+
+        <RadioButton
+            android:id="@+id/radio2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="RadioButton" />
+    </RadioGroup>
+
+    <EditText
+        android:id="@+id/editText1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:hint="input your name" />
+
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="204dp"
+        android:layout_height="43dp"
+        android:layout_weight="1.08"
+        android:scaleType="centerInside"
+        android:src="@drawable/rotate_image" />
 
 </LinearLayout>
