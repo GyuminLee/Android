@@ -26,9 +26,24 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(MainActivity.this, MyActivity.class);
-				i.putExtra(MyActivity.PARAM_NAME, "ysi");
-				i.putExtra(MyActivity.PARAM_AGE, 39);
+				Person p = new Person();
+				p.name = "yes";
+				p.age = 39;
+				p.weight = 90;
+				p.height = 170;
+				i.putExtra(MyActivity.PARAM_PERSION, p);
+				// ...
 				startActivityForResult(i, REQUEST_CODE_MY_ACTIVITY);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+				startActivity(i);
 			}
 		});
 		imageView = (ImageView)findViewById(R.id.imageView1);

@@ -14,6 +14,7 @@ public class MyActivity extends Activity {
 	EditText resultEdit;
 	public static final String PARAM_NAME = "name";
 	public static final String PARAM_AGE = "age";
+	public static final String PARAM_PERSION = "person";
 	public static final String RESULT_AGE = "resultAge";
 	public static final String RESULT_STRING = "resultString";
 	int resultAge;
@@ -23,8 +24,9 @@ public class MyActivity extends Activity {
 	    super.onCreate(savedInstanceState);
 	    setContentView(R.layout.activity_main);
 	    Intent i = getIntent();
-	    String name = i.getStringExtra(PARAM_NAME);
-	    int age = i.getIntExtra(PARAM_AGE, 0);
+	    Person p = i.getParcelableExtra(PARAM_PERSION);
+	    String name = p.name;
+	    int age = p.age;
 	    messageView = (TextView)findViewById(R.id.textView1);
 	    resultEdit = (EditText)findViewById(R.id.editText1);
 	    messageView.setText("name : " + name + ", age : " + age);
