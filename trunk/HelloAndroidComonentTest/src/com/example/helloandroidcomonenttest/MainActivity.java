@@ -15,6 +15,7 @@ public class MainActivity extends Activity {
 	ImageView imageView;
 	public static final int REQUEST_CODE_MY_ACTIVITY = 0;
 	public static final int REQUEST_CODE_GET_CONTENT = 1;
+	int state;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,6 +58,15 @@ public class MainActivity extends Activity {
 				startActivityForResult(i, REQUEST_CODE_GET_CONTENT);
 			}
 		});
+		if (savedInstanceState != null) {
+			state = savedInstanceState.getInt("state");
+		}
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putInt("state", state);
 	}
 
 	@Override
