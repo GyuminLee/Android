@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 	TextView messageView;
 	EditText itemView;
 	ListView listView;
-	ArrayAdapter<String> mAdapter;
+	ArrayAdapter<MyData> mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,9 +34,10 @@ public class MainActivity extends Activity {
 		listView = (ListView) findViewById(R.id.listView1);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		String[] array = getResources().getStringArray(R.array.items);
-		ArrayList<String> list = new ArrayList<String>();
-		list.addAll(Arrays.<String> asList(array));
-		mAdapter = new ArrayAdapter<String>(this,
+//		ArrayList<String> list = new ArrayList<String>();
+//		list.addAll(Arrays.<String> asList(array));
+		ArrayList<MyData> list = getInitData();
+		mAdapter = new ArrayAdapter<MyData>(this,
 				android.R.layout.simple_list_item_multiple_choice, list);
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
@@ -44,8 +45,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				String text = mAdapter.getItem(position);
-				messageView.setText("clicked item : " + text);
+				MyData data = mAdapter.getItem(position);
+				messageView.setText("clicked item : " + data.name);
 
 			}
 		});
@@ -56,9 +57,8 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				String text = itemView.getText().toString();
 				if (text != null && !text.equals("")) {
-					mAdapter.add(text);
+					mAdapter.add(new MyData(text,30));
 				}
-
 			}
 		});
 
@@ -86,6 +86,14 @@ public class MainActivity extends Activity {
 						Toast.LENGTH_SHORT).show();
 			}
 		});
+	}
+
+	private ArrayList<MyData> getInitData() {
+		ArrayList<MyData> list = new ArrayList<MyData>();
+		list.add(new MyData("ysi",39));
+		list.add(new MyData("abc",29));
+		list.add(new MyData("def",19));
+		return list;
 	}
 
 	@Override
