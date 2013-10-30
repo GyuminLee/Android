@@ -33,6 +33,7 @@ public class MainActivity extends Activity {
 		itemView = (EditText) findViewById(R.id.itemView);
 		listView = (ListView) findViewById(R.id.listView1);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+		listView.setStackFromBottom(true);
 		String[] array = getResources().getStringArray(R.array.items);
 //		ArrayList<String> list = new ArrayList<String>();
 //		list.addAll(Arrays.<String> asList(array));
@@ -58,6 +59,8 @@ public class MainActivity extends Activity {
 				String text = itemView.getText().toString();
 				if (text != null && !text.equals("")) {
 					mAdapter.add(new MyData(text,30));
+					int position = mAdapter.getCount() - 1;
+					listView.setSelection(position);
 				}
 			}
 		});
