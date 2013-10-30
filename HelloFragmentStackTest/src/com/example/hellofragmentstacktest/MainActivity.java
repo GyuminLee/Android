@@ -23,6 +23,7 @@ public class MainActivity extends Activity {
 		FragmentBase fb = new FragmentBase();
 		FragmentTransaction ft = getFragmentManager().beginTransaction();
 		ft.add(R.id.container, fb);
+		ft.commit();
 		Button btn = (Button)findViewById(R.id.btnPrev);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -45,6 +46,7 @@ public class MainActivity extends Activity {
 					FragmentTransaction ft = getFragmentManager().beginTransaction();
 					ft.replace(R.id.container, fList[count]);
 					ft.addToBackStack("back"+count);
+					ft.commit();
 				} else {
 					getFragmentManager().popBackStack("back0", FragmentManager.POP_BACK_STACK_INCLUSIVE);
 				}
