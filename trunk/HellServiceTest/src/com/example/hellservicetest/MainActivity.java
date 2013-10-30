@@ -2,8 +2,11 @@ package com.example.hellservicetest;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -41,8 +44,26 @@ public class MainActivity extends Activity {
 				stopService(i);
 			}
 		});
+		IntentFilter filter = new IntentFilter(MyService.ACTION_COUNT);
+		
+		registerReceiver(myReceiver, filter, "com.example.helloservicetest.permission.RECEIVE_COUNT", null);
 	}
 	
+	BroadcastReceiver myReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			
+			int count = intent.getIntExtra("count", 0);
+		}
+		
+	};
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		unregisterReceiver(myReceiver);
+	};
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if (requestCode == 0 && resultCode == RESULT_OK) {
