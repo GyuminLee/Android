@@ -1,10 +1,10 @@
 package com.example.hellservicetest;
 
-import android.app.Activity;
-import android.app.PendingIntent;
-import android.app.PendingIntent.CanceledException;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
@@ -14,6 +14,8 @@ public class MyService extends Service implements Runnable {
 	boolean isRunning = false;
 	int mCount = 0;
 	private final String TAG = "MyService";
+	
+	public static final String ACTION_COUNT = "com.example.helloservicetest.action.COUNT";
 	
 	@Override
 	public IBinder onBind(Intent arg0) {
@@ -28,8 +30,26 @@ public class MyService extends Service implements Runnable {
 		isRunning = true;
 		new Thread(this).start();
 		Toast.makeText(this, "onCreate...", Toast.LENGTH_SHORT).show();
+		
+		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		registerReceiver(myReceiver, filter);
+		
+		filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
+		registerReceiver(myReceiver, filter);
 	}
 
+	BroadcastReceiver myReceiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+				Log.i(TAG, "screen on...");
+			} else if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+				Log.i(TAG, "screen off...");
+			}
+		}
+		
+	};
 
 	@Override
 	public void run() {
@@ -38,6 +58,12 @@ public class MyService extends Service implements Runnable {
 				Thread.sleep(1000);
 				mCount++;
 				Log.i(TAG, "count : " + mCount);
+				if (mCount % 10 == 0) {
+					Intent i = new Intent(ACTION_COUNT);
+					i.putExtra("count", mCount);
+					String permission = getResources().getString(R.string.count_permission);
+					sendBroadcast(i,permission);
+				}
 			} catch (InterruptedException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -66,6 +92,7 @@ public class MyService extends Service implements Runnable {
 	public void onDestroy() {
 		Toast.makeText(this, "onDestroy...", Toast.LENGTH_SHORT).show();
 		isRunning = false;
+		unregisterReceiver(myReceiver);
 		super.onDestroy();
 	}
 }
