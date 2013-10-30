@@ -1,5 +1,6 @@
 package com.example.hellolisttest;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -30,7 +31,8 @@ public class MainActivity extends Activity {
 		itemView = (EditText)findViewById(R.id.itemView);
 		listView = (ListView)findViewById(R.id.listView1);
 		String[] array = getResources().getStringArray(R.array.items);
-		List<String> list = Arrays.<String>asList(array);
+		ArrayList<String> list = new ArrayList<String>();
+		list.addAll(Arrays.<String>asList(array));
 		mAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, list);
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
