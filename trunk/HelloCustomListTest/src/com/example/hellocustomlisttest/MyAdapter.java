@@ -7,11 +7,20 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class MyAdapter extends BaseAdapter {
+public class MyAdapter extends BaseAdapter implements MyItemView.OnItemImageClickListener {
 
 	Context mContext;
 	ArrayList<MyData> items = new ArrayList<MyData>();
 
+	public interface OnAdapterItemClickListener {
+		public void onAdapterItemClick(MyAdapter adapter, View view, MyData data);
+	}
+	
+	OnAdapterItemClickListener mListener;
+	public void setOnAdapterItemClickListener(OnAdapterItemClickListener listener) {
+		mListener = listener;
+	}
+	
 	public MyAdapter(Context context, ArrayList<MyData> list) {
 		mContext = context;
 		items.addAll(list);
@@ -43,11 +52,19 @@ public class MyAdapter extends BaseAdapter {
 		MyItemView view;
 		if (convertView == null) {
 			view = new MyItemView(mContext);
+			view.setOnItemImageClickListener(this);
 		} else {
 			view = (MyItemView) convertView;
 		}
 		view.setMyData(items.get(position));
 		return view;
+	}
+
+	@Override
+	public void onItemImageClick(MyItemView view, MyData data) {
+		if (mListener != null) {
+			mListener.onAdapterItemClick(this, view, data);
+		}
 	}
 
 }
