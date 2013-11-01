@@ -12,7 +12,7 @@ public class FragmentTwo extends Fragment {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		TextView tv = new TextView(getActivity());
-		tv.setText("One");
+		tv.setText("Two");
 		return tv;
 	}
 }
