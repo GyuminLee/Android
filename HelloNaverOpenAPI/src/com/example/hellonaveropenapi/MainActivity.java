@@ -33,15 +33,13 @@ public class MainActivity extends ParentActivity {
 					request.setOnResultListener(new NetworkRequest.OnResultListener<NaverMovies>() {
 
 						@Override
-						public void onSuccess(NaverMovies result) {
-							ArrayAdapter<MovieItem> aa = new ArrayAdapter<MovieItem>(
-									MainActivity.this, android.R.layout.simple_list_item_1,
-									result.item);
+						public void onSuccess(NetworkRequest request, NaverMovies result) {
+							MyAdapter aa = new MyAdapter(MainActivity.this, result.item);
 							listView.setAdapter(aa);
 						}
 
 						@Override
-						public void onError(int code) {
+						public void onError(NetworkRequest request, int code) {
 							
 						}
 						
