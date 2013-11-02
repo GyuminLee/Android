@@ -15,8 +15,8 @@ public abstract class NetworkRequest<T> {
 	
 	public abstract URL getURL();
 	public interface OnResultListener<T> {
-		public void onSuccess(T result);
-		public void onError(int code);
+		public void onSuccess(NetworkRequest request, T result);
+		public void onError(NetworkRequest request, int code);
 	}
 	
 	OnResultListener<T> mListener;
@@ -61,9 +61,9 @@ public abstract class NetworkRequest<T> {
 		if (isCanceled) return;
 		if (mListener != null) {
 			if (mResult != null) {
-				mListener.onSuccess(mResult);
+				mListener.onSuccess(this, mResult);
 			} else {
-				mListener.onError(0);
+				mListener.onError(this, 0);
 			}
 		}
 	}
@@ -79,7 +79,7 @@ public abstract class NetworkRequest<T> {
 	public void sendError(int code) {
 		if (isCanceled) return;
 		if (mListener != null) {
-			mListener.onError(code);
+			mListener.onError(this, code);
 		}
 	}
 }
