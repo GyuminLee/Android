@@ -49,24 +49,7 @@ public class MainActivity extends Activity {
 							if (result.count == 0) {
 								Toast.makeText(MainActivity.this, "not exist city", Toast.LENGTH_SHORT).show();
 							} else if (result.count == 1) {
-								WeatherForecastRequest req = new WeatherForecastRequest(result.list.item.get(0).toString());
-								req.setOnResultListener(new OnResultListener<WeatherData>() {
-
-									@Override
-									public void onSuccess(
-											NetworkRequest request,
-											WeatherData result) {
-										MyAdapter aa = new MyAdapter(MainActivity.this, result.forecast.time);
-										listView.setAdapter(aa);
-									}
-
-									@Override
-									public void onError(NetworkRequest request,
-											int error) {
-										// TODO Auto-generated method stub
-										
-									}
-								});
+								getForecast(result.list.item.get(0).toString());
 							} else if (result.count > 1) {
 								AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 								builder.setTitle("Select City");
@@ -80,25 +63,7 @@ public class MainActivity extends Activity {
 									@Override
 									public void onClick(DialogInterface dialog, int which) {
 										String city = (String)items[which];
-										WeatherForecastRequest req = new WeatherForecastRequest(city);
-										req.setOnResultListener(new OnResultListener<WeatherData>() {
-
-											@Override
-											public void onSuccess(
-													NetworkRequest request,
-													WeatherData result) {
-												MyAdapter aa = new MyAdapter(MainActivity.this, result.forecast.time);
-												listView.setAdapter(aa);
-											}
-
-											@Override
-											public void onError(
-													NetworkRequest request,
-													int error) {
-												// TODO Auto-generated method stub
-												
-											}
-										});
+										getForecast(city);
 									}
 								});
 								builder.create().show();
@@ -147,6 +112,28 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+	}
+	
+	private void getForecast(String city) {
+		WeatherForecastRequest request = new WeatherForecastRequest(city);
+		request.setOnResultListener(new OnResultListener<WeatherData>() {
+
+			@Override
+			public void onSuccess(
+					NetworkRequest request,
+					WeatherData result) {
+				MyAdapter aa = new MyAdapter(MainActivity.this, result.forecast.time);
+				listView.setAdapter(aa);
+			}
+
+			@Override
+			public void onError(NetworkRequest request,
+					int error) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		NetworkModel.getInstance().getNetworkData(request);
 	}
 
 	class MyTask extends AsyncTask<String, Integer, WeatherData> {
