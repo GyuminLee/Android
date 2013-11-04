@@ -6,12 +6,12 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -20,9 +20,10 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.begentgroup.xmlparser.XMLParser;
+import com.example.hellotemptest.CitiesDialogFragment.OnCityResultListener;
 import com.example.hellotemptest.NetworkRequest.OnResultListener;
 
-public class MainActivity extends Activity {
+public class MainActivity extends FragmentActivity {
 
 	EditText cityView;
 	ListView listView;
@@ -38,45 +39,77 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				String keyword = cityView.getText().toString();
-				if (keyword != null && !keyword.equals("")) {
-					CityRequest request = new CityRequest(keyword);
-					request.setOnResultListener(new OnResultListener<Cities>() {
-
-						@Override
-						public void onSuccess(NetworkRequest request,
-								Cities result) {
-							if (result.count == 0) {
-								Toast.makeText(MainActivity.this, "not exist city", Toast.LENGTH_SHORT).show();
-							} else if (result.count == 1) {
-								getForecast(result.list.item.get(0).toString());
-							} else if (result.count > 1) {
-								AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-								builder.setTitle("Select City");
-								builder.setIcon(R.drawable.ic_launcher);
-								final CharSequence[] items = new CharSequence[result.count];
-								for (int i = 0; i < items.length; i++) {
-									items[i] = (CharSequence)result.list.item.get(i).toString();
+				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				builder.setTitle("Yes? No?");
+				builder.setIcon(R.drawable.ic_launcher);
+				builder.setMessage("forecast???");
+				builder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						String keyword = cityView.getText().toString();
+						if (keyword != null && !keyword.equals("")) {
+							CitiesDialogFragment cdf = new CitiesDialogFragment();
+							Bundle args = new Bundle();
+							args.putString(CitiesDialogFragment.ARGUMENT_CITY, keyword);
+							cdf.setOnCityResultListener(new OnCityResultListener() {
+								
+								@Override
+								public void onCityResult(Cities cities) {
+									resultProcessing(cities);
 								}
-								builder.setItems(items, new DialogInterface.OnClickListener() {
-									
-									@Override
-									public void onClick(DialogInterface dialog, int which) {
-										String city = (String)items[which];
-										getForecast(city);
-									}
-								});
-								builder.create().show();
-							}
+							});
 							
+							cdf.show(getSupportFragmentManager(), "dialog");
 						}
-
-						@Override
-						public void onError(NetworkRequest request, int error) {
-							
-						}
-					});
-					NetworkModel.getInstance().getNetworkData(request);
+					}
+				});
+				builder.setNeutralButton("Cancel", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+					}
+				});
+				builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						
+					}
+				});
+				AlertDialog dlg = builder.create();
+				dlg.show();
+//				String keyword = cityView.getText().toString();
+//				if (keyword != null && !keyword.equals("")) {
+//					CitiesDialogFragment cdf = new CitiesDialogFragment();
+//					Bundle args = new Bundle();
+//					args.putString(CitiesDialogFragment.ARGUMENT_CITY, keyword);
+//					cdf.setOnCityResultListener(new OnCityResultListener() {
+//						
+//						@Override
+//						public void onCityResult(Cities cities) {
+//							resultProcessing(cities);
+//						}
+//					});
+//					
+//					cdf.show(getSupportFragmentManager(), "dialog");
+//					
+//					CityRequest request = new CityRequest(keyword);
+//					request.setOnResultListener(new OnResultListener<Cities>() {
+//
+//						@Override
+//						public void onSuccess(NetworkRequest request,
+//								Cities result) {
+//							resultProcessing(result);
+//						}
+//
+//						@Override
+//						public void onError(NetworkRequest request, int error) {
+//							
+//						}
+//					});
+//					NetworkModel.getInstance().getNetworkData(request);
 //					new MyTask().execute(keyword);
 //					NetworkModel.getInstance().getNetworkData(keyword, new OnResultListener() {
 //						
@@ -110,11 +143,36 @@ public class MainActivity extends Activity {
 //						}
 //					});
 //					NetworkModel.getInstance().getNetworkData(request);
-				}
+//				}
 			}
 		});
 	}
 	
+	
+	private void resultProcessing(Cities result) {
+		if (result.count == 0) {
+			Toast.makeText(MainActivity.this, "not exist city", Toast.LENGTH_SHORT).show();
+		} else if (result.count == 1) {
+			getForecast(result.list.item.get(0).toString());
+		} else if (result.count > 1) {
+			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+			builder.setTitle("Select City");
+			builder.setIcon(R.drawable.ic_launcher);
+			final CharSequence[] items = new CharSequence[result.count];
+			for (int i = 0; i < items.length; i++) {
+				items[i] = (CharSequence)result.list.item.get(i).toString();
+			}
+			builder.setItems(items, new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					String city = (String)items[which];
+					getForecast(city);
+				}
+			});
+			builder.create().show();
+		}
+	}
 	private void getForecast(String city) {
 		WeatherForecastRequest request = new WeatherForecastRequest(city);
 		request.setOnResultListener(new OnResultListener<WeatherData>() {
