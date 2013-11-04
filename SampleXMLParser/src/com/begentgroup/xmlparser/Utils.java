@@ -32,6 +32,7 @@ class Utils {
 		table.fields = clazz.getDeclaredFields();
 		for (Field field : table.fields) {
 			FieldInfo info = new FieldInfo();
+			field.setAccessible(true);
 			info.f = field;
 			info.fieldType = Utils.getClassType(field.getType());
 			if (field.getAnnotation(Exclusion.class) != null) {
