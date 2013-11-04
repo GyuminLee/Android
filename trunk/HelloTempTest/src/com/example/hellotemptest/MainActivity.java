@@ -76,6 +76,7 @@ public class MainActivity extends Activity {
 							
 						}
 					});
+					NetworkModel.getInstance().getNetworkData(request);
 //					new MyTask().execute(keyword);
 //					NetworkModel.getInstance().getNetworkData(keyword, new OnResultListener() {
 //						
