@@ -6,9 +6,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import com.begentgroup.xmlparser.XMLParser;
-
 import android.os.AsyncTask;
+
+import com.begentgroup.xmlparser.XMLParser;
 
 public class NetworkModel {
 	private static NetworkModel instance;
@@ -26,6 +26,11 @@ public class NetworkModel {
 	}
 	private NetworkModel() {
 		
+	}
+	
+	public <T> void getNetworkData(NetworkRequest<T> request, NetworkRequest.OnResultListener<T> listener) {
+		request.setOnResultListener(listener);
+		getNetworkData(request);
 	}
 	
 	public void getNetworkData(NetworkRequest request) {
