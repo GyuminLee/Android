@@ -9,6 +9,7 @@ import twitter4j.conf.Configuration;
 import twitter4j.conf.ConfigurationBuilder;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
@@ -28,6 +29,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		prefs = getSharedPreferences(PREF_NAME, 0);
 		Button btn = (Button)findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -36,19 +38,27 @@ public class MainActivity extends Activity {
 				new AuthorizeTask().execute("");
 			}
 		});
+		assignTwitter();
+		AccessToken token = getAccessToken();
+		if (token != null) {
+			twitter.setOAuthAccessToken(token);
+		}
 	}
 
+	private void assignTwitter() {
+		ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
+		configurationBuilder.setOAuthConsumerKey(CONSUMER_KEY);
+		configurationBuilder.setOAuthConsumerSecret(CONSUMER_SECRET);
+		Configuration configuration = configurationBuilder.build();
+		TwitterFactory twitterFactory = new TwitterFactory(configuration);
+		twitter = twitterFactory.getInstance();
+	}
+	
 	Twitter twitter;
 	RequestToken requestToken;
 	class AuthorizeTask extends AsyncTask<String,Integer,String> {
 		@Override
 		protected String doInBackground(String... params) {
-			ConfigurationBuilder configurationBuilder = new ConfigurationBuilder();
-			configurationBuilder.setOAuthConsumerKey(CONSUMER_KEY);
-			configurationBuilder.setOAuthConsumerSecret(CONSUMER_SECRET);
-			Configuration configuration = configurationBuilder.build();
-			TwitterFactory twitterFactory = new TwitterFactory(configuration);
-			twitter = twitterFactory.getInstance();
 			try {
 				requestToken = twitter.getOAuthRequestToken(CALLBACK_URL);
 				String url = requestToken.getAuthenticationURL();
@@ -87,6 +97,7 @@ public class MainActivity extends Activity {
 			String verifier = params[0];
 			try {
 				AccessToken token = twitter.getOAuthAccessToken(requestToken, verifier);
+				saveToken(token);
 				twitter.updateStatus("twitter test...");
 				return token;
 			} catch (TwitterException e) {
@@ -101,6 +112,25 @@ public class MainActivity extends Activity {
 			Toast.makeText(MainActivity.this, "token : " + result.getToken() + ", secret : " + result.getTokenSecret(), Toast.LENGTH_SHORT).show();
 			super.onPostExecute(result);
 		}
+	}
+	
+	public static final String PREF_NAME = "tokens";
+	SharedPreferences prefs;
+	
+	private void saveToken(AccessToken token) {
+		SharedPreferences.Editor editor = prefs.edit();
+		editor.putString("token", token.getToken());
+		editor.putString("secret", token.getTokenSecret());
+		editor.putLong("userid", token.getUserId());
+	}
+	
+	private AccessToken getAccessToken() {
+		String token = prefs.getString("token", "");
+		if (token.equals("")) return null;
+		String secret = prefs.getString("secret", "");
+		long id = prefs.getLong("userid", 0);
+		AccessToken accessToken = new AccessToken(token, secret, id);
+		return accessToken;
 	}
 	
 	@Override
