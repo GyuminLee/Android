@@ -11,7 +11,7 @@ public class WeatherForecastRequest extends NetworkRequest<WeatherData> {
 	URL url;
 	
 	public WeatherForecastRequest(String city) {
-		String urlText = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=json&units=metric&cnt=7&q="
+		String urlText = "http://api.openweathermap.org/data/2.5/forecast/daily?mode=xml&units=metric&cnt=7&q="
 				+ city;
 		try {
 			url = new URL(urlText);

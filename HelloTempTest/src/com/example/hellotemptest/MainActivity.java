@@ -52,6 +52,7 @@ public class MainActivity extends FragmentActivity {
 							CitiesDialogFragment cdf = new CitiesDialogFragment();
 							Bundle args = new Bundle();
 							args.putString(CitiesDialogFragment.ARGUMENT_CITY, keyword);
+							cdf.setArguments(args);
 							cdf.setOnCityResultListener(new OnCityResultListener() {
 								
 								@Override
@@ -153,7 +154,7 @@ public class MainActivity extends FragmentActivity {
 		if (result.count == 0) {
 			Toast.makeText(MainActivity.this, "not exist city", Toast.LENGTH_SHORT).show();
 		} else if (result.count == 1) {
-			getForecast(result.list.item.get(0).toString());
+			getForecast(result.list.item.get(0).city.toString());
 		} else if (result.count > 1) {
 			AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
 			builder.setTitle("Select City");
