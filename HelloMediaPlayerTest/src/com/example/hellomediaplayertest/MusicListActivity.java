@@ -26,6 +26,7 @@ public class MusicListActivity extends FragmentActivity
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+	    setContentView(R.layout.music_list);
 	    listView = (ListView)findViewById(R.id.listView1);
 	    String[] from = { MediaStore.Audio.Media.TITLE };
 	    int[] to = {android.R.id.text1 };
