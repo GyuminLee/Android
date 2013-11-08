@@ -8,7 +8,7 @@
         android:minSdkVersion="9"
         android:targetSdkVersion="18" />
 
-    <uses-feature android:name="android_software.live_wallpaper" />
+    <uses-feature android:name="android.software.live_wallpaper" />
 
     <application
         android:allowBackup="true"
