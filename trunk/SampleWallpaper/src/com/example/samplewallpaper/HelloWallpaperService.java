@@ -10,7 +10,6 @@ public class HelloWallpaperService extends WallpaperService {
 
 	@Override
 	public Engine onCreateEngine() {
-		// TODO Auto-generated method stub
 		return new MyWallPaperEngine();
 	}
 
@@ -98,7 +97,6 @@ public class HelloWallpaperService extends WallpaperService {
 			try {
 				wait();
 			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 		}
