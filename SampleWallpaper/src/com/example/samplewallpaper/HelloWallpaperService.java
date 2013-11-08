@@ -3,6 +3,7 @@ package com.example.samplewallpaper;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.service.wallpaper.WallpaperService;
+import android.view.MotionEvent;
 import android.view.Surface;
 import android.view.SurfaceHolder;
 
@@ -80,6 +81,11 @@ public class HelloWallpaperService extends WallpaperService {
 				}
 				
 			}
+		}
+		
+		@Override
+		public void onTouchEvent(MotionEvent event) {
+			super.onTouchEvent(event);
 		}
 		
 		int unitcolor = 0;
