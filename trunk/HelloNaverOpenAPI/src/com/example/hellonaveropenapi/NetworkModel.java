@@ -21,7 +21,6 @@ import android.os.Environment;
 public class NetworkModel {
 	private static NetworkModel instance;
 	HashMap<Context, ArrayList<NetworkRequest>> mRequestMap = new HashMap<Context, ArrayList<NetworkRequest>>();
-
 	public static final int MAX_THREAD_COUNT = 5;
 	
 	public static NetworkModel getInstance() {
@@ -121,6 +120,16 @@ public class NetworkModel {
 			mRequestMap.put(context, list);
 		}
 		list.add(request);
+		for (ImageRequest req : mQueue) {
+			if (req.isSameRequest(request)) {
+				return;
+			}
+		}
+		for (ImageRequest req : mRunningQueue) {
+			if (req.isSameRequest(request)) {
+				return;
+			}
+		}
 		enqueue(request);
 	}
 	
@@ -138,6 +147,7 @@ public class NetworkModel {
 	}
 
 	ArrayList<ImageRequest> mQueue = new ArrayList<ImageRequest>();
+	ArrayList<ImageRequest> mRunningQueue = new ArrayList<ImageRequest>();
 	
 	public synchronized void enqueue(ImageRequest request) {
 		mQueue.add(request);
@@ -154,6 +164,9 @@ public class NetworkModel {
 			}
 		}
 		ImageRequest request = mQueue.remove(0);
+		if (request != null) {
+			mRunningQueue.add(request);
+		}
 		return request;
 	}
 	
@@ -162,8 +175,9 @@ public class NetworkModel {
 		boolean isRunning = true;
 		@Override
 		protected Boolean doInBackground(String... params) {
+			ImageRequest request = null;
 			while(isRunning) {
-				ImageRequest request = dequeue();
+				request = dequeue();
 				if (request == null) continue;
 				URL url = request.getURL();
 				int retry = 3;
@@ -224,6 +238,7 @@ public class NetworkModel {
 				ArrayList<NetworkRequest> list = mRequestMap.get(request.context);
 				list.remove(request);
 			}
+			mRunningQueue.remove(request);
 			super.onProgressUpdate(values);
 		}
 	}
