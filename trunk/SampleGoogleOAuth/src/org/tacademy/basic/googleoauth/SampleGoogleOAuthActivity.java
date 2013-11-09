@@ -116,7 +116,7 @@ public class SampleGoogleOAuthActivity extends Activity {
 				});
 				th.start();
 			} else {
-				Toast.makeText(this, "ÄÚµå È¹µæ ½ÇÆÐ", Toast.LENGTH_SHORT).show();
+				Toast.makeText(this, "ï¿½Úµï¿½ È¹ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 			}
 			return;
 		}
@@ -158,7 +158,7 @@ public class SampleGoogleOAuthActivity extends Activity {
 					@Override
 					public void run() {
 						// TODO Auto-generated method stub
-						Toast.makeText(SampleGoogleOAuthActivity.this, "post Á¢¼Ó ½ÇÆÐ", Toast.LENGTH_SHORT).show();
+						Toast.makeText(SampleGoogleOAuthActivity.this, "post ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 					}
 					
 				});
@@ -195,7 +195,7 @@ public class SampleGoogleOAuthActivity extends Activity {
 				@Override
 				public void run() {
 					// TODO Auto-generated method stub
-					getGmailAtomFeed(access_token);					
+					getGmailAtomFeed(access_token,token_type);					
 				}
 				
 			});
@@ -206,7 +206,7 @@ public class SampleGoogleOAuthActivity extends Activity {
 		}
 	}
 
-	public void getGmailAtomFeed(final String access_token) {
+	public void getGmailAtomFeed(final String access_token,final String token_type) {
 		// TODO Auto-generated method stub
 		Thread th = new Thread(new Runnable(){
 
@@ -216,7 +216,7 @@ public class SampleGoogleOAuthActivity extends Activity {
 				try {
 					URL url = new URL("https://mail.google.com/mail/feed/atom");
 					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-					conn.addRequestProperty("Authorization", "OAuth "+access_token);
+					conn.addRequestProperty("Authorization", token_type + " "+access_token);
 					int respCode = conn.getResponseCode();
 					if (respCode == HttpURLConnection.HTTP_OK) {
 						StringBuilder sb = new StringBuilder();
@@ -242,7 +242,7 @@ public class SampleGoogleOAuthActivity extends Activity {
 							@Override
 							public void run() {
 								// TODO Auto-generated method stub
-								Toast.makeText(SampleGoogleOAuthActivity.this, "µ¥ÀÌÅÍ ¼ö½Å ½ÇÆÐ", Toast.LENGTH_SHORT).show();
+								Toast.makeText(SampleGoogleOAuthActivity.this, "ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½", Toast.LENGTH_SHORT).show();
 							}
 							
 						});
