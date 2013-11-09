@@ -1,24 +1,30 @@
 package com.example.hellonaveropenapi;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
-import java.lang.ref.WeakReference;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
-import java.util.HashMap;
+import java.util.ArrayList;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 
 public class ImageRequest extends NetworkRequest<Bitmap> {
 
 	String imageUrl;
+	ArrayList<ImageRequest> mSameList = new ArrayList<ImageRequest>();
+	
+	
+	public boolean isSameRequest(ImageRequest request) {
+		if (imageUrl.equals(request.imageUrl)) {
+			mSameList.add(request);
+			return true;
+		}
+		return false;
+	}
+	
 	public ImageRequest(String urlString) {
 		imageUrl = urlString;
 	}
@@ -64,10 +70,39 @@ public class ImageRequest extends NetworkRequest<Bitmap> {
 	public void setResult(Bitmap bm) {
 		mResult = bm;
 	}
+	boolean isCancelable = false;
 	
 	@Override
 	public void setCancel() {
-		super.setCancel();
-		NetworkModel.getInstance().removeImageRequest(this);
+		if (mSameList.size() == 0) {
+			super.setCancel();
+			NetworkModel.getInstance().removeImageRequest(this);
+		} else {
+			isCancelable = true;
+		}
+	}
+	
+	@Override
+	public void sendResult() {
+		if (isCancelable) {
+			super.isCancel();
+		}
+		super.sendResult();
+		for (ImageRequest request : mSameList) {
+			if (!request.isCanceled) {
+				request.setResult(mResult);
+				request.sendResult();
+			}
+		}
+	}
+	
+	@Override
+	public void sendError(int code) {
+		super.sendError(code);
+		for (ImageRequest request : mSameList) {
+			if (!request.isCanceled) {
+				request.sendError(code);
+			}
+		}
 	}
 }
