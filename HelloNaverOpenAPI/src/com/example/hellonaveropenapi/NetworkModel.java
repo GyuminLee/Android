@@ -2,7 +2,6 @@ package com.example.hellonaveropenapi;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -17,11 +16,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
 
 public class NetworkModel {
 	private static NetworkModel instance;
 	HashMap<Context, ArrayList<NetworkRequest>> mRequestMap = new HashMap<Context, ArrayList<NetworkRequest>>();
 	public static final int MAX_THREAD_COUNT = 5;
+	Handler mHandler;
 	
 	public static NetworkModel getInstance() {
 		if (instance == null) {
@@ -31,8 +33,10 @@ public class NetworkModel {
 	}
 
 	private NetworkModel() {
+		// main thread handler
+		mHandler = new Handler(Looper.getMainLooper());
 		for (int i = 0; i < MAX_THREAD_COUNT; i++) {
-			new MyImageDownloadTask().execute("");
+			new Thread(new MyImageDownloadTask()).start();
 		}
 	}
 
@@ -50,7 +54,8 @@ public class NetworkModel {
 			mRequestMap.put(context, list);
 		}
 		list.add(request);
-		new MyDownloadRequest().execute(request);
+		MyDownloadRequest task = new MyDownloadRequest(request);
+		task.execute(request);
 	}
 
 	HashMap<String,WeakReference<Bitmap>> mMemCache = new HashMap<String,WeakReference<Bitmap>>();
@@ -171,10 +176,11 @@ public class NetworkModel {
 	}
 	
 
-	class MyImageDownloadTask extends AsyncTask<String,ImageRequest,Boolean> {
+	class MyImageDownloadTask implements Runnable {
+
 		boolean isRunning = true;
 		@Override
-		protected Boolean doInBackground(String... params) {
+		public void run() {
 			ImageRequest request = null;
 			while(isRunning) {
 				request = dequeue();
@@ -221,16 +227,21 @@ public class NetworkModel {
 				}
 				
 			}
-			return null;
+		}
+
+		protected void publishProgress(final ImageRequest... request) {
+			mHandler.post(new Runnable() {
+				@Override
+				public void run() {
+					onProgressUpdate(request);
+				}
+			});
 		}
 		
-		@Override
-		protected void onCancelled() {
+		protected void cancel() {
 			isRunning = false;
-			super.onCancelled();
 		}
 		
-		@Override
 		protected void onProgressUpdate(ImageRequest... values) {
 			ImageRequest request = values[0];
 			if (request != null) {
@@ -239,8 +250,8 @@ public class NetworkModel {
 				list.remove(request);
 			}
 			mRunningQueue.remove(request);
-			super.onProgressUpdate(values);
 		}
+
 	}
 	
 	
@@ -251,6 +262,11 @@ public class NetworkModel {
 	class MyDownloadRequest extends
 			AsyncTask<NetworkRequest, Integer, Boolean> {
 		NetworkRequest mRequest;
+		
+		public MyDownloadRequest(NetworkRequest request) {
+			super();
+			mRequest = request;
+		}
 
 		@Override
 		protected Boolean doInBackground(NetworkRequest... params) {
