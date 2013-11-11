@@ -2,6 +2,7 @@ package com.example.hellonaveropenapi;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
@@ -27,7 +28,7 @@ public class ItemView extends FrameLayout {
 	ImageRequest request;
 	public void setData(MovieItem data) {
 		mData = data;
-		titleView.setText(data.title);
+		titleView.setText(Html.fromHtml(data.title));
 		directorView.setText(data.director);
 		iconView.setImageURL(data.image);
 	}
