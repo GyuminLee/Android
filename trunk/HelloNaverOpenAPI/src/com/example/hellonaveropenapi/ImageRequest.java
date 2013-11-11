@@ -18,7 +18,7 @@ public class ImageRequest extends NetworkRequest<Bitmap> {
 	
 	
 	public boolean isSameRequest(ImageRequest request) {
-		if (imageUrl.equals(request.imageUrl)) {
+		if (!isCancel() && imageUrl.equals(request.imageUrl)) {
 			mSameList.add(request);
 			return true;
 		}

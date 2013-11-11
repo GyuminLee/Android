@@ -24,10 +24,12 @@ public class URLImageView extends ImageView {
 	ImageRequest request;
 	public void setImageURL(String url) {
 		if (request != null) {
+			if (url != null && request.imageUrl.equals(url)) return;
 			request.setCancel();
 			request = null;
 		}
 		setImageResource(R.drawable.ic_launcher);
+		if (url == null || url.equals("")) return;
 		request = new ImageRequest(url);
 		request.setOnResultListener(new OnResultListener<Bitmap>() {
 
