@@ -1,6 +1,11 @@
 package com.example.hellogcmtest;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+import org.json.rpc.client.HttpJsonRpcClientTransport;
+import org.json.rpc.client.JsonRpcInvoker;
 
 import android.app.Activity;
 import android.content.Context;
@@ -8,8 +13,11 @@ import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 import android.widget.Toast;
 
+import com.example.shared.GCMSend;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GooglePlayServicesUtil;
 import com.google.android.gms.gcm.GoogleCloudMessaging;
@@ -21,6 +29,8 @@ public class MainActivity extends Activity {
 	private static final String PREFS = "myprefs";
 	private static final String FIELD_REG_ID = "regId";
 	private static final String FIELD_REG_SERVER = "serverReg";
+	
+	private GCMSend gcmSend;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +60,53 @@ public class MainActivity extends Activity {
 			Toast.makeText(this, "GCM Not Support!!!", Toast.LENGTH_SHORT).show();
 			finish();
 		}
+		
+		Button btn = (Button)findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				new AsyncTask<String, Integer, Boolean>() {
+
+					@Override
+					protected Boolean doInBackground(String... params) {
+						
+						return sendGCMMessage();
+					}
+					
+					protected void onPostExecute(Boolean result) {
+						if (result) {
+							Toast.makeText(MainActivity.this, "message sended", Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(MainActivity.this, "message fail", Toast.LENGTH_SHORT).show();
+						}
+					}
+					
+					
+				}.execute("");
+				
+			}
+		});
 	}
+	
+	private boolean sendGCMMessage() {
+		if (gcmSend == null) {
+			try {
+				HttpJsonRpcClientTransport tranport = new HttpJsonRpcClientTransport(new URL("http://dongjaguestbook.appspot.com/hellomyfirstweb"));
+				JsonRpcInvoker invoker = new JsonRpcInvoker();
+				gcmSend = invoker.get(tranport, "gcm", GCMSend.class);
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		if (gcmSend != null) {
+			return gcmSend.send(getRegId());
+		}
+		return false;
+	}
+	
+	
 
 	private String getRegId() {
 		return prefs.getString(FIELD_REG_ID, "");
