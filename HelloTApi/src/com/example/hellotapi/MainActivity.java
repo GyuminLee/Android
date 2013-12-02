@@ -34,9 +34,9 @@ public class MainActivity extends Activity {
 
 			@Override
 			public void onClick(View v) {
-				new AsyncTask<String, Integer, CategoryResponse>() {
+				new AsyncTask<String, Integer, CarRouteInfo>() {
 					@Override
-					protected CategoryResponse doInBackground(String... params) {
+					protected CarRouteInfo doInBackground(String... params) {
 						try {
 							URL url = new URL(
 									"https://apis.skplanetx.com/tmap/routes?callback=&bizAppId=&version=1&endX=129.07579349764512&endY=35.17883196265564&startX=126.98217734415019&startY=37.56468648536046&resCoordType=WGS84GEO&reqCoordType=WGS84GEO");
@@ -54,10 +54,10 @@ public class MainActivity extends Activity {
 								InputStream is = conn.getInputStream();
 								Gson gson = new GsonBuilder().registerTypeAdapter(Geometry.class, new GeometryDeseriaizer()).create(); 
 										//new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.UPPER_CAMEL_CASE).create(); //new Gson();
-								CategoryResult result = gson.fromJson(
+								CarRouteInfo result = gson.fromJson(
 										new InputStreamReader(is),
-										CategoryResult.class);
-								return result.categoryResponse;
+										CarRouteInfo.class);
+								return result;
 								// StringBuilder sb = new StringBuilder();
 								// String line;
 								// BufferedReader br = new BufferedReader(new
@@ -81,12 +81,12 @@ public class MainActivity extends Activity {
 					}
 
 					@Override
-					protected void onPostExecute(CategoryResponse result) {
+					protected void onPostExecute(CarRouteInfo result) {
 						if (result != null) {
-							ArrayAdapter<Category> adapter = new ArrayAdapter<Category>(
+							ArrayAdapter<Feature> adapter = new ArrayAdapter<Feature>(
 									MainActivity.this,
 									android.R.layout.simple_list_item_1,
-									result.children.category);
+									result.features);
 							listView.setAdapter(adapter);
 						} else {
 							Toast.makeText(MainActivity.this, "Error",
