@@ -163,6 +163,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
         CellStyle cs = wb.createCellStyle();
         cs.setFillForegroundColor(HSSFColor.LIME.index);
         cs.setFillPattern(HSSFCellStyle.SOLID_FOREGROUND);
+        
        
         //New Sheet
         Sheet sheet1 = null;
@@ -241,6 +242,14 @@ public class MainActivity extends Activity implements View.OnClickListener {
                 Iterator<Cell> cellIter = myRow.cellIterator();
                 while(cellIter.hasNext()){
                     HSSFCell myCell = (HSSFCell) cellIter.next();
+                    switch(myCell.getCellType()) {
+                    case HSSFCell.CELL_TYPE_BLANK :
+                    case HSSFCell.CELL_TYPE_BOOLEAN :
+                    case HSSFCell.CELL_TYPE_FORMULA :
+                    case HSSFCell.CELL_TYPE_NUMERIC :
+                    case HSSFCell.CELL_TYPE_STRING :
+                    case HSSFCell.CELL_TYPE_ERROR :
+                    }
                     Log.w("FileUtils", "Cell Value: " +  myCell.toString());
                     Toast.makeText(context, "cell Value: " + myCell.toString(), Toast.LENGTH_SHORT).show();
                 }
