@@ -39,17 +39,17 @@
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/showGoogle"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="@string/showGoogle" />
 
     <Button
-        android:id="@+id/button3"
+        android:id="@+id/myActivity"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button" />
+        android:text="Show MyActivity" />
 
 </LinearLayout>
