@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">핼로안드로이드</string>
+    <string name="action_settings">설정</string>
+    <string name="hello_world">헬로 월드!</string>
+    <string name="sendButton">보내기</string>
+    <string name="hintString">메시지 ...</string>
+
+</resources>

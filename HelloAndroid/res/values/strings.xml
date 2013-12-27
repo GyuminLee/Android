@@ -6,5 +6,6 @@
     <string name="hello_world">Hello world!</string>
     <string name="sendButton">Send</string>
     <string name="hintString">Show Message ...</string>
+    <string name="showGoogle">Show Google</string>
 
 </resources>
