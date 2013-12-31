@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="buttonPressed">#FF0000</drawable>
+    <drawable name="buttonNormal">#00FF00</drawable>
+    
+</resources>
