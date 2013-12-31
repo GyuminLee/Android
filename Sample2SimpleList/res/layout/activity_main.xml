@@ -39,6 +39,12 @@
 
     </LinearLayout>
 
+    <Button
+        android:id="@+id/showSelect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Select" />
+
     <ListView
         android:id="@+id/listView1"
         android:layout_width="match_parent"

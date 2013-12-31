@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.SparseBooleanArray;
 import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,10 +27,12 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		makeData();
-		keywordView = (EditText)findViewById(R.id.itemText);
+		keywordView = (EditText) findViewById(R.id.itemText);
 		listView = (ListView) findViewById(R.id.listView1);
+		// listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 		mAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_1, mData);
+				android.R.layout.simple_list_item_multiple_choice, mData);
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -41,14 +44,32 @@ public class MainActivity extends Activity {
 
 			}
 		});
-		
-		Button btn = (Button)findViewById(R.id.addItem);
+
+		Button btn = (Button) findViewById(R.id.addItem);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				String text = keywordView.getText().toString();
 				mAdapter.add(text);
+			}
+		});
+
+		btn = (Button) findViewById(R.id.showSelect);
+		btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				// int pos = listView.getCheckedItemPosition();
+				// String text = (String)listView.getItemAtPosition(pos);
+				String text = "";
+				SparseBooleanArray array = listView.getCheckedItemPositions();
+				for (int i = 0; i < array.size(); i++) {
+					if (array.get(i)) {
+						text += (String)listView.getItemAtPosition(i) + ",";
+					}
+				}
+				
 			}
 		});
 	}
