@@ -11,6 +11,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -24,6 +25,7 @@ public class MainActivity extends Activity {
 	int[] photos = {R.drawable.gallery_photo_1, R.drawable.gallery_photo_2, R.drawable.gallery_photo_3 };
 	
 	MyAdapter mAdapter;
+	ImageView itemImageView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,12 +33,29 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		makeData();
 		keywordView = (EditText) findViewById(R.id.itemText);
+		itemImageView = (ImageView)findViewById(R.id.itemImage);
+		itemImageView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				itemImageView.setVisibility(View.GONE);
+			}
+		});
 		listView = (ListView) findViewById(R.id.listView1);
 		// listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 //		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 //		mAdapter = new ArrayAdapter<String>(this,
 //				android.R.layout.simple_list_item_multiple_choice, mData);
 		mAdapter = new MyAdapter(this,mData);
+		mAdapter.setOnMyAdapterListener(new MyAdapter.OnMyAdapterListener() {
+			
+			@Override
+			public void onItemImageClick(MyAdapter adapter, View v, MyData d) {
+				Toast.makeText(MainActivity.this, "Item Image Clicked..." + d.title, Toast.LENGTH_SHORT).show();
+				itemImageView.setImageResource(d.imageId);
+				itemImageView.setVisibility(View.VISIBLE);
+			}
+		});
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override

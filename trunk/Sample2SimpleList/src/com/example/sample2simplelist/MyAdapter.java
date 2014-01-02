@@ -11,10 +11,21 @@ import android.widget.TextView;
 import com.example.sample2simplelist.model.MyData;
 import com.example.sample2simplelist.view.ItemView;
 
-public class MyAdapter extends BaseAdapter {
+public class MyAdapter extends BaseAdapter implements ItemView.OnImageClickListener {
 
 	ArrayList<MyData> mItems;
 	Context mContext;
+	
+	public interface OnMyAdapterListener {
+		public void onItemImageClick(MyAdapter adapter, View v, MyData d);
+	}
+	
+	OnMyAdapterListener mListener;
+	
+	public void setOnMyAdapterListener(OnMyAdapterListener listener) {
+		mListener = listener;
+	}
+	
 	public MyAdapter(Context context,ArrayList<MyData> items) {
 		mContext = context;
 		mItems = items;
@@ -46,6 +57,7 @@ public class MyAdapter extends BaseAdapter {
 		
 		if (convertView == null) {
 			view = new ItemView(mContext);
+			view.setOnImageClickListener(this);
 		} else {
 			view = (ItemView)convertView;
 		}
@@ -53,6 +65,13 @@ public class MyAdapter extends BaseAdapter {
 		view.setMyData(mItems.get(position));
 		
 		return view;
+	}
+
+	@Override
+	public void onImageClick(View v, MyData d) {
+		if (mListener != null) {
+			mListener.onItemImageClick(this, v, d);
+		}
 	}
 
 }
