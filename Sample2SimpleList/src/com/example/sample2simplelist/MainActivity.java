@@ -20,7 +20,7 @@ public class MainActivity extends Activity {
 	ListView listView;
 	EditText keywordView;
 	ArrayList<String> mData = new ArrayList<String>();
-	ArrayAdapter<String> mAdapter;
+	MyAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -31,8 +31,9 @@ public class MainActivity extends Activity {
 		listView = (ListView) findViewById(R.id.listView1);
 		// listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
 		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-		mAdapter = new ArrayAdapter<String>(this,
-				android.R.layout.simple_list_item_multiple_choice, mData);
+//		mAdapter = new ArrayAdapter<String>(this,
+//				android.R.layout.simple_list_item_multiple_choice, mData);
+		mAdapter = new MyAdapter(this,mData);
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 			@Override
@@ -51,7 +52,7 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				String text = keywordView.getText().toString();
-				mAdapter.add(text);
+//				mAdapter.add(text);
 			}
 		});
 
