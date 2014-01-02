@@ -8,21 +8,30 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import com.example.sample2simplelist.model.MyData;
+import com.example.sample2simplelist.view.ItemView;
+
 public class MyAdapter extends BaseAdapter {
 
-	ArrayList<String> mItems;
+	ArrayList<MyData> mItems;
 	Context mContext;
-	public MyAdapter(Context context,ArrayList<String> items) {
+	public MyAdapter(Context context,ArrayList<MyData> items) {
 		mContext = context;
 		mItems = items;
 	}
+	
+	public void add(MyData item) {
+		mItems.add(item);
+		notifyDataSetChanged();
+	}
+	
 	@Override
 	public int getCount() {
 		return mItems.size();
 	}
 
 	@Override
-	public String getItem(int position) {
+	public MyData getItem(int position) {
 		return mItems.get(position);
 	}
 
@@ -33,8 +42,16 @@ public class MyAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		TextView view = new TextView(mContext);
-		view.setText(mItems.get(position));
+		ItemView view = null;
+		
+		if (convertView == null) {
+			view = new ItemView(mContext);
+		} else {
+			view = (ItemView)convertView;
+		}
+		
+		view.setMyData(mItems.get(position));
+		
 		return view;
 	}
 

@@ -9,17 +9,20 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.sample2simplelist.model.MyData;
+
 public class MainActivity extends Activity {
 
 	ListView listView;
 	EditText keywordView;
-	ArrayList<String> mData = new ArrayList<String>();
+	ArrayList<MyData> mData = new ArrayList<MyData>();
+	int[] photos = {R.drawable.gallery_photo_1, R.drawable.gallery_photo_2, R.drawable.gallery_photo_3 };
+	
 	MyAdapter mAdapter;
 
 	@Override
@@ -39,8 +42,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onItemClick(AdapterView<?> list, View view,
 					int position, long id) {
-				String text = (String) listView.getItemAtPosition(position);
-				Toast.makeText(MainActivity.this, "selected Item : " + text,
+				MyData text = (MyData) listView.getItemAtPosition(position);
+				Toast.makeText(MainActivity.this, "selected Item : " + text.title,
 						Toast.LENGTH_SHORT).show();
 
 			}
@@ -52,7 +55,11 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				String text = keywordView.getText().toString();
-//				mAdapter.add(text);
+				MyData data = new MyData();
+				data.imageId = photos[mData.size() % photos.length];
+				data.title = text;
+				data.description = "desc : " + text;
+				mAdapter.add(data);
 			}
 		});
 
@@ -78,7 +85,11 @@ public class MainActivity extends Activity {
 	private void makeData() {
 		String[] array = getResources().getStringArray(R.array.items);
 		for (int i = 0; i < array.length; i++) {
-			mData.add(array[i]);
+			MyData data = new MyData();
+			data.imageId = photos[i % photos.length];
+			data.title = array[i];
+			data.description = "desc : " + array[i];
+			mData.add(data);
 		}
 	}
 
