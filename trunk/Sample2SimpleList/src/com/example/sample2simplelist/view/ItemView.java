@@ -1,8 +1,10 @@
 package com.example.sample2simplelist.view;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Checkable;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -10,12 +12,13 @@ import android.widget.TextView;
 import com.example.sample2simplelist.R;
 import com.example.sample2simplelist.model.MyData;
 
-public class ItemView extends FrameLayout {
+public class ItemView extends FrameLayout implements Checkable {
 	ImageView iconView;
 	TextView titleView;
 	TextView descView;
 	TextView detailView;
 	MyData mData;
+	boolean isChecked = false;
 	
 	public interface OnImageClickListener {
 		public void onImageClick(View v,MyData d);
@@ -71,5 +74,33 @@ public class ItemView extends FrameLayout {
 		descView.setText(data.description);
 		detailView.setVisibility(View.GONE);
 		mData = data;
+		isChecked = false;
+		setSelectedColor();
+	}
+
+	@Override
+	public boolean isChecked() {
+		return isChecked;
+	}
+
+	@Override
+	public void setChecked(boolean checked) {
+		if (isChecked == checked) return;
+		isChecked = checked;
+		setSelectedColor();
+	}
+
+	@Override
+	public void toggle() {
+		isChecked = !isChecked;
+		setSelectedColor();
+	}
+	
+	private void setSelectedColor() {
+		if (isChecked) {
+			setBackgroundColor(Color.DKGRAY);
+		} else {
+			setBackgroundColor(Color.WHITE);
+		}
 	}
 }
