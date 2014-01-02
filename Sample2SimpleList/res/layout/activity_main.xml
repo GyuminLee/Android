@@ -45,12 +45,25 @@
         android:layout_height="wrap_content"
         android:text="Show Select" />
 
-    <ListView
-        android:id="@+id/listView1"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_weight="1" >
+        android:layout_height="match_parent" >
 
-    </ListView>
+        <ListView
+            android:id="@+id/listView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1" >
+        </ListView>
+
+        <ImageView
+            android:id="@+id/itemImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_launcher"
+            android:visibility="gone" />
+
+    </FrameLayout>
 
 </LinearLayout>
