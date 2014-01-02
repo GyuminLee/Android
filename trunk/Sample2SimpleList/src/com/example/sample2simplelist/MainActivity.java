@@ -30,7 +30,7 @@ public class MainActivity extends Activity {
 		keywordView = (EditText) findViewById(R.id.itemText);
 		listView = (ListView) findViewById(R.id.listView1);
 		// listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
-		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
+//		listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
 //		mAdapter = new ArrayAdapter<String>(this,
 //				android.R.layout.simple_list_item_multiple_choice, mData);
 		mAdapter = new MyAdapter(this,mData);
