@@ -54,7 +54,9 @@ public class MyService extends Service {
 		
 		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
 		filter.addAction(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_HEADSET_PLUG);
 		registerReceiver(myReceiver, filter);
+		
 	}
 	
 	class MyReceiver extends BroadcastReceiver {
@@ -67,6 +69,8 @@ public class MyService extends Service {
 				startActivity(i);
 			} else if (intent.getAction().equals(Intent.ACTION_SCREEN_ON)){
 				Toast.makeText(MyService.this, "Screen on...", Toast.LENGTH_SHORT).show();
+			} else if (intent.getAction().equals(Intent.ACTION_HEADSET_PLUG)) {
+				Toast.makeText(MyService.this, "plug event...", Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
