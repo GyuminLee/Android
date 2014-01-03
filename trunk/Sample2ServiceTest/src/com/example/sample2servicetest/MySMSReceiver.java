@@ -23,6 +23,7 @@ public class MySMSReceiver extends BroadcastReceiver {
 		builder.setWhen(System.currentTimeMillis());
 		Intent i = new Intent(context,MyActivity.class);
 		i.putExtra("message", "sms received...");
+		i.putExtra("no", 1);
 		i.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		PendingIntent pi = PendingIntent.getActivity(context, 0, i, 0);
 		builder.setContentIntent(pi);
