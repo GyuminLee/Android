@@ -9,6 +9,8 @@
         android:targetSdkVersion="18" />
     <uses-permission android:name="android.permission.RECEIVE_SMS"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
+    <permission android:name="com.example.sample2servicetest.permission.COUNT" android:protectionLevel="signature"></permission>
+    <uses-permission android:name="com.example.sample2servicetest.permission.COUNT"/>
 
     <application
         android:allowBackup="true"

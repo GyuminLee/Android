@@ -13,7 +13,9 @@ import android.util.Log;
 import android.widget.Toast;
 
 public class MyService extends Service {
-
+	
+	public static final String ACTION_COUNT = "com.example.sample2servicetest.ACTION_COUNT";
+	public static final String PERMISSION_COUNT = "com.example.sample2servicetest.permission.COUNT";
 	private static final String TAG = "MyService";
 
 	public static final String PARAM_SET_COUNT = "setCount";
@@ -46,6 +48,12 @@ public class MyService extends Service {
 						e.printStackTrace();
 					}
 					mCount++;
+					if (mCount % 10 == 0) {
+						Intent i = new Intent(ACTION_COUNT);
+						i.putExtra(PARAM_RESULT_COUNT, mCount);
+						i.setFlags(Intent.FLAG_RECEIVER_REGISTERED_ONLY);
+						sendBroadcast(i,PERMISSION_COUNT);
+					}
 					Log.i(TAG, "count : " + mCount);
 				}
 
@@ -55,7 +63,7 @@ public class MyService extends Service {
 		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_OFF);
 		filter.addAction(Intent.ACTION_SCREEN_ON);
 		filter.addAction(Intent.ACTION_HEADSET_PLUG);
-		registerReceiver(myReceiver, filter);
+//		registerReceiver(myReceiver, filter);
 		
 	}
 	
@@ -101,6 +109,7 @@ public class MyService extends Service {
 	public void onDestroy() {
 		Toast.makeText(this, "onDestroy...", Toast.LENGTH_SHORT).show();
 		isRunning = false;
+		unregisterReceiver(myReceiver);
 		super.onDestroy();
 	}
 }

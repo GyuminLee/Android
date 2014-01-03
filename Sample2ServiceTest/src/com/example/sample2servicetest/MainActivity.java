@@ -2,7 +2,10 @@ package com.example.sample2servicetest;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
@@ -38,7 +41,20 @@ public class MainActivity extends Activity {
 				stopService(i);
 			}
 		});
+		
+		IntentFilter filter = new IntentFilter(MyService.ACTION_COUNT);
+		registerReceiver(receiver, filter, MyService.PERMISSION_COUNT, null);
 	}
+	
+	BroadcastReceiver receiver = new BroadcastReceiver() {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			int count = intent.getIntExtra(MyService.PARAM_RESULT_COUNT, 0);
+			Toast.makeText(MainActivity.this, "Count : " + count, Toast.LENGTH_SHORT).show();			
+		}
+		
+	};
 
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
