@@ -1,0 +1,21 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <item
+        android:id="@+id/action_settings"
+        android:orderInCategory="100"
+        android:showAsAction="never"
+        android:title="@string/action_settings"/>
+    <item
+        android:id="@+id/menuOne"
+        android:orderInCategory="101"
+        android:title="One"
+        android:icon="@android:drawable/ic_menu_search">
+    </item>
+    <item android:id="@+id/menuSub" android:title="sub menu" android:orderInCategory="102">
+        <menu>
+            <item android:id="@+id/submenu1" android:title="sub1" android:orderInCategory="200"/>
+            <item android:id="@+id/submenu2" android:title="sub2" android:orderInCategory="201"/>
+        </menu>
+    </item>
+
+</menu>
