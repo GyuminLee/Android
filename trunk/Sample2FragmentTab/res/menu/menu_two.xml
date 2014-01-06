@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/f2menu1" android:title="F2M1" android:orderInCategory="200"></item>
+    <item android:id="@+id/f2menu2" android:title="F2M2" android:orderInCategory="201" android:showAsAction="always|withText"></item>
+    
+
+</menu>
