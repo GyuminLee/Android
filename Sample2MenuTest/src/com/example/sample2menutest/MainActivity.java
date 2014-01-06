@@ -2,13 +2,17 @@ package com.example.sample2menutest;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.ImageView;
+import android.widget.SearchView;
+import android.widget.SearchView.OnQueryTextListener;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 
@@ -72,6 +76,34 @@ public class MainActivity extends Activity {
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main, menu);
 		MenuItem item = menu.findItem(R.id.menuOne);
+
+		SearchView view = (SearchView)item.getActionView();
+		view.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				Toast.makeText(MainActivity.this, "query : " + query, Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				Log.i("MainActivity", "text : " + newText);
+				return false;
+			}
+		});
+		
+//		View v = item.getActionView();
+//		EditText keywordView = (EditText)v.findViewById(R.id.keywordView);
+//		Button btn = (Button)v.findViewById(R.id.btnSearch);
+//		btn.setOnClickListener(new View.OnClickListener() {
+//			
+//			@Override
+//			public void onClick(View v) {
+//				// TODO Auto-generated method stub
+//				
+//			}
+//		});
 		return true;
 	}
 

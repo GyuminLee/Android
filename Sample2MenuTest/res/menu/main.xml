@@ -9,7 +9,7 @@
         android:id="@+id/menuOne"
         android:orderInCategory="101"
         android:title="One"
-        android:icon="@android:drawable/ic_menu_search">
+        android:icon="@android:drawable/ic_menu_search" android:showAsAction="always|collapseActionView" android:actionViewClass="android.widget.SearchView">
     </item>
     <item android:id="@+id/menuSub" android:title="sub menu" android:orderInCategory="102">
         <menu>
