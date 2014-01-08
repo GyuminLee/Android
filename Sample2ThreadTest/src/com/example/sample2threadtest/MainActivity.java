@@ -34,6 +34,21 @@ public class MainActivity extends Activity {
 			}
 		}
 	};
+	
+	class MyRunnable implements Runnable {
+		int progress;
+		String text;
+		public MyRunnable(int progress,String text) {
+			this.progress = progress;
+			this.text = text;
+		}
+		
+		@Override
+		public void run() {
+			messageView.setText(text);
+			progressBar.setProgress(progress);
+		}
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -61,12 +76,22 @@ public class MainActivity extends Activity {
 								e.printStackTrace();
 							}
 							count += 5;
-							mHandler.sendMessage(mHandler.obtainMessage(
-									MESSAGE_PROGRESS, count, 0, "proress : "
-											+ count));
+							MyRunnable r = new MyRunnable(count, "progress : " + count);
+							mHandler.post(r);
+//							mHandler.sendMessage(mHandler.obtainMessage(
+//									MESSAGE_PROGRESS, count, 0, "proress : "
+//											+ count));
 						}
-						mHandler.sendMessage(mHandler
-								.obtainMessage(MESSAGE_PROGRESS_DONE));
+						mHandler.post(new Runnable() {
+							
+							@Override
+							public void run() {
+								messageView.setText("done");
+								progressBar.setProgress(100);
+							}
+						});
+//						mHandler.sendMessage(mHandler
+//								.obtainMessage(MESSAGE_PROGRESS_DONE));
 					}
 				}).start();
 			}
