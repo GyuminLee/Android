@@ -1,6 +1,7 @@
 package com.example.sample2threadtest;
 
 import android.app.Activity;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -10,13 +11,19 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	TextView messageView;
 	ProgressBar progressBar;
+	TextView aniView;
 
+	private boolean isBackPressed = false;
+	
 	public final static int MESSAGE_PROGRESS = 1;
 	public final static int MESSAGE_PROGRESS_DONE = 2;
+	
+	public final static int TIMEOUT_BACK_PRESSED = 3;
 
 	Handler mHandler = new Handler() {
 		@Override
@@ -32,9 +39,24 @@ public class MainActivity extends Activity {
 				messageView.setText("done");
 				progressBar.setProgress(100);
 				break;
+			case TIMEOUT_BACK_PRESSED:
+				isBackPressed = false;
+				break;
 			}
 		}
 	};
+	
+	@Override
+	public void onBackPressed() {
+		if (isBackPressed) {
+			mHandler.removeMessages(TIMEOUT_BACK_PRESSED);
+			finish();
+		} else {
+			isBackPressed = true;
+			Toast.makeText(this, "one more back button", Toast.LENGTH_SHORT).show();
+			mHandler.sendMessageAtTime(mHandler.obtainMessage(TIMEOUT_BACK_PRESSED), 2000);
+		}
+	}
 	
 	class MyRunnable implements Runnable {
 		int progress;
@@ -105,7 +127,56 @@ public class MainActivity extends Activity {
 				new MyTask().execute("");
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.button3);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ani.starttime = MyAnimationRunnable.NO_START_TIME;
+				mHandler.post(ani);
+			}
+		});
+		btn = (Button)findViewById(R.id.button4);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mHandler.removeCallbacks(ani);
+			}
+		});
 	}
+	
+	MyAnimationRunnable ani = new MyAnimationRunnable();
+	
+	class MyAnimationRunnable implements Runnable {
+		public static final int NO_START_TIME = 1;
+		int percent = 0;
+		long starttime = NO_START_TIME;
+		int duration = 1000;
+		
+		@Override
+		public void run() {
+			long now = System.currentTimeMillis();
+			if (starttime == NO_START_TIME) {
+				starttime = now;
+			}
+			int interval = (int)(now - starttime) % duration;
+			boolean reverse = (((now - starttime) / duration) % 2) == 0? false : true;
+			percent = interval * 100 / duration;
+			if (reverse) {
+				percent = 100 - percent;
+			}
+//			percent = (percent + 10) % 110;
+			int r = 0xFF * percent / 100;
+			int color = Color.rgb(r, r, r);
+			aniView.setTextColor(color);
+			mHandler.postDelayed(this, 100);
+		}
+		
+	}
+	
+	
 	
 	class MyTask extends AsyncTask<String, Integer, Boolean> {
 		@Override
