@@ -54,7 +54,7 @@ public class MainActivity extends Activity {
 		} else {
 			isBackPressed = true;
 			Toast.makeText(this, "one more back button", Toast.LENGTH_SHORT).show();
-			mHandler.sendMessageAtTime(mHandler.obtainMessage(TIMEOUT_BACK_PRESSED), 2000);
+			mHandler.sendMessageDelayed(mHandler.obtainMessage(TIMEOUT_BACK_PRESSED), 2000);
 		}
 	}
 	
@@ -79,6 +79,7 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		messageView = (TextView) findViewById(R.id.messageView);
 		progressBar = (ProgressBar) findViewById(R.id.progressBar1);
+		aniView = (TextView)findViewById(R.id.textView1);
 		progressBar.setMax(100);
 		progressBar.setProgress(0);
 		messageView.setText("progress : 0");
