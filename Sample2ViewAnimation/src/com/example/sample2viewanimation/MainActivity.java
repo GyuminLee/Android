@@ -83,8 +83,8 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				Intent i = new Intent(MainActivity.this, MyActivity.class);
-				overridePendingTransition(R.anim.left_appear, R.anim.left_disappear);
 				startActivity(i);
+				overridePendingTransition(R.anim.left_appear, R.anim.left_disappear);
 			}
 		});
 	}
