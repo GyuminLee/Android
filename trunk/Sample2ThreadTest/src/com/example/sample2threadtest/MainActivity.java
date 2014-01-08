@@ -1,6 +1,7 @@
 package com.example.sample2threadtest;
 
 import android.app.Activity;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -96,6 +97,50 @@ public class MainActivity extends Activity {
 				}).start();
 			}
 		});
+		btn = (Button)findViewById(R.id.button2);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				new MyTask().execute("");
+			}
+		});
+	}
+	
+	class MyTask extends AsyncTask<String, Integer, Boolean> {
+		@Override
+		protected void onPreExecute() {
+			// ....
+		}
+		
+		@Override
+		protected Boolean doInBackground(String... params) {
+			int count = 0;
+			while (count < 100) {
+				try {
+					Thread.sleep(1000);
+				} catch (InterruptedException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				count += 5;
+				publishProgress(count);
+			}
+			return true;
+		}
+		
+		@Override
+		protected void onProgressUpdate(Integer... values) {
+			int progress = values[0];
+			messageView.setText("progress : " + progress);
+			progressBar.setProgress(progress);
+		}
+		
+		@Override
+		protected void onPostExecute(Boolean result) {
+			messageView.setText("done");
+			progressBar.setProgress(100);
+		}
 	}
 
 	@Override
