@@ -8,9 +8,17 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.ColorMatrix;
+import android.graphics.ColorMatrixColorFilter;
+import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.RadialGradient;
+import android.graphics.Shader;
+import android.graphics.Shader.TileMode;
+import android.graphics.SweepGradient;
+import android.util.AttributeSet;
 import android.view.View;
 
 public class MyView extends View {
@@ -34,6 +42,19 @@ public class MyView extends View {
 		init();
 	}
 	
+	public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		init();
+	}
+
+
+	public MyView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init();
+	}
+
+
+
 	Bitmap mBitmap;
 	Matrix mMatrix;
 	float[] mashPoint = {0, 200, 50, 250, 100, 200, 150, 250, 200 , 200 ,
@@ -73,14 +94,35 @@ public class MyView extends View {
 		
 	}
 	
+	
+	public void setBitmap(Bitmap bm) {
+		mBitmap = bm;
+	}
+	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		canvas.drawColor(Color.WHITE);
 		mPaint.setColor(Color.BLUE);
 		mPaint.setAntiAlias(true);
-		canvas.drawBitmap(mBitmap, 0, 0,mPaint);
+//		int[] colors = {Color.RED, Color.YELLOW, Color.BLUE, Color.RED};
+//		float[] positions = {0, 0.3f, 1};
+//		LinearGradient shader = new LinearGradient(100, 100, 300, 300, 0xFFFF0000, 0x00FF0000, Shader.TileMode.REPEAT);
+//		RadialGradient shader = new RadialGradient(200, 200, 100, Color.RED, Color.BLUE, TileMode.CLAMP);
 		
-		canvas.drawBitmapMesh(mBitmap, 4, 1, mashPoint, 0, null, 0, mPaint);
+//		SweepGradient shader = new SweepGradient(200, 200, colors, null);
+//		mPaint.setShader(shader);
+		
+//		canvas.drawCircle(200, 200, 100, mPaint);
+//		canvas.drawRect(100, 100, 300, 300, mPaint);
+//		canvas.drawBitmap(mBitmap, 0, 0,mPaint);
+		
+		ColorMatrix cm = new ColorMatrix();
+		cm.setSaturation(0);
+		ColorMatrixColorFilter cf = new ColorMatrixColorFilter(cm);
+		mPaint.setColorFilter(cf);
+		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
+//		
+//		canvas.drawBitmapMesh(mBitmap, 4, 1, mashPoint, 0, null, 0, mPaint);
 		
 //		mMatrix.setScale(1, -1, 0, mBitmap.getHeight());
 //		mMatrix.postSkew(0.5f, 0, 0, mBitmap.getHeight());
