@@ -19,6 +19,11 @@ import android.graphics.Shader;
 import android.graphics.Shader.TileMode;
 import android.graphics.SweepGradient;
 import android.util.AttributeSet;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
 
 public class MyView extends View {
@@ -30,7 +35,9 @@ public class MyView extends View {
 	float drawHeight;
 	float[] points = { 10, 10, 60, 110, 60, 110, 110, 10, 110, 10, 160, 110,
 			160, 110, 210, 10 };
-
+	GestureDetector detector;
+	ScaleGestureDetector scaleDetector;
+	
 	public MyView(Context context) {
 		super(context);
 		init();
@@ -48,6 +55,8 @@ public class MyView extends View {
 
 	Bitmap mBitmap;
 	Matrix mMatrix;
+	float mScaleFactor = 1.0f;
+	
 	float[] mashPoint = { 0, 200, 50, 250, 100, 200, 150, 250, 200, 200, 0,
 			300, 50, 500, 100, 300, 150, 350, 200, 300 };
 
@@ -82,6 +91,39 @@ public class MyView extends View {
 		mCursorPath.lineTo(0, -5);
 		mCursorPath.lineTo(-5, -5);
 
+		detector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
+			@Override
+			public boolean onSingleTapUp(MotionEvent e) {
+				invalidate();
+				return true;
+			}
+			
+			@Override
+			public boolean onFling(MotionEvent e1, MotionEvent e2,
+					float velocityX, float velocityY) {
+				sat = 0.1f;
+				invalidate();
+				return true;
+			}
+			
+			@Override
+			public boolean onScroll(MotionEvent e1, MotionEvent e2,
+					float distanceX, float distanceY) {
+				// TODO Auto-generated method stub
+				return super.onScroll(e1, e2, distanceX, distanceY);
+			}
+		});
+		scaleDetector = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener(){
+			@Override
+			public boolean onScale(ScaleGestureDetector detector) {
+				float f = detector.getScaleFactor();
+				sat *= f;
+				if (sat > 1) sat = 1;
+				else if (sat < 0) sat = 0.1f;
+				invalidate();
+				return true;
+			}
+		});
 	}
 
 	@Override
@@ -129,6 +171,18 @@ public class MyView extends View {
 		
 	}
 	
+	float ex, ey;
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		boolean used = detector.onTouchEvent(event);
+		used = scaleDetector.onTouchEvent(event);
+		if (event.getAction() == MotionEvent.ACTION_DOWN || event.getAction() == MotionEvent.ACTION_MOVE) {
+			return true;
+		}
+		return used;
+	}
+	
 	public void setBitmap(Bitmap bm) {
 		mBitmap = bm;
 		requestLayout();
@@ -168,7 +222,7 @@ public class MyView extends View {
 		ColorMatrixColorFilter cf = new ColorMatrixColorFilter(cm);
 		mPaint.setColorFilter(cf);
 		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
-		postDelayed(update, 100);
+//		postDelayed(update, 100);
 		//
 		// canvas.drawBitmapMesh(mBitmap, 4, 1, mashPoint, 0, null, 0, mPaint);
 
