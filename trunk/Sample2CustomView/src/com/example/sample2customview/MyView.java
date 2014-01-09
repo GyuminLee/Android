@@ -1,17 +1,16 @@
 package com.example.sample2customview;
 
+import java.io.InputStream;
+
 import android.content.Context;
 import android.content.res.Resources;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.CornerPathEffect;
-import android.graphics.DashPathEffect;
+import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PathDashPathEffect;
-import android.graphics.PathDashPathEffect.Style;
-import android.graphics.RectF;
-import android.graphics.Typeface;
 import android.view.View;
 
 public class MyView extends View {
@@ -35,11 +34,25 @@ public class MyView extends View {
 		init();
 	}
 	
+	Bitmap mBitmap;
+	Matrix mMatrix;
+	float[] mashPoint = {0, 200, 50, 250, 100, 200, 150, 250, 200 , 200 ,
+						 0, 300, 50, 500, 100, 300, 150, 350, 200, 300
+	};
+	
 	private void init() {
 		mPaint = new Paint();
 		Resources res = getContext().getResources();
 		drawWidth = res.getDimension(R.dimen.my_draw_width);
 		drawHeight = res.getDimension(R.dimen.my_draw_height);
+		InputStream is = res.openRawResource(R.drawable.gallery_photo_1);
+		mBitmap = BitmapFactory.decodeStream(is);
+		mMatrix = new Matrix();
+		mMatrix.reset();
+//		Bitmap scaledBitmap = Bitmap.createScaledBitmap(mBitmap, 100, 100, false);
+//		mBitmap.recycle();
+//		mBitmap = scaledBitmap;
+		
 		mPath = new Path();
 //		mPath.moveTo(0, 0);
 //		mPath.lineTo(50, 50);
@@ -56,6 +69,8 @@ public class MyView extends View {
 		mCursorPath.lineTo(5, 0);
 		mCursorPath.lineTo(0, -5);
 		mCursorPath.lineTo(-5, -5);
+		
+		
 	}
 	
 	@Override
@@ -63,16 +78,25 @@ public class MyView extends View {
 		canvas.drawColor(Color.WHITE);
 		mPaint.setColor(Color.BLUE);
 		mPaint.setAntiAlias(true);
-		mPaint.setStyle(Paint.Style.STROKE);
-		mPaint.setStrokeWidth(10);
+		canvas.drawBitmap(mBitmap, 0, 0,mPaint);
+		
+		canvas.drawBitmapMesh(mBitmap, 4, 1, mashPoint, 0, null, 0, mPaint);
+		
+//		mMatrix.setScale(1, -1, 0, mBitmap.getHeight());
+//		mMatrix.postSkew(0.5f, 0, 0, mBitmap.getHeight());
+//		mMatrix.setRotate(45, 0, mBitmap.getHeight());
+//		canvas.drawBitmap(mBitmap, mMatrix, mPaint);
+//		canvas.drawBitmap(mBitmap, 100, 100, mPaint);
+//		mPaint.setStyle(Paint.Style.STROKE);
+//		mPaint.setStrokeWidth(10);
 //		CornerPathEffect pe = new CornerPathEffect(10);
 //		mPaint.setPathEffect(pe);
-		float[] intervals = {10, 5, 20, 5};
-		DashPathEffect dpe = new DashPathEffect(intervals, 15);
-		PathDashPathEffect pdpe = new PathDashPathEffect(mCursorPath, 10, -5, PathDashPathEffect.Style.MORPH);
-		mPaint.setPathEffect(pdpe);
+//		float[] intervals = {10, 5, 20, 5};
+//		DashPathEffect dpe = new DashPathEffect(intervals, 15);
+//		PathDashPathEffect pdpe = new PathDashPathEffect(mCursorPath, 10, -5, PathDashPathEffect.Style.MORPH);
+//		mPaint.setPathEffect(pdpe);
 //		canvas.drawLine(100, 100, 300, 300, mPaint);
-		canvas.drawPath(mPath, mPaint);
+//		canvas.drawPath(mPath, mPaint);
 //		canvas.drawCircle(200, 200, 100, mPaint);
 //		mPaint.setTypeface(Typeface.DEFAULT_BOLD);
 //		mPaint.setStyle(Paint.Style.STROKE);
