@@ -16,14 +16,14 @@ public class NetworkModel {
 	}
 	
 	public interface OnNetworkResultListener {
-		public void onResultSuccess(NaverMovies movies);
+		public void onResultSuccess(MovieRequest movies);
 		public void onResultFail(int errorCode);
 	}
 	
-	public void getMovieData(String keyword, OnNetworkResultListener listener) {
+	public void getMovieData(MovieRequest request, OnNetworkResultListener listener) {
 		MovieListDownloadTask task = new MovieListDownloadTask();
 		task.setOnNetworkResultListener(listener);
-		task.execute(keyword);
+		task.execute(request);
 	}
 	
 }

@@ -30,22 +30,21 @@ public class MainActivity extends FragmentActivity {
 				String keyword = keywordView.getText().toString();
 				if (keyword != null && !keyword.equals("")) {
 					MovieDialogFragment mdf = new MovieDialogFragment();
-					Bundle b = new Bundle();
-					b.putString("keyword", keyword);
-					mdf.setArguments(b);
-					mdf.setOnNetworkResultListener(new NetworkModel.OnNetworkResultListener() {
+					MovieRequest request = new MovieRequest(keyword);
+					request.setOnResultListener(new MovieRequest.OnResultListener() {
 						
 						@Override
-						public void onResultSuccess(NaverMovies movies) {
+						public void onSuccess(MovieRequest request, NaverMovies movies) {
 							mAdapter = new MovieAdapter(MainActivity.this, movies.item);
 							listView.setAdapter(mAdapter);
 						}
 						
 						@Override
-						public void onResultFail(int errorCode) {
+						public void onError(MovieRequest request, int errorCode) {
 							Toast.makeText(MainActivity.this, "fail...", Toast.LENGTH_SHORT).show();
 						}
 					});
+					mdf.setOnNetworkResultListener(request);
 					mdf.show(getSupportFragmentManager(), "dialog");
 				} else {
 					Toast.makeText(MainActivity.this, "insert keyword...", Toast.LENGTH_SHORT).show();
