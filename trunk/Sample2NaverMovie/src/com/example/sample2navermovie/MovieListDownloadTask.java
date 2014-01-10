@@ -13,7 +13,7 @@ import com.begentgroup.xmlparser.XMLParser;
 import android.os.AsyncTask;
 
 public class MovieListDownloadTask extends
-		AsyncTask<MovieRequest, Integer, MovieRequest> {
+		AsyncTask<NetworkRequest, Integer, NetworkRequest> {
 
 	NetworkModel.OnNetworkResultListener mListener;
 	public void setOnNetworkResultListener(NetworkModel.OnNetworkResultListener listener) {
@@ -21,10 +21,10 @@ public class MovieListDownloadTask extends
 	}
 	
 	@Override
-	protected MovieRequest doInBackground(MovieRequest... params) {
+	protected NetworkRequest doInBackground(NetworkRequest... params) {
 		HttpURLConnection conn = null;
 		InputStream is = null;
-		MovieRequest request = params[0];
+		NetworkRequest request = params[0];
 		try {
 			URL url = request.getURL();
 			conn = (HttpURLConnection) url.openConnection();
@@ -54,7 +54,7 @@ public class MovieListDownloadTask extends
 	}
 	
 	@Override
-	protected void onPostExecute(MovieRequest result) {
+	protected void onPostExecute(NetworkRequest result) {
 		if (result != null) {
 			if (mListener != null) {
 				mListener.onResultSuccess(result);

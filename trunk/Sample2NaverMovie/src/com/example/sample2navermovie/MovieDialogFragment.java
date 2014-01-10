@@ -7,19 +7,19 @@ import android.support.v4.app.DialogFragment;
 
 public class MovieDialogFragment extends DialogFragment {
 	NetworkModel.OnNetworkResultListener mListener;
-	MovieRequest mRequest;
+	NetworkRequest mRequest;
 	
-	public void setOnNetworkResultListener(MovieRequest request) {
+	public void setRequest(NetworkRequest request) {
 		mRequest = request;
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		NetworkModel.getInstance().getMovieData(mRequest, new NetworkModel.OnNetworkResultListener() {
+		NetworkModel.getInstance().getNetworkData(mRequest, new NetworkModel.OnNetworkResultListener() {
 			
 			@Override
-			public void onResultSuccess(MovieRequest movies) {
+			public void onResultSuccess(NetworkRequest movies) {
 				dismiss();
 				if (mRequest != null) {
 					mRequest.sendSuccess();
