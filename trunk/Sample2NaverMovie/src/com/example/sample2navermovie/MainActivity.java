@@ -1,9 +1,7 @@
 package com.example.sample2navermovie;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
@@ -17,18 +15,24 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.EditText;
+import android.widget.ListView;
 import android.widget.Toast;
+
+import com.begentgroup.xmlparser.XMLParser;
 
 public class MainActivity extends Activity {
 
-	TextView messageView;
+	ListView listView;
+	EditText keywordView;
+	MovieAdapter mAdapter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		messageView = (TextView) findViewById(R.id.messageView);
+		listView = (ListView) findViewById(R.id.listView1);
+		keywordView = (EditText) findViewById(R.id.editText1);
 		Button btn = (Button) findViewById(R.id.btnSearch);
 		btn.setOnClickListener(new View.OnClickListener() {
 
@@ -40,23 +44,30 @@ public class MainActivity extends Activity {
 					dialog.setTitle("Download Movie");
 					dialog.setMessage("Please wait...");
 				}
-				new MyMovieTask().execute("");
-				dialog.show();
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					new MyMovieTask().execute(keyword);
+					dialog.show();
+				} else {
+					Toast.makeText(MainActivity.this, "insert keyword...", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 	}
 
 	ProgressDialog dialog;
 
-	class MyMovieTask extends AsyncTask<String, Integer, String> {
+	class MyMovieTask extends AsyncTask<String, Integer, NaverMovies> {
 		@Override
-		protected String doInBackground(String... params) {
+		protected NaverMovies doInBackground(String... params) {
+			HttpURLConnection conn = null;
+			InputStream is = null;
+			String keyword = params[0];
 			try {
 				URL url = new URL(
-						"http://openapi.naver.com/search?key=c1b406b32dbbbbeee5f2a36ddc14067f&display=10&start=1&target=movie&query="
-								+ URLEncoder.encode("벤허", "utf8"));
-				HttpURLConnection conn = (HttpURLConnection) url
-						.openConnection();
+						"http://openapi.naver.com/search?key=55f1e342c5bce1cac340ebb6032c7d9a&display=10&start=1&target=movie&query="
+								+ URLEncoder.encode(keyword, "utf8"));
+				conn = (HttpURLConnection) url.openConnection();
 
 				// conn.setRequestMethod("POST");
 				// conn.setRequestProperty("accept", "application/xml");
@@ -65,15 +76,11 @@ public class MainActivity extends Activity {
 
 				int responseCode = conn.getResponseCode();
 				if (responseCode == HttpURLConnection.HTTP_OK) {
-					InputStream is = conn.getInputStream();
-					BufferedReader br = new BufferedReader(
-							new InputStreamReader(is));
-					StringBuilder sb = new StringBuilder();
-					String line;
-					while ((line = br.readLine()) != null) {
-						sb.append(line + "/n/r");
-					}
-					return sb.toString();
+					is = conn.getInputStream();
+					XMLParser parser = new XMLParser();
+					NaverMovies movies = parser.fromXml(is, "channel",
+							NaverMovies.class);
+					return movies;
 				}
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -84,17 +91,27 @@ public class MainActivity extends Activity {
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
+			} finally {
+				if (is != null) {
+					try {
+						is.close();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
 			}
 			return null;
 		}
 
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(NaverMovies result) {
 			if (dialog != null) {
 				dialog.dismiss();
 			}
 			if (result != null) {
-				messageView.setText(result);
+				mAdapter = new MovieAdapter(MainActivity.this, result.item);
+				listView.setAdapter(mAdapter);
 			} else {
 				Toast.makeText(MainActivity.this, "error!", Toast.LENGTH_SHORT)
 						.show();
