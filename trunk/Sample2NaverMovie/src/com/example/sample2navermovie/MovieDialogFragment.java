@@ -6,35 +6,31 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 
 public class MovieDialogFragment extends DialogFragment {
-	String keyword;
 	NetworkModel.OnNetworkResultListener mListener;
+	MovieRequest mRequest;
 	
-	public void setOnNetworkResultListener(NetworkModel.OnNetworkResultListener listener) {
-		mListener = listener;
+	public void setOnNetworkResultListener(MovieRequest request) {
+		mRequest = request;
 	}
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		Bundle b = getArguments();
-		if (b != null) {
-			keyword = b.getString("keyword");
-		}
-		NetworkModel.getInstance().getMovieData(keyword, new NetworkModel.OnNetworkResultListener() {
+		NetworkModel.getInstance().getMovieData(mRequest, new NetworkModel.OnNetworkResultListener() {
 			
 			@Override
-			public void onResultSuccess(NaverMovies movies) {
+			public void onResultSuccess(MovieRequest movies) {
 				dismiss();
-				if (mListener != null) {
-					mListener.onResultSuccess(movies);
+				if (mRequest != null) {
+					mRequest.sendSuccess();
 				}
 			}
 			
 			@Override
 			public void onResultFail(int errorCode) {
 				dismiss();
-				if (mListener != null) {
-					mListener.onResultFail(errorCode);
+				if (mRequest != null) {
+					mRequest.sendError();
 				}
 			}
 		});

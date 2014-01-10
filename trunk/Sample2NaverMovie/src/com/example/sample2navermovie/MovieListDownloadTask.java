@@ -13,7 +13,7 @@ import com.begentgroup.xmlparser.XMLParser;
 import android.os.AsyncTask;
 
 public class MovieListDownloadTask extends
-		AsyncTask<String, Integer, NaverMovies> {
+		AsyncTask<MovieRequest, Integer, MovieRequest> {
 
 	NetworkModel.OnNetworkResultListener mListener;
 	public void setOnNetworkResultListener(NetworkModel.OnNetworkResultListener listener) {
@@ -21,23 +21,19 @@ public class MovieListDownloadTask extends
 	}
 	
 	@Override
-	protected NaverMovies doInBackground(String... params) {
+	protected MovieRequest doInBackground(MovieRequest... params) {
 		HttpURLConnection conn = null;
 		InputStream is = null;
-		String keyword = params[0];
+		MovieRequest request = params[0];
 		try {
-			URL url = new URL(
-					"http://openapi.naver.com/search?key=55f1e342c5bce1cac340ebb6032c7d9a&display=10&start=1&target=movie&query="
-							+ URLEncoder.encode(keyword, "utf8"));
+			URL url = request.getURL();
 			conn = (HttpURLConnection) url.openConnection();
 
 			int responseCode = conn.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK) {
 				is = conn.getInputStream();
-				XMLParser parser = new XMLParser();
-				NaverMovies movies = parser.fromXml(is, "channel",
-						NaverMovies.class);
-				return movies;
+				request.process(is);
+				return request;
 			}
 		} catch (MalformedURLException e) {
 			e.printStackTrace();
@@ -58,7 +54,7 @@ public class MovieListDownloadTask extends
 	}
 	
 	@Override
-	protected void onPostExecute(NaverMovies result) {
+	protected void onPostExecute(MovieRequest result) {
 		if (result != null) {
 			if (mListener != null) {
 				mListener.onResultSuccess(result);
