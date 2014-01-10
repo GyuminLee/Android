@@ -27,10 +27,10 @@ public class MovieDialogFragment extends DialogFragment {
 			}
 			
 			@Override
-			public void onResultFail(int errorCode) {
+			public void onResultFail(NetworkRequest request, int errorCode) {
 				dismiss();
 				if (mRequest != null) {
-					mRequest.sendError();
+					mRequest.sendError(errorCode);
 				}
 			}
 		});
