@@ -20,11 +20,13 @@ public class MovieListDownloadTask extends
 		mListener = listener;
 	}
 	
+	NetworkRequest mRequest = null;
 	@Override
 	protected NetworkRequest doInBackground(NetworkRequest... params) {
 		HttpURLConnection conn = null;
 		InputStream is = null;
 		NetworkRequest request = params[0];
+		mRequest = request;
 		try {
 			URL url = request.getURL();
 			conn = (HttpURLConnection) url.openConnection();
@@ -61,7 +63,7 @@ public class MovieListDownloadTask extends
 			}
 		} else {
 			if (mListener != null) {
-				mListener.onResultFail(-1);
+				mListener.onResultFail(mRequest,-1);
 			}
 		}
 	}

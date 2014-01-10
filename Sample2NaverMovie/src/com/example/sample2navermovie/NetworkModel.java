@@ -16,8 +16,8 @@ public class NetworkModel {
 	}
 	
 	public interface OnNetworkResultListener {
-		public void onResultSuccess(NetworkRequest movies);
-		public void onResultFail(int errorCode);
+		public void onResultSuccess(NetworkRequest request);
+		public void onResultFail(NetworkRequest request, int errorCode);
 	}
 	
 	public void getNetworkData(NetworkRequest request, OnNetworkResultListener listener) {
@@ -27,17 +27,16 @@ public class NetworkModel {
 	}
 	
 	public void getNetworkData(NetworkRequest request) {
-		final NetworkRequest r = request;
 		getNetworkData(request, new OnNetworkResultListener() {
 
 			@Override
 			public void onResultSuccess(NetworkRequest request) {
-				r.sendSuccess();
+				request.sendSuccess();
 			}
 
 			@Override
-			public void onResultFail(int errorCode) {
-				r.sendError();
+			public void onResultFail(NetworkRequest request, int errorCode) {
+				request.sendError(errorCode);
 			}
 			
 		});

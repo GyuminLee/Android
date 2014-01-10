@@ -40,9 +40,9 @@ public abstract class NetworkRequest<T> {
 		}
 	}
 	
-	public void sendError() {
+	public void sendError(int error) {
 		if (mListener != null) {
-			mListener.onError(this, -1);
+			mListener.onError(this, error);
 		}
 	}
 	
