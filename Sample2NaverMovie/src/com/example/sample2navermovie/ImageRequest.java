@@ -25,5 +25,11 @@ public class ImageRequest extends NetworkRequest<Bitmap> {
 	public void process(InputStream is) {
 		result = BitmapFactory.decodeStream(is);
 	}
+	
+	@Override
+	public void cancel() {
+		super.cancel();
+		NetworkModel.getInstance().remove(this);
+	}
 
 }
