@@ -12,6 +12,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -95,6 +96,14 @@ public class NetworkModel {
 	}
 
 	public void getNetworkImage(Context context, ImageRequest request) {
+		Bitmap bitmap = CacheManager.getInstance().getCacheBitmap(request.getKey());
+		
+		if (bitmap != null) {
+			request.setResult(bitmap);
+			request.sendSuccess();
+			return;
+		}
+		
 		addRequestMap(context, request);
 		enqueue(request);
 	}
