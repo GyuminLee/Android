@@ -34,7 +34,7 @@ public class ImageRequest extends NetworkRequest<Bitmap> {
 
 	@Override
 	public void process(InputStream is) {
-		result = BitmapFactory.decodeStream(is);
+		result = CacheManager.getInstance().saveImage(getKey(), is);
 	}
 	
 	public void setResult(Bitmap bitmap) {
