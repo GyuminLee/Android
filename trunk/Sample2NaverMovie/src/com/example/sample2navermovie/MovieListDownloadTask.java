@@ -61,6 +61,7 @@ public class MovieListDownloadTask extends
 	
 	@Override
 	protected void onPostExecute(NetworkRequest result) {
+		NetworkModel.getInstance().removeRequestMap(mRequest);
 		if (result != null) {
 			if (mListener != null) {
 				mListener.onResultSuccess(result);

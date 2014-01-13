@@ -9,7 +9,9 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -17,6 +19,8 @@ public class NetworkModel {
 
 	private static NetworkModel instance;
 	private Handler mainHandler;
+	
+	private HashMap<Context,ArrayList<NetworkRequest>> mRequestMap = new HashMap<Context,ArrayList<NetworkRequest>>();
 
 	private final static int THREAD_COUNT = 5;
 	
@@ -42,15 +46,16 @@ public class NetworkModel {
 		public void onResultFail(NetworkRequest request, int errorCode);
 	}
 
-	public void getNetworkData(NetworkRequest request,
+	public void getNetworkData(Context context,NetworkRequest request,
 			OnNetworkResultListener listener) {
+		addRequestMap(context, request);
 		MovieListDownloadTask task = new MovieListDownloadTask();
 		task.setOnNetworkResultListener(listener);
 		task.execute(request);
 	}
 
-	public void getNetworkData(NetworkRequest request) {
-		getNetworkData(request, new OnNetworkResultListener() {
+	public void getNetworkData(Context context,NetworkRequest request) {
+		getNetworkData(context, request, new OnNetworkResultListener() {
 
 			@Override
 			public void onResultSuccess(NetworkRequest request) {
@@ -72,6 +77,10 @@ public class NetworkModel {
 		notify();
 	}
 
+	public void remove(ImageRequest request) {
+		mRequestQueue.remove(request);
+	}
+	
 	public synchronized ImageRequest dequeue() {
 		ImageRequest request = null;
 		while (mRequestQueue.size() == 0) {
@@ -85,10 +94,39 @@ public class NetworkModel {
 		return request;
 	}
 
-	public void getNetworkImage(ImageRequest request) {
+	public void getNetworkImage(Context context, ImageRequest request) {
+		addRequestMap(context, request);
 		enqueue(request);
 	}
 
+	public void addRequestMap(Context context, NetworkRequest request) {
+		ArrayList<NetworkRequest> list = mRequestMap.get(context);
+		if (list == null) {
+			list = new ArrayList<NetworkRequest>();
+			mRequestMap.put(context, list);
+		}
+		request.context = context;
+		list.add(request);
+	}
+	
+	public void removeRequestMap(NetworkRequest request) {
+		ArrayList<NetworkRequest> list = mRequestMap.get(request.context);
+		if (list != null) {
+			list.remove(request);
+			if (list.size() == 0) {
+				mRequestMap.remove(request.context);
+			}
+		}
+	}
+	
+	public void cancelRequestMap(Context context) {
+		ArrayList<NetworkRequest> list = mRequestMap.get(context);
+		for(NetworkRequest request : list) {
+			request.cancel(false);
+		}
+		mRequestMap.remove(context);
+	}
+	
 	public class ImageDownloadRunnable implements Runnable {
 		Handler mMainHandler;
 		boolean isRunning = false;
@@ -110,8 +148,10 @@ public class NetworkModel {
 					request.setConnectionConfig(conn);
 					request.setTimeout(conn);
 					request.setOutput(conn);
-
+					if (request.isCanceled()) continue;
 					int responseCode = conn.getResponseCode();
+					if (request.isCanceled()) continue;
+					request.setConnectionConfig(conn);
 					if (responseCode == HttpURLConnection.HTTP_OK) {
 						is = conn.getInputStream();
 						request.process(is);
@@ -142,6 +182,7 @@ public class NetworkModel {
 					if (conn != null) {
 						conn.disconnect();
 					}
+					removeRequestMap(request);
 				}
 				mMainHandler.post(new Runnable() {
 

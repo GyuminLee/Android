@@ -25,6 +25,9 @@ public class URLImageView extends ImageView {
 	ImageRequest mRequest;
 	
 	public void setImageURL(String url) {
+		if (mRequest != null) {
+			mRequest.cancel();
+		}
 		mRequest = null;
 		if (url != null && !url.equals("")) {
 			mRequest = new ImageRequest(url);
@@ -34,6 +37,7 @@ public class URLImageView extends ImageView {
 				public void onSuccess(NetworkRequest request, Bitmap result) {
 					if (request == mRequest) {
 						setImageBitmap(result);
+						mRequest = null;
 					}
 				}
 
@@ -42,7 +46,7 @@ public class URLImageView extends ImageView {
 					
 				}
 			});
-			NetworkModel.getInstance().getNetworkImage(mRequest);
+			NetworkModel.getInstance().getNetworkImage(getContext(),mRequest);
 		}
 	}
 

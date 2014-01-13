@@ -16,7 +16,7 @@ public class MovieDialogFragment extends DialogFragment {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		NetworkModel.getInstance().getNetworkData(mRequest, new NetworkModel.OnNetworkResultListener() {
+		NetworkModel.getInstance().getNetworkData(getActivity(), mRequest, new NetworkModel.OnNetworkResultListener() {
 			
 			@Override
 			public void onResultSuccess(NetworkRequest movies) {

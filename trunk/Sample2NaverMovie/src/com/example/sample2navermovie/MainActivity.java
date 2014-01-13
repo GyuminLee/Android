@@ -10,7 +10,7 @@ import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends ParentActivity {
 
 	ListView listView;
 	EditText keywordView;
