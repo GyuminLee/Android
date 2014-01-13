@@ -30,6 +30,10 @@ public class MovieListDownloadTask extends
 		try {
 			URL url = request.getURL();
 			conn = (HttpURLConnection) url.openConnection();
+			request.setRequestMethod(conn);
+			request.setConnectionConfig(conn);
+			request.setTimeout(conn);
+			request.setOutput(conn);
 
 			int responseCode = conn.getResponseCode();
 			if (responseCode == HttpURLConnection.HTTP_OK) {
