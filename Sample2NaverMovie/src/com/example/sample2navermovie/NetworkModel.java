@@ -105,6 +105,17 @@ public class NetworkModel {
 		}
 		
 		addRequestMap(context, request);
+		for (ImageRequest r : mRequestQueue) {
+			if (r.isSameRequest(request)) {
+				return;
+			}
+		}
+		
+		for (ImageRequest rr : mRunningQueue) {
+			if (rr.isSameRequest(request)) {
+				return;
+			}
+		}
 		enqueue(request);
 	}
 
@@ -136,6 +147,8 @@ public class NetworkModel {
 		mRequestMap.remove(context);
 	}
 	
+	ArrayList<ImageRequest> mRunningQueue = new ArrayList<ImageRequest>();
+	
 	public class ImageDownloadRunnable implements Runnable {
 		Handler mMainHandler;
 		boolean isRunning = false;
@@ -148,6 +161,8 @@ public class NetworkModel {
 		public void run() {
 			while (isRunning) {
 				final ImageRequest request = dequeue();
+				if (request == null) continue;
+				mRunningQueue.add(request);
 				HttpURLConnection conn = null;
 				InputStream is = null;
 				try {
@@ -192,6 +207,7 @@ public class NetworkModel {
 						conn.disconnect();
 					}
 					removeRequestMap(request);
+					mRunningQueue.remove(request);
 				}
 				mMainHandler.post(new Runnable() {
 
