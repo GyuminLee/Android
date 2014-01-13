@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 public class ItemView extends FrameLayout {
 
-	ImageView iconView;
+	URLImageView iconView;
 	TextView titleView;
 	TextView actorView;
 	MovieItem mData;
@@ -22,7 +22,7 @@ public class ItemView extends FrameLayout {
 	
 	private void init() {
 		LayoutInflater.from(getContext()).inflate(R.layout.item_layout, this);
-		iconView = (ImageView)findViewById(R.id.iconView);
+		iconView = (URLImageView)findViewById(R.id.iconView);
 		titleView = (TextView)findViewById(R.id.titleView);
 		actorView = (TextView)findViewById(R.id.actorView);
 	}
@@ -31,20 +31,7 @@ public class ItemView extends FrameLayout {
 		titleView.setText(Html.fromHtml(item.title));
 		actorView.setText(item.actor);
 		iconView.setImageResource(R.drawable.ic_launcher);
-		if (item.image != null && !item.image.equals("")) {
-			ImageRequest request = new ImageRequest(item.image);
-			request.setOnResultListener(new NetworkRequest.OnResultListener<Bitmap>() {
-				@Override
-				public void onSuccess(NetworkRequest request, Bitmap result) {
-					iconView.setImageBitmap(result);
-				}
-				@Override
-				public void onError(NetworkRequest request, int error) {
-					
-				}
-			});
-			NetworkModel.getInstance().getNetworkImage(request);
-		}
+		iconView.setImageURL(item.image);
 		mData = item;
 	}
 

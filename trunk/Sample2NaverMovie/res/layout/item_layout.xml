@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     android:orientation="horizontal" >
 
-    <ImageView
+    <com.example.sample2navermovie.URLImageView
         android:id="@+id/iconView"
         android:layout_width="40dp"
         android:layout_height="40dp"
