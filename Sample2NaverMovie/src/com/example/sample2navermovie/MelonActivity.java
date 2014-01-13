@@ -23,11 +23,11 @@ public class MelonActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 				MelonRequest request = new MelonRequest();
-				request.setOnResultListener(new NetworkRequest.OnResultListener<String>() {
+				request.setOnResultListener(new NetworkRequest.OnResultListener<Places>() {
 
 					@Override
-					public void onSuccess(NetworkRequest request, String result) {
-						messageView.setText(result);
+					public void onSuccess(NetworkRequest request, Places result) {
+//						messageView.setText(result);
 					}
 
 					@Override
