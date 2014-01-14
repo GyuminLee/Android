@@ -6,6 +6,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.support.v4.widget.SimpleCursorAdapter;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
@@ -42,6 +44,23 @@ public class MainActivity extends Activity {
 				new int[] { android.R.id.text1 }, 0);
 		listView.setAdapter(mAdapter);
 
+		keywordView.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				String keyword = s.toString();
+				searchPhoneBook(keyword);
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {				
+			}
+		});
 		Button btn = (Button) findViewById(R.id.btnSearch);
 		btn.setOnClickListener(new View.OnClickListener() {
 
