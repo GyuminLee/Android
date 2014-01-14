@@ -11,6 +11,7 @@
     tools:context=".MainActivity" >
 
     <TextView
+        android:id="@+id/messageView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
@@ -47,13 +48,24 @@
         android:inputType="number"
         android:text="0" />
 
-    <Button
-        android:id="@+id/btnAdd"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="right"
-        android:text="Add" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <Button
+            android:id="@+id/btnModify"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Modify" />
+
+        <Button
+            android:id="@+id/btnAdd"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add" />
+    </LinearLayout>
 
     <ListView
         android:id="@+id/listView1"
