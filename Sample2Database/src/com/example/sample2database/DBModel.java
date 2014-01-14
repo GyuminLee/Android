@@ -1,5 +1,7 @@
 package com.example.sample2database;
 
+import java.util.ArrayList;
+
 import android.content.ContentValues;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -51,6 +53,26 @@ public class DBModel {
 		SQLiteDatabase db = openHelper.getReadableDatabase();
 		return db.query(DBConstants.PersonTable.TABLE_NAME, columns, null,
 				null, null, null, null);
+	}
+	
+	public void insertMulti(ArrayList<Person> personlist) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
+		db.beginTransaction();
+		try {
+			ContentValues values = new ContentValues();
+			for (Person p : personlist) {
+				values.clear();
+				values.put(DBConstants.PersonTable.COLUMN_NAME, p.name);
+				values.put(DBConstants.PersonTable.COLUMN_AGE, p.age);
+				db.insert(DBConstants.PersonTable.TABLE_NAME, null, values);
+			}
+			db.setTransactionSuccessful();
+		} catch (Exception e) {
+			e.printStackTrace();
+		} finally {
+			db.endTransaction();
+		}
+		db.close();
 	}
 
 }
