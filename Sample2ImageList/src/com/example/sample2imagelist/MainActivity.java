@@ -44,7 +44,7 @@ public class MainActivity extends FragmentActivity implements
 				centerView.setVisibility(View.GONE);
 			}
 		});
-		mAdapter = new SimpleCursorAdapter(this, R.layout.item_layout2, null,
+		mAdapter = new SimpleCursorAdapter(this, R.layout.item_layout, null,
 				columns, new int[] { R.id.iconView, R.id.titleView }, 0);
 		mAdapter.setViewBinder(new ViewBinder() {
 

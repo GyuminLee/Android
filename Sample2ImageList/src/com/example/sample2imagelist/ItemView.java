@@ -1,13 +1,14 @@
 package com.example.sample2imagelist;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.AttributeSet;
-import android.view.LayoutInflater;
 import android.widget.Checkable;
-import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
-public class ItemView extends FrameLayout implements Checkable {
+public class ItemView extends LinearLayout implements Checkable {
 
 	public ItemView(Context context) {
 		super(context);
@@ -16,6 +17,7 @@ public class ItemView extends FrameLayout implements Checkable {
 	
 	
 	
+	@TargetApi(Build.VERSION_CODES.HONEYCOMB)
 	public ItemView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init();
@@ -29,7 +31,6 @@ public class ItemView extends FrameLayout implements Checkable {
 	}
 
 	private void init() {
-		LayoutInflater.from(getContext()).inflate(R.layout.item_layout, this);
 		drawBackgroundColor();
 	}
 
