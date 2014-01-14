@@ -16,7 +16,7 @@ public class MyDBOpenHelper extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String sql = "CREATE TABLE "+DBConstants.PersonTable.TABLE_NAME +"(" + 
-					 DBConstants.PersonTable._ID + " PRIMARY KEY autoincrement, " +
+					 DBConstants.PersonTable._ID + " integer PRIMARY KEY autoincrement, " +
 					 DBConstants.PersonTable.COLUMN_NAME + " text," +
 					 DBConstants.PersonTable.COLUMN_AGE + " integer);";
 		db.execSQL(sql);
