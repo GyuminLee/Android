@@ -23,7 +23,7 @@ public class MainActivity extends Activity {
 			+ " NOTNULL) AND (" + ContactsContract.Contacts.DISPLAY_NAME
 			+ " != ''))";
 
-	String orderby = " COLLATE LOCALIZED ASC";
+	String orderby = ContactsContract.Contacts.DISPLAY_NAME + " COLLATE LOCALIZED ASC";
 
 	Cursor mCursor = null;
 
