@@ -35,6 +35,17 @@ public class DBModel {
 		person.id = db.insert(DBConstants.PersonTable.TABLE_NAME, null, values);
 		db.close();
 	}
+	
+	public void update(Person person) {
+		SQLiteDatabase db = openHelper.getWritableDatabase();
+		ContentValues values = new ContentValues();
+		values.put(DBConstants.PersonTable.COLUMN_NAME, person.name);
+		values.put(DBConstants.PersonTable.COLUMN_AGE, person.age);
+		String selection = DBConstants.PersonTable._ID + " = ? ";
+		String[] args = {"" + person.id};
+		db.update(DBConstants.PersonTable.TABLE_NAME, values, selection, args);
+		db.close();
+	}
 
 	public Cursor query(String[] columns) {
 		SQLiteDatabase db = openHelper.getReadableDatabase();
