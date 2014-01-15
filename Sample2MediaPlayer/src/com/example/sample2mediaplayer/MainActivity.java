@@ -5,9 +5,12 @@ import java.io.IOException;
 import android.app.Activity;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class MainActivity extends Activity {
 
@@ -21,13 +24,56 @@ public class MainActivity extends Activity {
 
 	MediaPlayer mPlayer;
 	int mPlayerState;
+	
+	SeekBar progressView;
+	
+	Handler mHandler = new Handler();
 
+	final static int UPDATE_INTERVAL = 200;
+	
+	Runnable updateRunnable = new Runnable() {
+		
+		@Override
+		public void run() {
+			if (mPlayerState == PLAYER_STATE_STARTED) {
+				progressView.setProgress(mPlayer.getCurrentPosition());
+				mHandler.postDelayed(this, UPDATE_INTERVAL);
+			}
+		}
+	};
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		progressView = (SeekBar)findViewById(R.id.progressView);
 		mPlayer = MediaPlayer.create(this, R.raw.winter_blues);
 		mPlayerState = PLAYER_STATE_PREPARED;
+		progressView.setMax(mPlayer.getDuration());
+		progressView.setProgress(0);
+		
+		progressView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			int current;
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				if (mPlayerState == PLAYER_STATE_STARTED) {
+					mPlayer.seekTo(current);
+				}
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				if (fromUser) {
+					current = progress;
+				}
+			}
+		});
 		Button btn = (Button) findViewById(R.id.btnStart);
 		btn.setOnClickListener(new View.OnClickListener() {
 
@@ -50,8 +96,10 @@ public class MainActivity extends Activity {
 				if (mPlayerState == PLAYER_STATE_PREPARED
 						|| mPlayerState == PLAYER_STATE_PAUSED
 						|| mPlayerState == PLAYER_STATE_COMPLETED) {
+					mPlayer.seekTo(progressView.getProgress());
 					mPlayer.start();
 					mPlayerState = PLAYER_STATE_STARTED;
+					mHandler.post(updateRunnable);
 				}
 			}
 		});
@@ -78,6 +126,7 @@ public class MainActivity extends Activity {
 						|| mPlayerState == PLAYER_STATE_COMPLETED) {
 					mPlayer.stop();
 					mPlayerState = PLAYER_STATE_STOPPED;
+					progressView.setProgress(0);
 				}
 
 			}
