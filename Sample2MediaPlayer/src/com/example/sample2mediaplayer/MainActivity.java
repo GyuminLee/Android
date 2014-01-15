@@ -3,6 +3,8 @@ package com.example.sample2mediaplayer;
 import java.io.IOException;
 
 import android.app.Activity;
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +28,8 @@ public class MainActivity extends Activity {
 	int mPlayerState;
 	
 	SeekBar progressView;
+	SeekBar volumeView;
+	AudioManager mAudioManager;
 	
 	Handler mHandler = new Handler();
 
@@ -46,11 +50,34 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		progressView = (SeekBar)findViewById(R.id.progressView);
+		volumeView = (SeekBar)findViewById(R.id.volumeView);
 		mPlayer = MediaPlayer.create(this, R.raw.winter_blues);
 		mPlayerState = PLAYER_STATE_PREPARED;
 		progressView.setMax(mPlayer.getDuration());
 		progressView.setProgress(0);
-		
+		mAudioManager = (AudioManager)getSystemService(Context.AUDIO_SERVICE);
+		int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+		volumeView.setMax(maxVolume);
+		int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+		volumeView.setProgress(currentVolume);
+		volumeView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+			
+			@Override
+			public void onStopTrackingTouch(SeekBar seekBar) {
+				
+			}
+			
+			@Override
+			public void onStartTrackingTouch(SeekBar seekBar) {
+				
+			}
+			
+			@Override
+			public void onProgressChanged(SeekBar seekBar, int progress,
+					boolean fromUser) {
+				mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+			}
+		});
 		progressView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
 			int current;
 			
