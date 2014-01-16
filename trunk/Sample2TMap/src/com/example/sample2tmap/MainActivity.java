@@ -1,6 +1,13 @@
 package com.example.sample2tmap;
 
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.ArrayList;
+
+import javax.xml.parsers.FactoryConfigurationError;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,22 +22,34 @@ import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapData.TMapPathType;
 import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapPolyLine;
 import com.skp.Tmap.TMapView;
 
 public class MainActivity extends Activity {
 	TMapView mMap;
 	LocationManager mLM;
+	EditText keywordView;
+	TMapPoint currentPoint = null;
+	TMapPoint startPoint = null;
+	TMapPoint endPoint = null;
+	TextView positionView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		mMap = (TMapView) findViewById(R.id.map);
+		keywordView = (EditText) findViewById(R.id.keywordView);
+		positionView = (TextView) findViewById(R.id.positionView);
 		mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		new MapRegisterTask().execute("");
 		Button btn = (Button) findViewById(R.id.btnZoomIn);
@@ -81,6 +100,80 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+
+		btn = (Button) findViewById(R.id.btnSearch);
+		btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					new SearckTask().execute(keyword);
+				}
+			}
+		});
+
+		btn = (Button) findViewById(R.id.btnStart);
+		btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (currentPoint != null) {
+					startPoint = currentPoint;
+					currentPoint = null;
+					positionView.setText("not set");
+				}
+			}
+		});
+		btn = (Button) findViewById(R.id.btnEnd);
+		btn.setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				if (currentPoint != null) {
+					endPoint = currentPoint;
+					currentPoint = null;
+					positionView.setText("not set");
+				}
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btnRoute);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (startPoint != null && endPoint != null) {
+					new RouteSearchTask().execute(startPoint,endPoint);
+					startPoint = endPoint = null;
+				}
+			}
+		});
+	}
+	
+	class RouteSearchTask extends AsyncTask<TMapPoint, Integer, TMapPolyLine> {
+		@Override
+		protected TMapPolyLine doInBackground(TMapPoint... params) {
+			TMapPoint start = params[0];
+			TMapPoint end = params[1];
+			TMapData data = new TMapData();
+			try {
+				TMapPolyLine path = data.findPathDataWithType(TMapPathType.CAR_PATH, start, end);
+				return path;
+			} catch (Exception e) {
+				e.printStackTrace();
+			} 
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(TMapPolyLine result) {
+			if (result != null) {
+				mMap.addTMapPath(result);
+				Bitmap bm = ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap();
+				mMap.setTMapPathIcon(bm, bm);
+			}
+		}
 	}
 
 	LocationListener mListener = new LocationListener() {
@@ -181,7 +274,8 @@ public class MainActivity extends Activity {
 
 			@Override
 			public boolean onPressEvent(ArrayList<TMapMarkerItem> markers,
-					ArrayList<TMapPOIItem> arg1, TMapPoint point, PointF arg3) {
+					ArrayList<TMapPOIItem> poiitems, TMapPoint point,
+					PointF arg3) {
 				Toast.makeText(
 						MainActivity.this,
 						"lat : " + point.getLatitude() + ",lng : "
@@ -192,6 +286,15 @@ public class MainActivity extends Activity {
 							"click marker : " + item.getID(),
 							Toast.LENGTH_SHORT).show();
 				}
+
+				for (TMapPOIItem item : poiitems) {
+					Toast.makeText(MainActivity.this,
+							"poi : " + item.getPOIName(), Toast.LENGTH_SHORT)
+							.show();
+				}
+				currentPoint = point;
+				positionView.setText("lat : " + currentPoint.getLatitude()
+						+ ",lng : " + currentPoint.getLongitude());
 				return false;
 			}
 		});
@@ -207,6 +310,34 @@ public class MainActivity extends Activity {
 		// mMap.setSightVisible(true);
 		// mMap.setCompassMode(true);
 		// mMap.setTrackingMode(true);
+
+	}
+
+	class SearckTask extends AsyncTask<String, Integer, ArrayList<TMapPOIItem>> {
+		@Override
+		protected ArrayList<TMapPOIItem> doInBackground(String... params) {
+			TMapData mapData = new TMapData();
+			String keyword = params[0];
+			try {
+				TMapPoint point = mMap.getCenterPoint();
+				ArrayList<TMapPOIItem> list = mapData.findAroundKeywordPOI(
+						point, keyword, 500, 10);
+				return list;
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			return null;
+		}
+
+		@Override
+		protected void onPostExecute(ArrayList<TMapPOIItem> result) {
+			if (result != null) {
+				mMap.addTMapPOIItem(result);
+				if (result.size() > 0) {
+					mMap.setCenterPoint(result.get(0).getPOIPoint().getLongitude(), result.get(0).getPOIPoint().getLatitude());
+				}
+			}
+		}
 	}
 
 	@Override
