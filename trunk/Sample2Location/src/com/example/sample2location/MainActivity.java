@@ -58,7 +58,6 @@ public class MainActivity extends Activity {
 									addresses);
 							listView.setAdapter(adapter);
 						} catch (IOException e) {
-							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
 					}
@@ -101,7 +100,6 @@ public class MainActivity extends Activity {
 							android.R.layout.simple_list_item_1, addresses);
 					listView.setAdapter(adapter);
 				} catch (IOException e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
 
