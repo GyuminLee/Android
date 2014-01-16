@@ -9,6 +9,7 @@
         android:targetSdkVersion="18" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
         android:allowBackup="true"
@@ -24,6 +25,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <service android:name="AlertService" android:exported="true"></service>
+        <activity android:exported="true" android:name="AlertActivity"></activity>
     </application>
 
 </manifest>
