@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Locale;
 
 import android.app.Activity;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
@@ -17,6 +18,8 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -62,6 +65,19 @@ public class MainActivity extends Activity {
 						}
 					}
 				}
+			}
+		});
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view, int position,
+					long id) {
+				Address address = (Address)listView.getItemAtPosition(position);
+				Intent intent = new Intent(MainActivity.this, AlertService.class);
+				intent.putExtra(AlertService.PARAM_ADDRESS, address);
+				PendingIntent pi = PendingIntent.getService(MainActivity.this, 0, intent, 0);
+				long time = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
+				mLM.addProximityAlert(address.getLatitude(), address.getLongitude(), 500, -1, pi);
 			}
 		});
 		mLM = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
