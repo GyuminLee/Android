@@ -10,6 +10,8 @@ import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Menu;
+import android.view.View;
+import android.widget.Button;
 
 import com.skp.Tmap.TMapView;
 
@@ -24,6 +26,27 @@ public class MainActivity extends Activity {
 		mMap = (TMapView)findViewById(R.id.map);
 		mLM = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		new MapRegisterTask().execute("");
+		Button btn = (Button)findViewById(R.id.btnZoomIn);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (isInitialized) {
+					mMap.MapZoomIn();
+				}
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btnZoomOut);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (isInitialized) {
+					mMap.MapZoomOut();
+				}
+			}
+		});
 	}
 	
 	LocationListener mListener = new LocationListener() {
@@ -65,6 +88,7 @@ public class MainActivity extends Activity {
 			mMap.setLocationPoint(location.getLongitude(), location.getLatitude());
 			Bitmap icon = ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap();
 			mMap.setIcon(icon);
+			mMap.setIconVisibility(true);
 		}
 	}
 	@Override
