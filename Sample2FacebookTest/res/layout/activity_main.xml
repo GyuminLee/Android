@@ -15,16 +15,16 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
+    <com.facebook.widget.LoginButton
+        android:id="@+id/authButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+    
     <Button
         android:id="@+id/btnLogin"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Login" />
-    
-    <com.facebook.widget.LoginButton
-        android:id="@+id/authButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" />
-
+        
 </LinearLayout>
