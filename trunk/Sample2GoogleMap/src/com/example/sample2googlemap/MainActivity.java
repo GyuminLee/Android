@@ -8,13 +8,16 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
@@ -124,6 +127,32 @@ public class MainActivity extends FragmentActivity implements
 		}
 	}
 	
+	class MyInfoWindow implements InfoWindowAdapter {
+
+		View infoView;
+		TextView titleView;
+		TextView snippetView;
+		
+		public MyInfoWindow(Context context) {
+			infoView = LayoutInflater.from(context).inflate(R.layout.info_window_layout, null);
+			titleView = (TextView)infoView.findViewById(R.id.title);
+			snippetView = (TextView)infoView.findViewById(R.id.snippet);
+		}
+		
+		@Override
+		public View getInfoContents(Marker marker) {
+			titleView.setText(marker.getTitle());
+			snippetView.setText(marker.getSnippet());
+			return infoView;
+		}
+
+		@Override
+		public View getInfoWindow(Marker marker) {
+			// TODO Auto-generated method stub
+			return null;
+		}
+		
+	}
 	private void setUpMap() {
 		mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 		mMap.setMyLocationEnabled(true);
@@ -137,6 +166,7 @@ public class MainActivity extends FragmentActivity implements
 		mMap.setOnMapLongClickListener(this);
 		mMap.setOnCameraChangeListener(this);
 		mMap.setOnInfoWindowClickListener(this);
+		mMap.setInfoWindowAdapter(new MyInfoWindow(this));
 	}
 	
 	
