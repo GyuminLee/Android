@@ -26,6 +26,13 @@
             android:layout_height="wrap_content"
             android:text="Marker" />
 
+        <Button
+            android:id="@+id/btnRoute"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Route" />
+
     </LinearLayout>
 
     <fragment
