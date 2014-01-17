@@ -1,11 +1,20 @@
 package com.example.sample2googlemap;
 
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.skplanetx.openapi.tmap.CarFeature;
+import org.skplanetx.openapi.tmap.CarRouteInfo;
+import org.skplanetx.openapi.tmap.Geometry;
+import org.skplanetx.openapi.tmap.GeometryDeserializer;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.LayoutInflater;
@@ -13,6 +22,7 @@ import android.view.Menu;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -24,6 +34,16 @@ import com.google.android.gms.maps.model.CameraPosition;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.skp.openplatform.android.sdk.api.APIRequest;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKConstants.CONTENT_TYPE;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKConstants.HttpMethod;
+import com.skp.openplatform.android.sdk.common.PlanetXSDKException;
+import com.skp.openplatform.android.sdk.common.RequestBundle;
+import com.skp.openplatform.android.sdk.common.ResponseMessage;
 
 public class MainActivity extends FragmentActivity implements
 	GoogleMap.OnMarkerClickListener, 
@@ -42,6 +62,7 @@ public class MainActivity extends FragmentActivity implements
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		APIRequest.setAppKey("458a10f5-c07e-34b5-b2bd-4a891e024c2a");
 		setUpMapIfNeed();
 		mLM = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		Button btn = (Button)findViewById(R.id.btnMarker);
@@ -65,6 +86,84 @@ public class MainActivity extends FragmentActivity implements
 				mMarkerResolver.put(data, marker);
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btnRoute);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				new MyRouteTask().execute("");
+			}
+		});
+	}
+	CarRouteInfo mResult;
+	
+	class MyRouteTask extends AsyncTask<String, Integer, PolylineOptions> {
+		@Override
+		protected PolylineOptions doInBackground(String... params) {
+			double startLat = 37.56468648536046;
+			double startLng = 126.98217734415019;
+			double endLat = 35.17883196265564;
+			double endLng = 129.07579349764512;
+			APIRequest request = new APIRequest();
+			RequestBundle bundle = new RequestBundle();
+			bundle.setUrl("https://apis.skplanetx.com/tmap/routes");
+			bundle.setHttpMethod(HttpMethod.POST);
+			bundle.setRequestType(CONTENT_TYPE.FORM);
+			bundle.setResponseType(CONTENT_TYPE.JSON);
+			Map<String,Object> param = new HashMap<String,Object>();
+			param.put("version", 1);
+			param.put("endX", endLng);
+			param.put("endY", endLat);
+			param.put("startX", startLng);
+			param.put("startY", startLat);
+			param.put("resCoordType", "WGS84GEO");
+			param.put("reqCoordType", "WGS84GEO");
+			bundle.setParameters(param);
+			try {
+				ResponseMessage message = request.request(bundle);
+				Gson gson = new GsonBuilder().registerTypeAdapter(Geometry.class, new GeometryDeserializer()).create();
+				CarRouteInfo info = gson.fromJson(message.getResultMessage(), CarRouteInfo.class);
+				mResult = info;
+				PolylineOptions options = new PolylineOptions();
+				for (CarFeature feature : info.features) {
+					if (feature.geometry.type.equals("LineString")) {
+						double[] coords = feature.geometry.coordinates;
+						for (int i = 0 ; i < coords.length; i+=2) {
+							LatLng point = new LatLng(coords[i+1],coords[i]);
+							options.add(point);
+						}
+					}
+				}
+				options.color(Color.RED);
+				options.width(10);
+				return options;
+			} catch (PlanetXSDKException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+			return null;
+		}
+		
+		@Override
+		protected void onPostExecute(PolylineOptions result) {
+			if (result != null) {
+				Polyline line = mMap.addPolyline(result);
+				List<LatLng> points = line.getPoints();
+				if (points.size() > 0) {
+					LatLng firstpoint = points.get(0);
+					CameraUpdate update = CameraUpdateFactory.newLatLng(firstpoint);
+					mMap.animateCamera(update);
+				}
+				
+				int totalD = mResult.features.get(0).properties.totalDistance;
+				int totalT = mResult.features.get(0).properties.totalTime;
+				int totalF = mResult.features.get(0).properties.totalFare;
+				Toast.makeText(MainActivity.this, " distance : " + totalD + ", Time : " + totalT + ", Fare : " + totalF, Toast.LENGTH_SHORT).show();
+			}
+			super.onPostExecute(result);
+		}
 	}
 	
 	LocationListener mListener = new LocationListener() {
@@ -141,6 +240,7 @@ public class MainActivity extends FragmentActivity implements
 		
 		@Override
 		public View getInfoContents(Marker marker) {
+			MyData data = mValueResolver.get(marker.getId());
 			titleView.setText(marker.getTitle());
 			snippetView.setText(marker.getSnippet());
 			return infoView;
