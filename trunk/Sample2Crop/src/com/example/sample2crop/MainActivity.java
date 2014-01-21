@@ -57,6 +57,9 @@ public class MainActivity extends Activity {
 				startActivityForResult(photoPickerIntent, REQUEST_CODE_CROP);
 			}
 		});
+		if (savedInstanceState != null) {
+			mSavedFile = new File(savedInstanceState.getString("filename"));
+		}
 	}
 
 	@Override
@@ -72,6 +75,12 @@ public class MainActivity extends Activity {
 		mSavedFile = new File(Environment.getExternalStorageDirectory(),"temp_" + System.currentTimeMillis()/1000);
 		
 		return Uri.fromFile(mSavedFile);
+	}
+	
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("filename", mSavedFile.getAbsolutePath());
 	}
 	
 	@Override
