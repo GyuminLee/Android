@@ -34,6 +34,13 @@ public class MainActivity extends FragmentActivity {
 			}
 		});
 	}
+	
+	@Override
+	public void onBackPressed() {
+		if (!getSupportFragmentManager().findFragmentByTag(tabHost.getCurrentTabTag()).getChildFragmentManager().popBackStackImmediate()) {
+			super.onBackPressed();
+		}
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
