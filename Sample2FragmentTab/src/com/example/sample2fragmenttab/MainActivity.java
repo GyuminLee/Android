@@ -1,9 +1,11 @@
 package com.example.sample2fragmenttab;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.view.Menu;
+import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
 
 public class MainActivity extends FragmentActivity {
@@ -33,6 +35,13 @@ public class MainActivity extends FragmentActivity {
 				}
 			}
 		});
+		Toast.makeText(this, "onCreate....", Toast.LENGTH_SHORT).show();
+	}
+	
+	@Override
+	public void onConfigurationChanged(Configuration newConfig) {
+		super.onConfigurationChanged(newConfig);
+		Toast.makeText(this, "onCreate....", Toast.LENGTH_SHORT).show();
 	}
 	
 	@Override

@@ -23,23 +23,36 @@ public class FragmentOne extends Fragment {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setHasOptionsMenu(true);
-		getChildFragmentManager().addOnBackStackChangedListener(new OnBackStackChangedListener() {
-			
-			@Override
-			public void onBackStackChanged() {
-				Toast.makeText(getActivity(), "backstack changed", Toast.LENGTH_SHORT).show();
-			}
-		});
+		getChildFragmentManager().addOnBackStackChangedListener(
+				new OnBackStackChangedListener() {
+
+					@Override
+					public void onBackStackChanged() {
+						Toast.makeText(getActivity(), "backstack changed",
+								Toast.LENGTH_SHORT).show();
+					}
+				});
 	}
+
+	View view = null;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		View v = inflater.inflate(R.layout.fragment_one_layout, container,
-				false);
-		return v;
+		if (view == null) {
+			view = inflater.inflate(R.layout.fragment_one_layout, container,
+					false);
+		} else {
+			ViewGroup pv = (ViewGroup)view.getParent();
+			pv.removeView(view);
+		}
+		return view;
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+	}
 	@Override
 	public void onActivityCreated(Bundle savedInstanceState) {
 		super.onActivityCreated(savedInstanceState);
@@ -64,7 +77,7 @@ public class FragmentOne extends Fragment {
 						.beginTransaction();
 				FragmentSubTwo f = new FragmentSubTwo();
 				f.setTargetFragment(this, 1);
-				ft.replace(R.id.subContainer, f,"sf1");
+				ft.replace(R.id.subContainer, f, "sf1");
 				ft.addToBackStack("sub1");
 				ft.commit();
 			}
