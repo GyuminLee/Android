@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-public class TwoFragment extends Fragment {
+public class TwoFragment extends PagerFragment {
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,

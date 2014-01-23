@@ -19,6 +19,7 @@ public class MainActivity extends FragmentActivity {
 		mTabHost.setup();
 		
 		ViewPager pager = (ViewPager)findViewById(R.id.pager);
+		pager.setPageMargin(-50);
 		mTabsAdapter = new TabsAdapter(this, mTabHost, pager);
 		
 		mTabsAdapter.addTab(mTabHost.newTabSpec("spec1").setIndicator("tab1"), OneFragment.class, null);
