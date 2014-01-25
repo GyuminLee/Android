@@ -221,7 +221,7 @@ public class GestureGridView extends GridView {
 	@Override
 	public boolean onTouchEvent(MotionEvent ev) {
 		boolean bConsumed = false;
-		mDetector.onTouchEvent(ev);
+		bConsumed = mDetector.onTouchEvent(ev);
 		switch (ev.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
 			GestureItemViewGroup v = castGestureItemViewGroup(getChildView(ev));
@@ -241,6 +241,11 @@ public class GestureGridView extends GridView {
 		}
 		if (!bConsumed) {
 			bConsumed = super.onTouchEvent(ev);
+		} else {
+			int oldAction = ev.getAction();
+			ev.setAction(MotionEvent.ACTION_CANCEL);
+			bConsumed = super.onTouchEvent(ev);
+			ev.setAction(oldAction);
 		}
 		switch (ev.getActionMasked()) {
 		case MotionEvent.ACTION_DOWN:
