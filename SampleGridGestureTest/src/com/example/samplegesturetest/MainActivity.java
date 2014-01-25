@@ -3,35 +3,49 @@ package com.example.samplegesturetest;
 import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
-import android.widget.ArrayAdapter;
+import android.view.View;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
-import com.example.samplegesturetest.FlingGridView.OnFlingGestureListener;
+import com.example.samplegesturetest.GestureGridView.OnSwipeListener;
 
 public class MainActivity extends Activity {
 
-	FlingGridView listView;
-	String[] data = {"data0","data1","data2","data3","data4","data5","data6","data7","data8"};
+	GestureGridView listView;
+	String[] data = {"data0","data1","data2","data3","data4","data5","data6","data7","data8",
+			"data0","data1","data2","data3","data4","data5","data6","data7","data8",
+			"data0","data1","data2","data3","data4","data5","data6","data7","data8",
+			"data0","data1","data2","data3","data4","data5","data6","data7","data8"};
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		listView = (FlingGridView)findViewById(R.id.listView1);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,data);
+		listView = (GestureGridView)findViewById(R.id.listView1);
+//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,data);
+		MyAdapter adapter = new MyAdapter(this, data);
 		listView.setAdapter(adapter);
-		listView.setOnFlingGestureListener(new OnFlingGestureListener() {
+		listView.setOnSwipeListener(new OnSwipeListener() {
 			
 			@Override
-			public boolean onFlingGesture(FlingGridView v, int orientation) {
+			public boolean onSwipe(View v, int orientation) {
 				switch(orientation) {
-				case FlingGridView.BOTTOM_TO_UP :
-				case FlingGridView.UP_TO_BOTTOM :
-				case FlingGridView.LEFT_TO_RIGHT :
-				case FlingGridView.RIGHT_TO_LEFT :
+				case GestureGridView.SWIPE_BOTTOM_TO_UP :
+				case GestureGridView.SWIPE_UP_TO_BOTTOM :
+				case GestureGridView.SWIPE_LEFT_TO_RIGHT :
+				case GestureGridView.SWIPE_RIGHT_TO_LEFT :
 					Toast.makeText(MainActivity.this, "fling...", Toast.LENGTH_SHORT).show();
 				}
 				return false;
+			}
+		});
+		listView.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
+					long arg3) {
+				Toast.makeText(MainActivity.this, "onItemClick", Toast.LENGTH_SHORT).show();
 			}
 		});
 	}
