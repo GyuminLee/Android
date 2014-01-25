@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 				case GestureGridView.SWIPE_RIGHT_TO_LEFT :
 					Toast.makeText(MainActivity.this, "fling...", Toast.LENGTH_SHORT).show();
 				}
-				return false;
+				return true;
 			}
 		});
 		listView.setOnItemClickListener(new OnItemClickListener() {
