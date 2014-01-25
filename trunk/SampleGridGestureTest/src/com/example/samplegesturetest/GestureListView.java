@@ -1,14 +1,16 @@
 package com.example.samplegesturetest;
 
+import com.example.samplegesturetest.GestureGridView.OnSwipeListener;
+
 import android.content.Context;
-import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.GridView;
+import android.widget.ListView;
 
-public class GestureGridView extends GridView {
+public class GestureListView extends ListView {
+
 
 	public static final int SWIPE_BOTTOM_TO_UP = 1;
 	public static final int SWIPE_UP_TO_BOTTOM = 2;
@@ -25,17 +27,18 @@ public class GestureGridView extends GridView {
 		mListener = listener;
 	}
 
-	public GestureGridView(Context context) {
+	
+	public GestureListView(Context context) {
 		super(context);
 		init();
 	}
 
-	public GestureGridView(Context context, AttributeSet attrs, int defStyle) {
+	public GestureListView(Context context, AttributeSet attrs, int defStyle) {
 		super(context, attrs, defStyle);
 		init();
 	}
 
-	public GestureGridView(Context context, AttributeSet attrs) {
+	public GestureListView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		init();
 	}
@@ -76,7 +79,7 @@ public class GestureGridView extends GridView {
 	private boolean performSwipe(MotionEvent e1, MotionEvent e2, int orientation) {
 		boolean bConsumed = false;
 		if (mListener != null) {
-			bConsumed = mListener.onSwipe(GestureGridView.this, orientation);
+			bConsumed = mListener.onSwipe(GestureListView.this, orientation);
 		}
 		if (!bConsumed) {
 			GestureItemViewGroup v = castGestureItemViewGroup(getMatchChildView(
@@ -255,4 +258,5 @@ public class GestureGridView extends GridView {
 		}
 		return bConsumed;
 	}
+	
 }
