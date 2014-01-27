@@ -20,6 +20,7 @@ public class LineChartFragment extends Fragment {
 		XYMultipleSeriesRenderer renderer = DataModel.getInstance()
 				.getRenderer();
 		renderer.setClickEnabled(true);
+		renderer.setSelectableBuffer(10);
 		final GraphicalView view = ChartFactory.getLineChartView(getActivity(),
 				DataModel.getInstance().getDataset(), renderer);
 		view.setOnClickListener(new View.OnClickListener() {
