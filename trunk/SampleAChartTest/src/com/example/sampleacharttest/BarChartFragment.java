@@ -21,7 +21,7 @@ public class BarChartFragment extends Fragment {
 		GraphicalView v = ChartFactory.getBarChartView(getActivity(), 
 				DataModel.getInstance().getDataset(), 
 				DataModel.getInstance().getRenderer(), 
-				Type.STACKED);
+				Type.DEFAULT);
 		return v;
 	}
 }
