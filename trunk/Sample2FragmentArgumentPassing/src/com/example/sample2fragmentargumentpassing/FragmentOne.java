@@ -12,6 +12,20 @@ import android.widget.Button;
 import android.widget.TextView;
 
 public class FragmentOne extends Fragment {
+	Bundle b;
+	@Override
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		b= getArguments();
+	}
+	
+	public interface OnButtonClickListener {
+		public void onButtonClick(String keyword);
+	}
+	OnButtonClickListener mListener;
+	public void setOnButtonClickListener(OnButtonClickListener listener) {
+		mListener = listener;
+	}
 
 	TextView messageView;
 	public final static int REQUEST_CODE_GET_MESSAGE = 0;
@@ -32,6 +46,9 @@ public class FragmentOne extends Fragment {
 				ft.replace(R.id.container, f);
 				ft.addToBackStack(null);
 				ft.commit();
+				if (mListener != null) {
+					mListener.onButtonClick(messageView.getText().toString());
+				}
 			}
 		});
 		return v;
