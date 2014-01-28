@@ -39,8 +39,8 @@ public class MainActivity extends Activity {
 					SparseBooleanArray array = listView.getCheckedItemPositions();
 					StringBuilder sb = new StringBuilder();
 					for (int i = 0; i < array.size(); i++) {
-						if (array.get(i)) {
-							sb.append(listView.getItemAtPosition(i).toString()+",");
+						if (array.get(array.keyAt(i))) {
+							sb.append(listView.getItemAtPosition(array.keyAt(i)).toString()+",");
 						}
 					}
 					listView.setChoiceMode(ListView.CHOICE_MODE_NONE);
