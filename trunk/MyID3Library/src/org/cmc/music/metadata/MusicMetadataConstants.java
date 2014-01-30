@@ -34,6 +34,7 @@ public interface MusicMetadataConstants
 	public static final String KEY_COMMENT = "comment";
 	public static final String KEY_TRACK_NUMBER = "track_number";
 	public static final String KEY_DISC_NUMBER = "disc_number";
+	public static final String KEY_BPM = "bmp";
 
 	//	public static final String KEY_Track_Number = "Track Number";
 
@@ -82,6 +83,7 @@ public interface MusicMetadataConstants
 			KEY_ALBUM_ARTIST, //
 			KEY_COMPOSER_2, //
 			KEY_COMPILATION, //
+			KEY_BPM,
 			KEY_SOUNDTRACK, //
 			KEY_LABEL, //
 			KEY_ACAPELLA, //

@@ -184,6 +184,32 @@ public class ID3v2DataMapping implements MusicMetadataConstants {
 					}
 				}
 			}, //
+			new ID3v2TagHandler() {
+				protected ID3FrameType getFrameType() {
+					return ID3FrameType.BPM;
+				}
+
+				protected Object getKey() {
+					return KEY_BPM;
+				}
+
+				public void process(MusicMetadata values, MyID3v2FrameText tag)
+
+				{
+					try {
+						String value = tag.value;
+						if (value == null || value.trim().length() < 1)
+							return;
+						value = value.trim();
+						if (!isNumber(value))
+							return;
+						Number number = Integer.valueOf(value);
+						values.put(KEY_BPM, number);
+					} catch (Throwable e) {
+
+					}
+				}
+			}, //
 
 			new ID3v2TagHandler() {
 				protected ID3FrameType getFrameType() {
