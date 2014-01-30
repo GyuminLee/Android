@@ -189,6 +189,11 @@ public class MusicMetadata extends SimpleMap
 	{
 		return getString(KEY_COMPILATION);
 	}
+	
+	public Number getBPM()
+	{
+		return getNumber(KEY_BPM);
+	}
 
 	/* (non-Javadoc)
 	 * @see org.cmc.music.common.IMusicMetadata#clearSongTitle()
@@ -286,6 +291,11 @@ public class MusicMetadata extends SimpleMap
 		remove(KEY_COMPILATION);
 	}
 
+	public void clearBPM()
+	{
+		remove(KEY_BPM);
+	}
+	
 	//
 
 	/* (non-Javadoc)
