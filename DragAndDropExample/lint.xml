@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<lint>
+    <issue id="NewApi">
+        <ignore path="src/com/example/draganddropexample/DragAndDropLayout.java" />
+        <ignore path="src/com/example/draganddropexample/IconGridLayout.java" />
+        <ignore path="src/com/example/draganddropexample/IconGridView.java" />
+    </issue>
+</lint>
