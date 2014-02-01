@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.example.DragLayer
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:launcher="http://schemas.android.com/apk/res/com.android.launcher"
+
+    android:id="@+id/drag_layer"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+<TextView
+	android:id="@+id/Text1"  
+    android:layout_width="fill_parent" 
+    android:layout_height="wrap_content" 
+    android:text="@string/hello"
+    />
+<ImageView
+    android:id="@+id/Image1"
+    android:src="@drawable/photo1"
+    android:layout_weight="50" 
+    android:adjustViewBounds="true"
+    android:layout_width="80px"
+    android:layout_height="100px" />
+<ImageView
+    android:id="@+id/Image2"
+    android:src="@drawable/photo2"
+    android:layout_weight="50" 
+    android:adjustViewBounds="true"
+    android:layout_width="50px"
+    android:layout_height="80px" />
+
+</com.example.DragLayer>
