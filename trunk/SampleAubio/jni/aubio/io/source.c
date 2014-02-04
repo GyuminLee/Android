@@ -32,6 +32,8 @@
 #ifdef HAVE_SNDFILE
 #include "io/source_sndfile.h"
 #endif /* HAVE_SNDFILE */
+#include "aubio_priv.h"
+#include <android/log.h>
 
 typedef void (*aubio_source_do_t)(aubio_source_t * s, fvec_t * data, uint_t * read);
 typedef void (*aubio_source_do_multi_t)(aubio_source_t * s, fmat_t * data, uint_t * read);
@@ -52,7 +54,10 @@ struct _aubio_source_t {
 
 aubio_source_t * new_aubio_source(char_t * uri, uint_t samplerate, uint_t hop_size) {
   aubio_source_t * s = AUBIO_NEW(aubio_source_t);
+  AUBIO_MSG("new aubio source");
+
 #if HAVE_LIBAV
+  AUBIO_MSG("libav");
   s->source = (void *)new_aubio_source_avcodec(uri, samplerate, hop_size);
   if (s->source) {
     s->s_do = (aubio_source_do_t)(aubio_source_avcodec_do);
@@ -65,6 +70,7 @@ aubio_source_t * new_aubio_source(char_t * uri, uint_t samplerate, uint_t hop_si
   }
 #endif /* HAVE_LIBAV */
 #ifdef __APPLE__
+  AUBIO_MSG("apple");
   s->source = (void *)new_aubio_source_apple_audio(uri, samplerate, hop_size);
   if (s->source) {
     s->s_do = (aubio_source_do_t)(aubio_source_apple_audio_do);
@@ -77,6 +83,7 @@ aubio_source_t * new_aubio_source(char_t * uri, uint_t samplerate, uint_t hop_si
   }
 #endif /* __APPLE__ */
 #if HAVE_SNDFILE
+  AUBIO_MSG("sndfile");
   s->source = (void *)new_aubio_source_sndfile(uri, samplerate, hop_size);
   if (s->source) {
     s->s_do = (aubio_source_do_t)(aubio_source_sndfile_do);

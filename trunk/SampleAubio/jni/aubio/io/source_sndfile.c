@@ -31,6 +31,7 @@
 #include "source_sndfile.h"
 
 #include "temporal/resampler.h"
+#include <android/log.h>
 
 #define MAX_CHANNELS 6
 #define MAX_SIZE 4096

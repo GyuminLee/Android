@@ -72,6 +72,7 @@
 
 #include "mathutils.h"
 
+#include <android/log.h>
 /****
  * 
  * SYSTEM INTERFACE
@@ -114,15 +115,24 @@ typedef enum {
 } aubio_status;
 
 #ifdef HAVE_C99_VARARGS_MACROS
-#define AUBIO_ERR(...)               fprintf(stderr, "AUBIO ERROR: " __VA_ARGS__)
-#define AUBIO_MSG(...)               fprintf(stdout, __VA_ARGS__)
-#define AUBIO_DBG(...)               fprintf(stderr, __VA_ARGS__)
-#define AUBIO_WRN(...)               fprintf(stderr, "AUBIO WARNING: " __VA_ARGS__)
+#define AUBIO_ERR(...)   __android_log_print(ANDROID_LOG_ERROR  ,"SampleAubio", __VA_ARGS__)
+#define AUBIO_MSG(...)   __android_log_print(ANDROID_LOG_INFO   ,"SampleAubio", __VA_ARGS__)
+#define AUBIO_DBG(...)   __android_log_print(ANDROID_LOG_DEBUG  ,"SampleAubio", __VA_ARGS__)
+#define AUBIO_WRN(...)   __android_log_print(ANDROID_LOG_WARN   ,"SampleAubio", __VA_ARGS__)
+//#define AUBIO_ERR(...)               fprintf(stderr, "AUBIO ERROR: " __VA_ARGS__)
+//#define AUBIO_MSG(...)               fprintf(stdout, __VA_ARGS__)
+//#define AUBIO_DBG(...)               fprintf(stderr, __VA_ARGS__)
+//#define AUBIO_WRN(...)               fprintf(stderr, "AUBIO WARNING: " __VA_ARGS__)
 #else
-#define AUBIO_ERR(format, args...)   fprintf(stderr, "AUBIO ERROR: " format , ##args)
-#define AUBIO_MSG(format, args...)   fprintf(stdout, format , ##args)
-#define AUBIO_DBG(format, args...)   fprintf(stderr, format , ##args)
-#define AUBIO_WRN(format, args...)   fprintf(stderr, "AUBIO WARNING: " format, ##args)
+#define AUBIO_ERR(...)   __android_log_print(ANDROID_LOG_ERROR  ,"SampleAubio", __VA_ARGS__)
+#define AUBIO_MSG(...)   __android_log_print(ANDROID_LOG_INFO   ,"SampleAubio", __VA_ARGS__)
+#define AUBIO_DBG(...)   __android_log_print(ANDROID_LOG_DEBUG  ,"SampleAubio", __VA_ARGS__)
+#define AUBIO_WRN(...)   __android_log_print(ANDROID_LOG_WARN   ,"SampleAubio", __VA_ARGS__)
+//
+//#define AUBIO_ERR(format, args...)   fprintf(stderr, "AUBIO ERROR: " format , ##args)
+//#define AUBIO_MSG(format, args...)   fprintf(stdout, format , ##args)
+//#define AUBIO_DBG(format, args...)   fprintf(stderr, format , ##args)
+//#define AUBIO_WRN(format, args...)   fprintf(stderr, "AUBIO WARNING: " format, ##args)
 #endif
 
 #define AUBIO_ERROR   AUBIO_ERR
