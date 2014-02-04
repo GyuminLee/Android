@@ -71,6 +71,9 @@
 /* Define to 1 if you have the <unistd.h> header file. */
 #define HAVE_UNISTD_H 1
 
+#define HAVE_SNDFILE 1
+#define HAVE_SAMPLERATE 1
+
 /* Define to enable jack support */
 #define JACK_SUPPORT 0 // TK not used for now 
 
@@ -99,4 +102,4 @@
 #define STDC_HEADERS 1
 
 /* Version number of package */
-#define VERSION "0.3.2"
+#define VERSION "0.4.0"

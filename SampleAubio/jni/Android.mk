@@ -18,6 +18,59 @@
 
 LOCAL_PATH:= $(call my-dir)
 
+## libfftw module
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := libfftw
+LOCAL_CFLAGS    := -Werror -g\
+	-I$(LOCAL_PATH)/fftw \
+	-I$(LOCAL_PATH)/fftw/api \
+	-I$(LOCAL_PATH)/fftw/kernel \
+	-I$(LOCAL_PATH)/fftw/dft \
+	-I$(LOCAL_PATH)/fftw/rdft \
+	-I$(LOCAL_PATH)/fftw/reodft \
+	-I$(LOCAL_PATH)/fftw/simd \
+	-I$(LOCAL_PATH)/fftw/rdft/simd \
+-I$(LOCAL_PATH)/fftw/rdft/scalar \
+-I$(LOCAL_PATH)/fftw/dft/simd \
+-I$(LOCAL_PATH)/fftw/dft/scalar
+
+LOCAL_SRC_FILES := $(shell cd $(LOCAL_PATH); find ./fftw/ -type f -name '*.c'; find ./fftw/ -type f -name '*.cpp')
+
+LOCAL_LDLIBS    := \
+                   -llog -lm
+
+include $(BUILD_STATIC_LIBRARY)
+
+## libsndfile module
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := libsndfile
+LOCAL_CFLAGS    := -Werror -g\
+-I$(LOCAL_PATH)/libsndfile \
+-I$(LOCAL_PATH)/include
+
+LOCAL_SRC_FILES := $(shell cd $(LOCAL_PATH); find ./libsndfile/ -type f -name '*.c'; find ./libsndfile/ -type f -name '*.cpp')
+
+LOCAL_LDLIBS    := \
+                   -llog -lm
+
+include $(BUILD_STATIC_LIBRARY)
+
+## libsamplerate module
+include $(CLEAR_VARS)
+
+LOCAL_MODULE    := libsamplerate
+LOCAL_CFLAGS    := -Werror -g\
+-I$(LOCAL_PATH)/libsamplerate
+
+LOCAL_SRC_FILES := $(shell cd $(LOCAL_PATH); find ./libsamplerate/ -type f -name '*.c'; find ./libsamplerate/ -type f -name '*.cpp')
+
+LOCAL_LDLIBS    := \
+                   -llog -lm
+
+include $(BUILD_STATIC_LIBRARY)
+
 ## libaubio module
 include $(CLEAR_VARS)
 
@@ -33,9 +86,13 @@ LOCAL_CFLAGS    := -Werror -g\
 	-I$(LOCAL_PATH)/aubio/temporal \
 	-I$(LOCAL_PATH)/aubio/utils \
 	-I$(LOCAL_PATH)/tempo \
+	-I$(LOCAL_PATH)/libsamplerate \
+	-I$(LOCAL_PATH)/fftw \
+	-I$(LOCAL_PATH)/libsndfile \
 	-I$(LOCAL_PATH)/include
 
 LOCAL_SRC_FILES := $(shell cd $(LOCAL_PATH); find ./aubio/ -type f -name '*.c'; find ./aubio/ -type f -name '*.cpp'; find ./tempo/ -type f -name '*.c')
+LOCAL_STATIC_LIBRARIES := libfftw libsndfile libsamplerate
 LOCAL_LDLIBS    := \
                    -llog -lm
 
