@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class FragmentSubTwo extends Fragment {
+public class FragmentSubTwo extends ChildFragment {
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {

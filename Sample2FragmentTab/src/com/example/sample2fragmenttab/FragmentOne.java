@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
-public class FragmentOne extends Fragment {
+public class FragmentOne extends ChildFragment {
 	boolean isInitialized = false;
 	boolean isSetStartFragment = false;
 
