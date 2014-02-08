@@ -2,11 +2,12 @@ package com.example.sample2fragmenttab;
 
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.view.Menu;
-import android.widget.Toast;
 import android.widget.TabHost.OnTabChangeListener;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
 
@@ -46,7 +47,12 @@ public class MainActivity extends FragmentActivity {
 	
 	@Override
 	public void onBackPressed() {
-		if (!getSupportFragmentManager().findFragmentByTag(tabHost.getCurrentTabTag()).getChildFragmentManager().popBackStackImmediate()) {
+		Fragment f = getSupportFragmentManager().findFragmentByTag(tabHost.getCurrentTabTag());
+		if (f instanceof ChildFragment) {
+			if (!((ChildFragment) f).onBackPressed()) {
+				super.onBackPressed();
+			}
+		} else if (!f.getChildFragmentManager().popBackStackImmediate()) {
 			super.onBackPressed();
 		}
 	}
