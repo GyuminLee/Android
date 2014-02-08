@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.database.DataSetObserver;
+import android.graphics.Color;
 import android.util.AttributeSet;
 import android.view.Gravity;
 import android.view.View;
@@ -223,7 +224,7 @@ public class IconGridView extends LinearLayout implements IconDropTargetView.OnD
 			ll.addView(cl,params);
 			for (int j = 0; j < columnSize; j++) {
 				IconDropTargetView v = new IconDropTargetView(getContext());
-				params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT, 1);
+				params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT, 1);
 				cl.addView(v,params);
 				v.setNumber(number++);
 				v.setOnDropListener(this);
