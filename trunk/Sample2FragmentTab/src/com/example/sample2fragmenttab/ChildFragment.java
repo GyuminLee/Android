@@ -73,4 +73,8 @@ public class ChildFragment extends Fragment {
 		}
 		super.onActivityResult(requestCode, resultCode, data);
 	}
+	
+	public boolean onBackPressed() {
+		return getChildFragmentManager().popBackStackImmediate();
+	}
 }
