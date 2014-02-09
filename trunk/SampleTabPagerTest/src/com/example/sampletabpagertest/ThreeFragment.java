@@ -18,5 +18,11 @@ public class ThreeFragment extends PagerFragment {
 		tv.setText("ThreeFragment");
 		return v;
 	}
+	
+	@Override
+	public void onPageCurrent() {
+		super.onPageCurrent();
+		getActivity().setTitle("ThreeFragment");
+	}
 
 }

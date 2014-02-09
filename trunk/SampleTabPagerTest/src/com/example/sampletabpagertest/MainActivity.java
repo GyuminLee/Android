@@ -26,9 +26,11 @@ public class MainActivity extends FragmentActivity {
 		mTabsAdapter.addTab(mTabHost.newTabSpec("spec2").setIndicator("tab2"), TwoFragment.class, null);
 		mTabsAdapter.addTab(mTabHost.newTabSpec("spec3").setIndicator("tab3"), ThreeFragment.class, null);
 		
+		
 		if (savedInstanceState != null) {
+			mTabsAdapter.onRestoreInstanceState(savedInstanceState);
 			mTabHost.setCurrentTabByTag(savedInstanceState.getString("tab"));
-		}
+		} 
 		
 	}
 	
@@ -37,6 +39,7 @@ public class MainActivity extends FragmentActivity {
 		// TODO Auto-generated method stub
 		super.onSaveInstanceState(outState);
 		outState.putString("tab", mTabHost.getCurrentTabTag());
+		mTabsAdapter.onSaveInstanceState(outState);
 	}
 
 	@Override

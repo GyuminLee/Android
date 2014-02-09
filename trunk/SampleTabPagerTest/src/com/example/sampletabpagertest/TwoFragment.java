@@ -18,5 +18,11 @@ public class TwoFragment extends PagerFragment {
 		tv.setText("TwoFragment");
 		return v;
 	}
+	
+	@Override
+	public void onPageCurrent() {
+		super.onPageCurrent();
+		getActivity().setTitle("TwoFragment");
+	}
 
 }
