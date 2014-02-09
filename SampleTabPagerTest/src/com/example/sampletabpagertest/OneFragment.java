@@ -32,6 +32,7 @@ public class OneFragment extends PagerFragment {
 	public void onPageCurrent() {
 		super.onPageCurrent();
 		initFragment();
+		getActivity().setTitle("OneFragment");
 	}
 	
 	private void initFragment() {

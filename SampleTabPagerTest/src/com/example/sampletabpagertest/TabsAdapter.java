@@ -4,8 +4,11 @@ import java.util.ArrayList;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
@@ -14,20 +17,37 @@ import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabWidget;
-import android.widget.Toast;
 
 public class TabsAdapter extends FragmentPagerAdapter implements
 		TabHost.OnTabChangeListener, ViewPager.OnPageChangeListener {
 	private final Context mContext;
 	private final TabHost mTabHost;
 	private final ViewPager mViewPager;
+	private final FragmentManager mFragmentManager;
 	private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
+	private final static String FIELD_KEY_PREFIX = "tabinfo";
+
+	private final static int MESSAGE_PAGE_CURRENT = 1;
+	
+	Handler mHandler = new Handler() {
+		@Override
+		public void handleMessage(Message msg) {
+			switch(msg.what) {
+			case MESSAGE_PAGE_CURRENT :
+				int position = msg.arg1;
+				Fragment f = getTabFragment(position);
+				if (f != null && f instanceof PagerFragment) {
+					((PagerFragment)f).onPageCurrent();
+				}
+			}
+		}
+	};
 
 	static final class TabInfo {
 		private final String tag;
 		private final Class<?> clss;
 		private final Bundle args;
-		public Fragment fragment;
+		private Fragment fragment;
 
 		TabInfo(String _tag, Class<?> _class, Bundle _args) {
 			tag = _tag;
@@ -54,8 +74,13 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 
 	public TabsAdapter(FragmentActivity activity, TabHost tabHost,
 			ViewPager pager) {
-		super(activity.getSupportFragmentManager());
-		mContext = activity;
+		this(activity,activity.getSupportFragmentManager(),tabHost,pager);
+	}
+	
+	public TabsAdapter(Context context,FragmentManager fragmentManager, TabHost tabHost, ViewPager pager) {
+		super(fragmentManager);
+		mContext = context;
+		mFragmentManager = fragmentManager;
 		mTabHost = tabHost;
 		mViewPager = pager;
 		mTabHost.setOnTabChangedListener(this);
@@ -63,14 +88,30 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 		mViewPager.setOnPageChangeListener(this);
 	}
 
+	public void onRestoreInstanceState(Bundle savedInstanceState) {
+		for (TabInfo info : mTabs) {
+			String keyfield = FIELD_KEY_PREFIX + info.tag;
+			info.fragment = mFragmentManager.getFragment(savedInstanceState, keyfield);
+		}
+	}
+	
+	public void onSaveInstanceState(Bundle outState) {
+		for (TabInfo info : mTabs) {
+			String keyfield = FIELD_KEY_PREFIX + info.tag;
+			if (info.fragment != null) {
+				mFragmentManager.putFragment(outState, keyfield, info.fragment);
+			}
+		}
+	}
+	
 	public void addTab(TabHost.TabSpec tabSpec, Class<?> clss, Bundle args) {
 		tabSpec.setContent(new DummyTabFactory(mContext));
 		String tag = tabSpec.getTag();
 
 		TabInfo info = new TabInfo(tag, clss, args);
 		mTabs.add(info);
-		mTabHost.addTab(tabSpec);
 		notifyDataSetChanged();
+		mTabHost.addTab(tabSpec);
 	}
 
 	@Override
@@ -92,6 +133,8 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 		mTabChangeListener = listener;
 	}
 
+	boolean isFirst = true;
+	private final static int FIRST_DELAY_INTERVAL = 20;
 	@Override
 	public void onTabChanged(String tabId) {
 		int position = mTabHost.getCurrentTab();
@@ -99,12 +142,14 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 		if (mTabChangeListener != null) {
 			mTabChangeListener.onTabChanged(tabId);
 		}
-		Fragment f = getTabFragment(position);
-		if (f instanceof PagerFragment) {
-			((PagerFragment)f).onPageCurrent();
+		if (isFirst) {
+			mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_PAGE_CURRENT, position, 0), FIRST_DELAY_INTERVAL);
+			isFirst = false;
+		} else {
+			mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_PAGE_CURRENT, position, 0));
 		}
 	}
-
+	
 	public Fragment getTabFragment(int position) {
 		TabInfo info = mTabs.get(position);
 		if (info != null) {
