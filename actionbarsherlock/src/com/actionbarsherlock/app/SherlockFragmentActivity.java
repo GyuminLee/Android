@@ -22,8 +22,8 @@ public class SherlockFragmentActivity extends Watson implements OnActionModeStar
     private static final String TAG = "SherlockFragmentActivity";
 
     private ActionBarSherlock mSherlock;
-    private boolean mIgnoreNativeCreate = false;
-    private boolean mIgnoreNativePrepare = false;
+    private boolean mIgnoreNativeCreate = true;
+    private boolean mIgnoreNativePrepare = true;
     private boolean mIgnoreNativeSelected = true;
 
     protected final ActionBarSherlock getSherlock() {

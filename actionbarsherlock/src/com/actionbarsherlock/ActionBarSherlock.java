@@ -41,7 +41,7 @@ import static android.view.ViewGroup.LayoutParams.MATCH_PARENT;
  */
 public abstract class ActionBarSherlock {
     protected static final String TAG = "ActionBarSherlock";
-    public static final boolean DEBUG = true;
+    public static final boolean DEBUG = false;
 
     private static final Class<?>[] CONSTRUCTOR_ARGS = new Class[] { Activity.class, int.class };
     private static final HashMap<Implementation, Class<? extends ActionBarSherlock>> IMPLEMENTATIONS =
