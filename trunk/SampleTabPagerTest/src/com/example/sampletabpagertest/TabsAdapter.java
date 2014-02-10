@@ -43,6 +43,8 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 		}
 	};
 
+	ArrayList<Message> delayedMessage = new ArrayList<Message>();
+	
 	static final class TabInfo {
 		private final String tag;
 		private final Class<?> clss;
@@ -142,12 +144,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 		if (mTabChangeListener != null) {
 			mTabChangeListener.onTabChanged(tabId);
 		}
-		if (isFirst) {
-			mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_PAGE_CURRENT, position, 0), FIRST_DELAY_INTERVAL);
-			isFirst = false;
-		} else {
-			mHandler.sendMessage(mHandler.obtainMessage(MESSAGE_PAGE_CURRENT, position, 0));
-		}
+		mHandler.sendMessageDelayed(mHandler.obtainMessage(MESSAGE_PAGE_CURRENT, position, 0), FIRST_DELAY_INTERVAL);
 	}
 	
 	public Fragment getTabFragment(int position) {
