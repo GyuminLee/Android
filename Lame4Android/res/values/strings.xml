@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">LAME4Android</string>
+
+	<string name="input_file_label">Select input file:</string>
+	<string name="output_file_label">Select output file:</string>
+	<string name="encode_btn_label">Encode to MP3</string>
+	<string name="decode_btn_label">Decode to Wave</string>
+
+	<string name="open_input_file_title">Select Input File</string>
+	<string name="open_input_file_btn_text">Select File</string>
+
+	<string name="save_output_file_title">Select Output File</string>
+	<string name="save_output_file_btn_text">Save As</string>
+
+	<string name="mode_btn_on_label">Encode Mode</string>
+	<string name="mode_btn_off_label">Decode Mode</string>
+
+	<string name="lame_quality_label">LAME Encode Preset</string>
+
+	<string name="radio_medium_label">Medium</string>
+	<string name="radio_standard_label">Standard</string>
+	<string name="radio_extreme_label">Extreme</string>
+
+	<string name="lame_encode_start_msg">Encoding file to MP3</string>
+	<string name="lame_encode_end_msg">File encoded as MP3!</string>
+
+	<string name="lame_decode_start_msg">Decoding file to WAV</string>
+	<string name="lame_decode_end_msg">File decoded as WAV!</string>
+
+	<string name="decode_unavail_title">Error!</string>
+	<string name="decode_unavail_warning">Decode mode not available yet!</string>
+
+	<string name="no_encode_files_title">Error!</string>
+	<string name="no_encode_files_warning">Source and/or destination file paths missing!</string>
+
+	<string name="lame_encode_error_file_create_title">Error!</string>
+	<string name="lame_encode_error_file_create_msg">Could not access input or output file!</string>
+
+	<string name="lame_encode_error_file_type_title">Error!</string>
+	<string name="lame_encode_error_file_type_msg">Unknown input file type!</string>
+
+	<string name="lame_encode_error_encode_io_title">Error!</string>
+	<string name="lame_encode_error_encode_io_msg">Error occurred writing to output file!</string>
+
+	<string name="lame_decode_error_init_decoder_title">Error!</string>
+	<string name="lame_decode_error_init_decoder_msg">Unable to initialize decoder!</string>
+
+	<string name="lame_decode_error_decode_io_title">Error!</string>
+	<string name="lame_decode_error_decode_io_msg">I/O Error occurred during decode!</string>
+
+	<string name="set_preferences">Settings</string>
+
+	<string name="prefs_cat_ads">Ad Preferences</string>
+	<string name="prefs_enable_ads_key">enable_ads</string>
+	<string name="prefs_enable_ads">Enable Ads</string>
+	<string name="prefs_enable_ads_summary_on">Thanks for supporting the developer!</string>
+	<string name="prefs_enable_ads_summary_off">Please consider showing ads to support the
+		developer!</string>
+	<string name="prefs_enable_ads_title">Enable Mobile Ads</string>
+	<string name="prefs_enable_ads_default">true</string>
+
+	<string name="about_title">About Lame4Android Version 0.05</string>
+	<string name="about_text">
+		Lame4Android is licensed under the LGPL\n\
+		\n\
+		Copyright (c) 2010 Ethan Chen\n\
+		http://github.com/intervigilium/Lame4Android\n\
+		\n\
+		This library is free software; you can redistribute it and/or\n\
+		modify it under the terms of the GNU Lesser General Public\n\
+		License as published by the Free Software Foundation; either\n\
+		version 2 of the License, or (at your option) any later version.\n\
+		\n\
+		This library is distributed in the hope that it will be useful,\n\
+		but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n\
+		Lesser General Public License for more details.\n\
+		\n\
+		You should have received a copy of the GNU Lesser General Public\n\
+		License along with this library; if not, write to the Free Software\n\
+		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA\n\
+		\n\
+		\n\
+		LAME is licensed under LGPL\n\
+		Copyright (c) 1999-2007 The LAME Project\n\
+		Copyright (c) 1999-2001 Mark Taylor\n\
+		Copyright (c) 1998 Micheal Cheng\n\
+		\n\
+		This library is free software; you can redistribute it and/or\n\
+		modify it under the terms of the GNU Lesser General Public\n\
+		License as published by the Free Software Foundation; either\n\
+		version 2 of the License, or (at your option) any later version.\n\
+		\n\
+		This library is distributed in the hope that it will be useful,\n\
+		but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n\
+		Lesser General Public License for more details.\n\
+		\n\
+		You should have received a copy of the GNU Lesser General Public\n\
+		License along with this library; if not, write to the Free Software\n\
+		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA\n\
+		\n\
+		\n\
+		mpglib is licensed under the LGPL\n\
+		Copyright (c) 1995-1997 Michael Hipp\n\
+		\n\
+		This library is free software; you can redistribute it and/or\n\
+		modify it under the terms of the GNU Lesser General Public\n\
+		License as published by the Free Software Foundation; either\n\
+		version 2 of the License, or (at your option) any later version.\n\
+		\n\
+		This library is distributed in the hope that it will be useful,\n\
+		but WITHOUT ANY WARRANTY; without even the implied warranty of\n\
+		MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU\n\
+		Lesser General Public License for more details.\n\
+		\n\
+		You should have received a copy of the GNU Lesser General Public\n\
+		License along with this library; if not, write to the Free Software\n\
+		Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301  USA\n\
+		\n\
+		\n\
+		Android icons and logos are licensed under the Creative Commons 3.0
+		Attribution License\n\
+		\n\
+		Portions of this page are modifications based on work created and shared by
+		Google and used according to terms described in the Creative Commons
+		3.0 Attribution License.\n\
+		\n\
+		License terms available at: http://creativecommons.org/licenses/by/3.0/\n\
+	</string>
+
+	<string name="help_title">How to Use</string>
+	<string name="help_text">How to Encode and Decode\n\
+		OpenIntents FileManager, or any similar file manager is required\n\
+		1. Press button to right of source text field to select input\n\
+		2. Press button to right of destination text field to select output\n\
+		3. Select encode or decode mode using toggle button\n\
+		4. Select encode/decode options if necessary\n\
+		5. Press the Encode or Decode button to begin\n\
+		\n\
+		Problems Encoding or Decoding?\n\
+		1. Make sure you have sufficient space available on your sdcard\n\
+		2. Make sure you are attempting to decode/encode a supported file type\n\
+		3. Try re-installing the application\n\
+		4. Send me an email with your problems/questions\n\
+		\n\
+		Supported File Types\n\
+		Encoding: WAVE input only (.wav extension)\n\
+		Decoding: MP3 input only (.mp3 extension)\n\
+	</string>
+</resources>

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:ads="http://schemas.android.com/apk/res/com.intervigil.lame"
+	android:id="@+id/main_layout" android:orientation="vertical"
+	android:layout_width="fill_parent" android:layout_height="fill_parent">
+
+	<com.google.ads.AdView android:id="@+id/main_adview"
+		android:layout_width="fill_parent" android:layout_height="wrap_content"
+		ads:adUnitId="a14cc4c75fa8625" ads:adSize="BANNER" />
+
+	<TextView android:id="@+id/input_label" android:text="@string/input_file_label"
+		android:layout_width="fill_parent" android:layout_height="wrap_content" />
+
+	<LinearLayout android:id="@+id/input_layout"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+
+		<EditText android:id="@+id/input_file" android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:layout_weight="1"
+			android:maxLines="1" android:scrollHorizontally="true"
+			android:ellipsize="end" />
+
+		<ImageButton android:id="@+id/select_input_file_btn"
+			android:src="@drawable/ic_launcher_folder" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+	</LinearLayout>
+
+
+	<TextView android:id="@+id/output_label" android:text="@string/output_file_label"
+		android:layout_width="fill_parent" android:layout_height="wrap_content" />
+
+	<LinearLayout android:id="@+id/output_layout"
+		android:orientation="horizontal" android:layout_width="fill_parent"
+		android:layout_height="wrap_content">
+
+		<EditText android:id="@+id/output_file" android:layout_width="fill_parent"
+			android:layout_height="fill_parent" android:layout_weight="1"
+			android:maxLines="1" android:scrollHorizontally="true"
+			android:ellipsize="end" />
+
+		<ImageButton android:id="@+id/select_output_file_btn"
+			android:src="@drawable/ic_launcher_folder" android:layout_width="wrap_content"
+			android:layout_height="wrap_content" />
+	</LinearLayout>
+
+	<ToggleButton android:id="@+id/mode_btn" android:textOn="@string/mode_btn_on_label"
+		android:textOff="@string/mode_btn_off_label" android:layout_gravity="center"
+		android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+	<TextView android:id="@+id/lame_quality_text" android:text="@string/lame_quality_label"
+		android:layout_gravity="center" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+
+	<RadioGroup android:id="@+id/quality_radios" android:layout_width="fill_parent"
+		android:layout_height="wrap_content" android:orientation="horizontal">
+
+		<RadioButton android:id="@+id/radio_medium" android:text="@string/radio_medium_label"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+		<RadioButton android:id="@+id/radio_standard" android:text="@string/radio_standard_label"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+
+		<RadioButton android:id="@+id/radio_extreme" android:text="@string/radio_extreme_label"
+			android:layout_width="wrap_content" android:layout_height="wrap_content" />
+	</RadioGroup>
+
+	<Button android:id="@+id/encode_btn" android:text="@string/decode_btn_label"
+		android:layout_gravity="center" android:layout_width="wrap_content"
+		android:layout_height="wrap_content" />
+</LinearLayout>
