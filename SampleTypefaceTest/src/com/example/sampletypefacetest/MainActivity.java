@@ -60,11 +60,12 @@ public class MainActivity extends Activity {
 	@Override
 	public View onCreateView(String name, Context context, AttributeSet attrs) {
 		View v = super.onCreateView(name, context, attrs);
-		if (v instanceof TextView) {
-			TextView tv = (TextView) v;
+		if (v == null && name.equals("TextView")) {
+			TextView tv = new TextView(context,attrs);
 			tv.setTypeface(nanum);
+			v = tv;
 		}
 		return v;
 	}
-
+	
 }
