@@ -62,7 +62,7 @@ public class MainActivity extends Activity {
 				Context context = getApplicationContext();
 				final WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
 				TextView tv = new TextView(MainActivity.this);
-				tv.setText("Toast Window Test");
+				tv.setText("System Overlay Window Test");
 				tv.setOnClickListener(new View.OnClickListener() {
 					
 					@Override
