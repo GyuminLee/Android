@@ -6,9 +6,11 @@ import android.app.SearchManager;
 import android.app.SearchableInfo;
 import android.content.Context;
 import android.os.Bundle;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar.Tab;
 import android.support.v7.widget.SearchView;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,17 +28,65 @@ public class MainActivity extends ActionBarActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		actionBar = getSupportActionBar();
-		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
-		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, items);
-		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-		actionBar.setListNavigationCallbacks(adapter, new ActionBar.OnNavigationListener() {
+		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_TABS);
+		ActionBar.Tab tab = actionBar.newTab();
+		tab.setText("Tab1");
+		tab.setIcon(android.R.drawable.ic_search_category_default);
+		tab.setTabListener(new ActionBar.TabListener() {
 			
 			@Override
-			public boolean onNavigationItemSelected(int position, long id) {
-				Toast.makeText(MainActivity.this, items[position], Toast.LENGTH_SHORT).show();
-				return true;
+			public void onTabUnselected(Tab tab, FragmentTransaction ft) {
+				
+			}
+			
+			@Override
+			public void onTabSelected(Tab tab, FragmentTransaction ft) {
+				FragmentOne f = new FragmentOne();
+				ft.replace(R.id.container, f);
+			}
+			
+			@Override
+			public void onTabReselected(Tab tab, FragmentTransaction ft) {
+				
 			}
 		});
+		actionBar.addTab(tab);
+		tab = actionBar.newTab();
+		tab.setText("Tab2");
+		tab.setIcon(R.drawable.ic_launcher);
+		tab.setTabListener(new ActionBar.TabListener() {
+			
+			@Override
+			public void onTabUnselected(Tab arg0, FragmentTransaction arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onTabSelected(Tab tab, FragmentTransaction ft) {
+				FragmentTwo f = new FragmentTwo();
+				ft.replace(R.id.container, f);
+			}
+			
+			@Override
+			public void onTabReselected(Tab arg0, FragmentTransaction arg1) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		actionBar.addTab(tab);
+		actionBar.setDisplayHomeAsUpEnabled(true);
+//		actionBar.setNavigationMode(ActionBar.NAVIGATION_MODE_LIST);
+//		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item, items);
+//		adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//		actionBar.setListNavigationCallbacks(adapter, new ActionBar.OnNavigationListener() {
+//			
+//			@Override
+//			public boolean onNavigationItemSelected(int position, long id) {
+//				Toast.makeText(MainActivity.this, items[position], Toast.LENGTH_SHORT).show();
+//				return true;
+//			}
+//		});
 	}
 
 	@Override
