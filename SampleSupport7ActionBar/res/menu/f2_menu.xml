@@ -4,5 +4,6 @@
     <item android:id="@+id/f2m1" 
         android:orderInCategory="103"
         android:title="F2M1"
-        app:showAsAction="ifRoom|withText"/>
+        app:showAsAction="ifRoom"
+        app:actionProviderClass="com.example.samplesupport7actionbar.FragmentTwo$SettingsActionProvider"/>
 </menu>
