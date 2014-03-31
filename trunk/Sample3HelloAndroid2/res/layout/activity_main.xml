@@ -31,5 +31,30 @@
         android:hint="@string/messageHint"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/gallery_photo_1" />
+    <Button 
+        android:id="@+id/btnShowGallery"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Gallery"/>
+
+    <Button
+        android:id="@+id/btnGoGoole"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Go Google" />
+
+    <Button
+        android:id="@+id/btnMyActivity"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show MyActivity" />
+
 </LinearLayout>
 

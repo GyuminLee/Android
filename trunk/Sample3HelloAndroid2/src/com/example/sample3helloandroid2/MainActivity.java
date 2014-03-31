@@ -1,5 +1,8 @@
 package com.example.sample3helloandroid2;
 
+import android.app.Activity;
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
@@ -7,12 +10,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
 	EditText keywordView;
 	TextView messageView;
+	ImageView imageView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,6 +26,7 @@ public class MainActivity extends ActionBarActivity {
 		
 		keywordView = (EditText)findViewById(R.id.keywordView);
 		messageView = (TextView)findViewById(R.id.messageView);
+		imageView = (ImageView)findViewById(R.id.imageView);
 		
 		Button btn = (Button)findViewById(R.id.btnSend);
 		btn.setOnClickListener(new View.OnClickListener() {
@@ -31,10 +37,50 @@ public class MainActivity extends ActionBarActivity {
 			}
 		});
 		
+		btn = (Button)findViewById(R.id.btnShowGallery);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+				i.setType("image/*");
+				startActivityForResult(i,0);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btnGoGoole);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+				startActivity(i);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btnMyActivity);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainActivity.this, MyActivity.class);
+				startActivity(i);
+			}
+		});
+		
 //		if (savedInstanceState == null) {
 //			getSupportFragmentManager().beginTransaction()
 //					.add(R.id.container, new PlaceholderFragment()).commit();
 //		}
+	}
+	
+	@Override
+	protected void onActivityResult(int arg0, int arg1, Intent arg2) {
+		if (arg0 == 0 && arg1 == Activity.RESULT_OK) {
+			Uri uri = arg2.getData();
+			imageView.setImageURI(uri);
+		}
+		super.onActivityResult(arg0, arg1, arg2);
 	}
 
 	@Override
