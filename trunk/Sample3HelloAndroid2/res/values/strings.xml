@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">Sample3HelloAndroid2</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">Settings</string>
+    <string name="btnSend">Send Send</string>
+    <string name="btnSendHint">Insert Keyword</string>
+    <string name="messageHint">show message</string>
+
+</resources>

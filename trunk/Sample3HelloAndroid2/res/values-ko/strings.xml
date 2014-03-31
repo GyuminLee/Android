@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sample3HelloAndroid2</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="action_settings">설정</string>
+    <string name="btnSend">보내기</string>
+    <string name="btnSendHint">키워드 입력</string>
+    <string name="messageHint">메시지 보이기</string>
+</resources>
