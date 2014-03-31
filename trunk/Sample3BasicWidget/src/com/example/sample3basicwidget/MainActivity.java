@@ -9,6 +9,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -60,9 +61,9 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public boolean onEditorAction(TextView v, int actionId,
 					KeyEvent event) {
-				// if (event.getKeyCode() == KeyEvent.KEYCODE_ENTER) {
-				// // ....
-				// }
+				if (actionId == EditorInfo.IME_ACTION_GO) {
+					// ...
+				}
 				Toast.makeText(MainActivity.this, "Go Clicked..",
 						Toast.LENGTH_SHORT).show();
 				return false;
