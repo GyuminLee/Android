@@ -24,6 +24,16 @@ public class MyAdapter extends BaseAdapter {
 		}
 	}
 	
+	public void add(MyData data) {
+		mItems.add(data);
+		notifyDataSetChanged();
+	}
+	
+	public void addAll(List<MyData> items) {
+		mItems.addAll(items);
+		notifyDataSetChanged();
+	}
+	
 	@Override
 	public int getCount() {
 		return mItems.size();
@@ -41,7 +51,12 @@ public class MyAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ItemView view = new ItemView(mContext);
+		ItemView view;
+		if (convertView == null) {
+			view = new ItemView(mContext);
+		} else {
+			view = (ItemView)convertView;
+		}
 		view.setMyData(mItems.get(position));
 		return view;
 	}

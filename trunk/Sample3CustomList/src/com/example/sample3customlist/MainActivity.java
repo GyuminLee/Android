@@ -1,14 +1,19 @@
 package com.example.sample3customlist;
 
 import java.util.ArrayList;
+import java.util.Random;
 
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -25,6 +30,9 @@ public class MainActivity extends ActionBarActivity {
 					};
 	ListView listView;
 	MyAdapter mAdapter;
+	EditText keywordView;
+	Random rnd = new Random();
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,7 +51,44 @@ public class MainActivity extends ActionBarActivity {
 				Toast.makeText(MainActivity.this, "name : " + d.name, Toast.LENGTH_SHORT).show();				
 			}
 		});
+		keywordView = (EditText)findViewById(R.id.editText1);
+		Button btn = (Button)findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String name = keywordView.getText().toString();
+				MyData d = new MyData();
+				
+				d.name = getResources().getString(R.string.capName) + name;
+				d.desc = "desc " + name;
+				d.resId = iconList[rnd.nextInt(iconList.length)];
+				
+				mAdapter.add(d);
+				// d... 
+			}
+		});
 		
+		listView.setOnScrollListener(new OnScrollListener() {
+			
+			@Override
+			public void onScrollStateChanged(AbsListView view, int scrollState) {
+				// TODO Auto-generated method stub
+				
+			}
+			
+			@Override
+			public void onScroll(AbsListView view, int firstVisibleItem,
+					int visibleItemCount, int totalItemCount) {
+				if (firstVisibleItem + visibleItemCount == totalItemCount) {
+					if (!isLoading) {
+						isLoading = true;
+						loadMore();
+					}
+				}
+				
+			}
+		});
 		// adapter
 		// listview ...
 
@@ -53,11 +98,28 @@ public class MainActivity extends ActionBarActivity {
 //		}
 	}
 	
-	private void makeData() {
+	boolean isLoading = false;
+	
+	private void loadMore() {
+		ArrayList<MyData> moreData = new ArrayList<MyData>();
 		for (int i = 0; i < 10; i++) {
 			MyData d = new MyData();
-			d.name = "name " + i;
-			d.desc = "desc " + i;
+			d.name = "more " + i;
+			d.desc = "more desc " + i;
+			d.resId = iconList[0];
+		}
+		
+		mAdapter.addAll(moreData);
+		isLoading = false;
+	}
+	
+	private void makeData() {
+		String nameCap = this.getResources().getString(R.string.capName);
+		String descCap = this.getResources().getString(R.string.capDesc);
+		for (int i = 0; i < 10; i++) {
+			MyData d = new MyData();
+			d.name = nameCap + i;
+			d.desc = descCap + i;
 			d.resId = iconList[i % iconList.length];
 			mItems.add(d);
 		}
