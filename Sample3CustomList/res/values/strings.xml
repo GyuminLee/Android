@@ -4,5 +4,7 @@
     <string name="app_name">Sample3CustomList</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="capName">name </string>
+    <string name="capDesc">desc </string>
 
 </resources>
