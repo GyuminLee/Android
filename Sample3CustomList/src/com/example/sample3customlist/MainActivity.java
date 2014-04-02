@@ -14,8 +14,11 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.example.sample3customlist.MyAdapter.OnAdapterItemClickListener;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -32,6 +35,7 @@ public class MainActivity extends ActionBarActivity {
 	MyAdapter mAdapter;
 	EditText keywordView;
 	Random rnd = new Random();
+	ImageView imageView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,6 +45,23 @@ public class MainActivity extends ActionBarActivity {
 		makeData();
 		listView = (ListView)findViewById(R.id.listView1);
 		mAdapter = new MyAdapter(this, mItems);
+		mAdapter.setOnAdapterItemClickListener(new OnAdapterItemClickListener() {
+			
+			@Override
+			public void onAdapterItemClick(View v, MyData data) {
+				Toast.makeText(MainActivity.this, "image clicked : " + data.name, Toast.LENGTH_SHORT).show();
+				imageView.setImageResource(data.resId);
+				imageView.setVisibility(View.VISIBLE);
+			}
+		});
+		imageView = (ImageView)findViewById(R.id.imageView1);
+		imageView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				imageView.setVisibility(View.GONE);
+			}
+		});
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
