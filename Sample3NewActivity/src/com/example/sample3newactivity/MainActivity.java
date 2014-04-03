@@ -1,14 +1,19 @@
 package com.example.sample3newactivity;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
@@ -18,6 +23,7 @@ public class MainActivity extends ActionBarActivity {
 	TextView resultView;
 	
 	public static final int REQUEST_CODE_MY_ACTIVITY = 0;
+	public static final int REQUEST_CODE_GET_IMAGE = 1;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,6 +50,32 @@ public class MainActivity extends ActionBarActivity {
 				startActivityForResult(i,REQUEST_CODE_MY_ACTIVITY);
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.button2);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_GET_CONTENT);
+				i.setType("image/*");
+				startActivityForResult(i,REQUEST_CODE_GET_IMAGE);
+			}
+		});
+		btn = (Button)findViewById(R.id.button3);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				File file = new File("/sdcard/a.pdf");
+				Uri uri = Uri.fromFile(file);
+				Intent i = new Intent(Intent.ACTION_VIEW);
+				i.setDataAndType(uri, "application/pdf");
+				startActivity(i);
+//				Intent i = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//				i.putExtra(MediaStore.EXTRA_OUTPUT, uri);
+//				startActivityForResult(i,2);
+			}
+		});
 //		if (savedInstanceState == null) {
 //			getSupportFragmentManager().beginTransaction()
 //					.add(R.id.container, new PlaceholderFragment()).commit();
@@ -57,7 +89,12 @@ public class MainActivity extends ActionBarActivity {
 				resultCode == Activity.RESULT_OK) {
 			String message = data.getStringExtra(MyActivity.RESULT_MESSAGE);
 			resultView.setText(message);
+		} else if (requestCode == REQUEST_CODE_GET_IMAGE) {
+			Uri uri = data.getData();
+			ImageView imageView = (ImageView)findViewById(R.id.imageView1);
+			imageView.setImageURI(uri);
 		}
+		
 	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
