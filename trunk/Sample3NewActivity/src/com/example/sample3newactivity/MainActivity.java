@@ -1,5 +1,6 @@
 package com.example.sample3newactivity;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
@@ -16,6 +17,7 @@ public class MainActivity extends ActionBarActivity {
 	EditText ageView;
 	TextView resultView;
 	
+	public static final int REQUEST_CODE_MY_ACTIVITY = 0;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -35,7 +37,7 @@ public class MainActivity extends ActionBarActivity {
 				int age = Integer.parseInt(ageView.getText().toString());
 				i.putExtra(MyActivity.PARAM_NAME, name);
 				i.putExtra(MyActivity.PARAM_AGE, age);
-				startActivity(i);
+				startActivityForResult(i,REQUEST_CODE_MY_ACTIVITY);
 			}
 		});
 //		if (savedInstanceState == null) {
@@ -44,6 +46,15 @@ public class MainActivity extends ActionBarActivity {
 //		}
 	}
 
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == REQUEST_CODE_MY_ACTIVITY &&
+				resultCode == Activity.RESULT_OK) {
+			String message = data.getStringExtra(MyActivity.RESULT_MESSAGE);
+			resultView.setText(message);
+		}
+	}
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 
