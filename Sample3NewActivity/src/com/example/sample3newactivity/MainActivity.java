@@ -22,6 +22,8 @@ public class MainActivity extends ActionBarActivity {
 	EditText ageView;
 	TextView resultView;
 	
+	File file;
+	
 	public static final int REQUEST_CODE_MY_ACTIVITY = 0;
 	public static final int REQUEST_CODE_GET_IMAGE = 1;
 	@Override
@@ -66,7 +68,7 @@ public class MainActivity extends ActionBarActivity {
 			
 			@Override
 			public void onClick(View v) {
-				File file = new File("/sdcard/a.pdf");
+				file = new File("/sdcard/a.pdf");
 				Uri uri = Uri.fromFile(file);
 				Intent i = new Intent(Intent.ACTION_VIEW);
 				i.setDataAndType(uri, "application/pdf");
@@ -76,12 +78,20 @@ public class MainActivity extends ActionBarActivity {
 //				startActivityForResult(i,2);
 			}
 		});
+		if (savedInstanceState != null) {
+			file = new File(savedInstanceState.getString("file"));
+		}
 //		if (savedInstanceState == null) {
 //			getSupportFragmentManager().beginTransaction()
 //					.add(R.id.container, new PlaceholderFragment()).commit();
 //		}
 	}
 
+	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		super.onSaveInstanceState(outState);
+		outState.putString("file", file.getAbsolutePath());		
+	}
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -93,6 +103,8 @@ public class MainActivity extends ActionBarActivity {
 			Uri uri = data.getData();
 			ImageView imageView = (ImageView)findViewById(R.id.imageView1);
 			imageView.setImageURI(uri);
+		} else {
+			// file...
 		}
 		
 	}
