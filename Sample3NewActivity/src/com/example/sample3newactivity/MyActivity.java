@@ -18,6 +18,7 @@ public class MyActivity extends Activity {
 
 	public static final String PARAM_NAME = "name";
 	public static final String PARAM_AGE = "age";
+	public static final String PARAM_PERSON = "person";
 	public static final String RESULT_MESSAGE = "message";
 
 	@Override
@@ -28,8 +29,9 @@ public class MyActivity extends Activity {
 		ageView = (TextView) findViewById(R.id.textAge);
 		group = (RadioGroup) findViewById(R.id.radioGroup1);
 		Intent i = getIntent();
-		String name = i.getStringExtra(PARAM_NAME);
-		int age = i.getIntExtra(PARAM_AGE, 0);
+		Person p = i.getParcelableExtra(PARAM_PERSON);
+		String name = p.name;
+		int age = p.age;
 		nameView.setText(name);
 		ageView.setText("" + age);
 		Button btn = (Button) findViewById(R.id.button1);

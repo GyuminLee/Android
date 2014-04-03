@@ -35,8 +35,12 @@ public class MainActivity extends ActionBarActivity {
 				Intent i = new Intent(MainActivity.this,MyActivity.class);
 				String name = nameView.getText().toString();
 				int age = Integer.parseInt(ageView.getText().toString());
-				i.putExtra(MyActivity.PARAM_NAME, name);
-				i.putExtra(MyActivity.PARAM_AGE, age);
+				Person p = new Person();
+				p.name = name;
+				p.age = age;
+				i.putExtra(MyActivity.PARAM_PERSON, p);
+//				i.putExtra(MyActivity.PARAM_NAME, name);
+//				i.putExtra(MyActivity.PARAM_AGE, age);
 				startActivityForResult(i,REQUEST_CODE_MY_ACTIVITY);
 			}
 		});
