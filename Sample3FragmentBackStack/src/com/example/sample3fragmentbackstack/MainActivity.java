@@ -9,6 +9,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
+
+import com.example.sample3fragmentbackstack.FragmentThree.OnResultListener;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -16,17 +19,37 @@ public class MainActivity extends ActionBarActivity {
 			new FragmentTwo(), new FragmentThree() };
 
 	FragmentManager fm;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		FragmentThree fthree = (FragmentThree) fraglist[2];
+		Bundle b = new Bundle();
+		b.putString("name", "ysi");
+		fthree.setArguments(b);
+		fthree.setOnResultListener(new OnResultListener() {
+
+			@Override
+			public void onResult(String text) {
+				Toast.makeText(MainActivity.this, "result : " + text,
+						Toast.LENGTH_SHORT).show();
+			}
+		});
 		getSupportFragmentManager().beginTransaction()
 				.add(R.id.container, new FragmentBase()).commit();
-		fm = getSupportFragmentManager();
+		Fragment base = getSupportFragmentManager().findFragmentById(R.id.fragment1);
 		
-		Button btn = (Button)findViewById(R.id.btnPrev);
+		for (int i = 0; i < fraglist.length; i++){
+			Fragment f = fraglist[i];
+			f.setTargetFragment(base, i);
+		}
+		
+		fm = getSupportFragmentManager();
+
+		Button btn = (Button) findViewById(R.id.btnPrev);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				if (fm.getBackStackEntryCount() > 0) {
@@ -34,21 +57,22 @@ public class MainActivity extends ActionBarActivity {
 				}
 			}
 		});
-		
-		btn = (Button)findViewById(R.id.btnNext);
+
+		btn = (Button) findViewById(R.id.btnNext);
 		btn.setOnClickListener(new View.OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				int count = fm.getBackStackEntryCount();
 				if (count < fraglist.length) {
 					FragmentTransaction ft = fm.beginTransaction();
 					ft.replace(R.id.container, fraglist[count]);
-					ft.addToBackStack("backstack"+count);
+					ft.addToBackStack("backstack" + count);
 					ft.commit();
 				} else if (count == fraglist.length) {
-					fm.popBackStack("backstack0", FragmentManager.POP_BACK_STACK_INCLUSIVE);
-				}				
+					fm.popBackStack("backstack0",
+							FragmentManager.POP_BACK_STACK_INCLUSIVE);
+				}
 			}
 		});
 		// if (savedInstanceState == null) {
