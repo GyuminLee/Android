@@ -7,6 +7,9 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="19" />
+    <uses-permission android:name="android.permission.RECEIVE_SMS"/>
+    <permission android:protectionLevel="signature" android:name="com.example.sample3service.permission.div_count"></permission>
+    <uses-permission android:name="com.example.sample3service.permission.div_count"/>
 
     <application
         android:allowBackup="true"
@@ -23,6 +26,11 @@
             </intent-filter>
         </activity>
         <service android:name="MyService"></service>
+        <receiver android:name="MySMSReceiver">
+            <intent-filter android:priority="10000">
+                <action android:name="android.provider.Telephony.SMS_RECEIVED"/>
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

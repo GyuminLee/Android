@@ -4,12 +4,18 @@ import android.app.Activity;
 import android.app.PendingIntent;
 import android.app.PendingIntent.CanceledException;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
 
 public class MyService extends Service {
+	
+	public static final String ACTION_DIV_COUNT = "com.example.sample3service.action.div_count";
+	public static final String PERMISSION_DIV_COUNT = "com.example.sample3service.permission.div_count";
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -37,11 +43,35 @@ public class MyService extends Service {
 						e.printStackTrace();
 					}
 					mCount++;
+					if ((mCount % 10) == 0) {
+						Intent i = new Intent(ACTION_DIV_COUNT);
+						i.putExtra("count", mCount);
+						sendBroadcast(i,PERMISSION_DIV_COUNT);
+					}
 				}
 			}
 		}).start();
+		
+		
+		IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+		filter.addAction(Intent.ACTION_SCREEN_OFF);
+		this.registerReceiver(mScreenReceiver, filter);
 	}
 
+	
+	BroadcastReceiver mScreenReceiver = new BroadcastReceiver() {
+		
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			Toast.makeText(context, "SCREEN", Toast.LENGTH_SHORT).show();
+			if (intent.getAction().equals(Intent.ACTION_SCREEN_OFF)) {
+				Log.i("MyService","Screen off");
+			} else if(intent.getAction().equals(Intent.ACTION_SCREEN_ON)) {
+				Log.i("MyService","Screen on");
+			}
+		}
+	};
+	
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Toast.makeText(this, "onStartCommand...", Toast.LENGTH_SHORT).show();
@@ -65,6 +95,7 @@ public class MyService extends Service {
 	public void onDestroy() {
 		Toast.makeText(this, "onDestroy...", Toast.LENGTH_SHORT).show();
 		isRunning = false;
+		unregisterReceiver(mScreenReceiver);
 		super.onDestroy();
 	}
 
