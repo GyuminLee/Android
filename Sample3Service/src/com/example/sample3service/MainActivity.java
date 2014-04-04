@@ -2,7 +2,10 @@ package com.example.sample3service;
 
 import android.app.Activity;
 import android.app.PendingIntent;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -63,6 +66,26 @@ public class MainActivity extends ActionBarActivity {
 
 		public PlaceholderFragment() {
 		}
+		
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			IntentFilter filter = new IntentFilter(MyService.ACTION_DIV_COUNT);
+			getActivity().registerReceiver(mReceiver, filter, MyService.PERMISSION_DIV_COUNT, null);
+		}
+		@Override
+		public void onDestroy() {
+			getActivity().unregisterReceiver(mReceiver);
+			super.onDestroy();
+		}
+		
+		BroadcastReceiver mReceiver = new BroadcastReceiver() {
+			
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				Toast.makeText(getActivity(), "receive count", Toast.LENGTH_SHORT).show();
+			}
+		};
 
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
