@@ -22,6 +22,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="MyActivity" android:theme="@style/AppCustomDialog"></activity>
+        <activity android:name="MyActivity2" android:theme="@style/AppTranslucent"></activity>
     </application>
 
 </manifest>

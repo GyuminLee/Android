@@ -50,4 +50,18 @@
         android:layout_height="wrap_content"
         android:text="Show H Progress" />
 
+    <Button
+        android:id="@+id/btnShowMyActivity"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show MyActivity" />
+
+    <Button
+        android:id="@+id/btnShowMyActivity2"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show MyActivity2" />
+
 </LinearLayout>
