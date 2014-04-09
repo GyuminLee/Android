@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -76,7 +77,9 @@ public class MainActivity extends ActionBarActivity {
 				public void onClick(View v) {
 					FragmentManager fm = ((FragmentActivity)getActivity()).getSupportFragmentManager();
 					MyCustomDialogFragment dialog = new MyCustomDialogFragment();
-					dialog.show(fm, "dialog");
+					FragmentTransaction ft = fm.beginTransaction();
+					ft.addToBackStack(null);
+					dialog.show(ft, "dialog");
 				}
 			});
 			return rootView;
