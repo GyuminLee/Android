@@ -13,12 +13,15 @@ import android.os.Build;
 
 public class MainActivity extends ActionBarActivity {
 
+	MyView myView;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		
-		MyView view = new MyView(this);
-		setContentView(view);
+		setContentView(R.layout.activity_main);
+		myView = (MyView)findViewById(R.id.myView1);
+		myView.setImageResource(R.drawable.gallery_photo_2);
 	}
 
 	@Override
