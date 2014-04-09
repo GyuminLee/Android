@@ -1,40 +1,48 @@
 package com.example.sample3customview;
 
 import java.io.InputStream;
-import java.io.ObjectOutputStream.PutField;
 
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.BitmapShader;
 import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.ColorFilter;
-import android.graphics.ColorMatrix;
-import android.graphics.ColorMatrixColorFilter;
-import android.graphics.LinearGradient;
 import android.graphics.Matrix;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.RadialGradient;
-import android.graphics.RectF;
-import android.graphics.Shader;
-import android.graphics.SweepGradient;
-import android.graphics.Xfermode;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Toast;
 
 public class MyView extends View {
 
 	Paint mPaint = new Paint();
 	Bitmap mBitmap;
 	Matrix mMatrix;
+	GestureDetector mDetector;
+	ScaleGestureDetector mScaleDetetor;
 	
 	public MyView(Context context) {
 		super(context);
 		init();
 	}
+	
+	
+	public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		init();
+	}
+
+	public MyView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init();
+	}
+
+
 	float[] mPoints;
 	int count = 30;
 	float maxWidth = 300;
@@ -60,6 +68,8 @@ public class MyView extends View {
 	}};
 	
 	int pointIndex = 0;
+	
+	float mScaleFactor = 1.0f;
 	
 	private void init() {
 		mPoints = new float[(count + 1) * 2 * 2];
@@ -118,6 +128,43 @@ public class MyView extends View {
 //				postDelayed(this, 200);
 //			}
 //		}, 200);
+		
+		mDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener() {
+			@Override
+			public boolean onFling(MotionEvent e1, MotionEvent e2,
+					float velocityX, float velocityY) {
+				float distance = Math.abs(e1.getX() - e2.getX());
+				Log.i("MyView", "fling..." + distance);
+				return true;
+			}
+			
+			@Override
+			public boolean onSingleTapUp(MotionEvent e) {
+				return super.onSingleTapUp(e);
+			}
+			
+			@Override
+			public boolean onDown(MotionEvent e) {
+				return true;
+			}
+		});
+		mScaleDetetor = new ScaleGestureDetector(getContext(), new ScaleGestureDetector.SimpleOnScaleGestureListener(){
+			@Override
+			public boolean onScale(ScaleGestureDetector detector) {
+				float factor = detector.getScaleFactor();
+				mScaleFactor *= factor;
+				adjustScale();
+				return true;
+			}
+		});
+	}
+	
+	private void adjustScale() {
+		if (mScaleFactor < 0.5f) {
+			mScaleFactor = 0.5f;
+		} else if (mScaleFactor > 4) {
+			mScaleFactor = 4;
+		}
 	}
 	
 	@Override
@@ -216,11 +263,35 @@ public class MyView extends View {
 		// Xfermode
 //		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
 //		
-//		Xfermode mode = new PorterDuffXfermode(PorterDuff.Mode.OVERLAY);
+//		Xfermode mode = new PorterDuffXfermode(PorterDuff.Mode.ADD);
 //		mPaint.setColor(Color.RED);
 //		mPaint.setXfermode(mode);
 //		canvas.drawCircle(mBitmap.getWidth()/2, mBitmap.getHeight()/2, mBitmap.getWidth()/2, mPaint);
-		
+		mPaint.setStyle(Paint.Style.FILL);
+		mPaint.setShadowLayer(10, 10, 10, Color.DKGRAY);
+		canvas.drawBitmap(mBitmap, 100, 100,mPaint);
+//		canvas.drawCircle(200, 200, 100, mPaint);
+	}
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		boolean bUsed = mDetector.onTouchEvent(event);
+		if (!bUsed) {
+			bUsed = mScaleDetetor.onTouchEvent(event);
+		}
+		if (!bUsed) {
+			bUsed = super.onTouchEvent(event);
+		}
+		switch(event.getAction()) {
+		case MotionEvent.ACTION_DOWN :
+			float x = event.getX();
+			float y = event.getY();
+			// ...
+		}
+		return bUsed;
 	}
 
+	public void setImageResource(int resId) {
+		mBitmap = BitmapFactory.decodeResource(getResources(), resId);
+	}
 }
