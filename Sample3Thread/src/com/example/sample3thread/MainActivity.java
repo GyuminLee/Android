@@ -1,5 +1,6 @@
 package com.example.sample3thread;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -90,6 +91,7 @@ public class MainActivity extends ActionBarActivity {
 				
 				@Override
 				public void onClick(View v) {
+					/*
 					new Thread(new Runnable() {
 						int progress = 0;
 						@Override
@@ -110,6 +112,8 @@ public class MainActivity extends ActionBarActivity {
 							mHandler.post(new UpdateDoneRunnable());
 						}
 					}).start();
+					*/
+					new MyTask().execute("");
 				}
 			});
 			return rootView;
@@ -138,6 +142,48 @@ public class MainActivity extends ActionBarActivity {
 				messageView.setText("progress done");
 			}
 			
+		}
+		
+		public class MyTask extends AsyncTask<String, Integer, Boolean> {
+			@Override
+			protected void onPreExecute() {
+				super.onPreExecute();
+				messageView.setText("Progress : 0");
+				progressView.setMax(100);
+				progressView.setProgress(0);
+			}
+			
+			@Override
+			protected Boolean doInBackground(String... params) {
+				int progress = 0;
+				while(progress <= 100) {
+					publishProgress(progress);
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					progress+=5;
+				}
+				return true;
+			}
+			
+			@Override
+			protected void onProgressUpdate(Integer... values) {
+				super.onProgressUpdate(values);
+				int progress = values[0];
+				messageView.setText("progress : " + progress);
+				progressView.setProgress(progress);
+			}
+			
+			@Override
+			protected void onPostExecute(Boolean result) {
+				super.onPostExecute(result);
+				if (result != null && result) {
+					messageView.setText("progress done");
+				}
+			}
 		}
 	}
 
