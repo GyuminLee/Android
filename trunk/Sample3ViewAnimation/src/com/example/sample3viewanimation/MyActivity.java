@@ -30,8 +30,8 @@ public class MyActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 				FragmentA f = new FragmentA();
-				ft.replace(R.id.container, f);
 				ft.setCustomAnimations(R.anim.set2_anim, R.anim.set_anim);
+				ft.replace(R.id.container, f);
 				ft.commit();
 			}
 		});
@@ -43,8 +43,8 @@ public class MyActivity extends ActionBarActivity {
 			public void onClick(View v) {
 				FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
 				FragmentB f = new FragmentB();
-				ft.replace(R.id.container, f);
 				ft.setCustomAnimations(R.anim.set2_anim, R.anim.set_anim, R.anim.alpha_anim, R.anim.translate);
+				ft.replace(R.id.container, f);
 				ft.addToBackStack(null);
 				ft.commit();
 				
