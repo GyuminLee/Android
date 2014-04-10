@@ -1,5 +1,6 @@
 package com.example.sample3viewanimation;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -71,12 +72,25 @@ public class MainActivity extends ActionBarActivity {
 				@Override
 				public void onClick(View v) {
 //					Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.translate);
-					Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.set_anim);
+//					Animation anim = AnimationUtils.loadAnimation(getActivity(), R.anim.set_anim);
+					Animation anim = new Animation3D();
+					anim.setDuration(1000);
 //					anim.setStartOffset(0);
 //					textView.startAnimation(anim);
 //					anim = AnimationUtils.loadAnimation(getActivity(), R.anim.translate);
 //					anim.setStartOffset(300);
 					imageView.startAnimation(anim);
+				}
+			});
+			
+			btn = (Button)rootView.findViewById(R.id.button2);
+			btn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(getActivity(),MyActivity.class);
+					startActivity(i);
+					getActivity().overridePendingTransition(R.anim.set2_anim, R.anim.set_anim);
 				}
 			});
 			return rootView;
