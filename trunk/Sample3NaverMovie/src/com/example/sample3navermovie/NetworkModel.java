@@ -3,18 +3,25 @@ package com.example.sample3navermovie;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.net.CookieHandler;
+import java.net.CookieManager;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLEncoder;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
+import android.os.Handler;
+import android.os.Looper;
 
 import com.begentgroup.xmlparser.XMLParser;
 
 public class NetworkModel {
 
 	private static NetworkModel instance;
+	Handler mHandler;
 	
 	public static NetworkModel getInstance() {
 		if (instance == null) {
@@ -24,7 +31,8 @@ public class NetworkModel {
 	}
 	
 	private NetworkModel() {
-		
+		mHandler = new Handler(Looper.getMainLooper());
+		CookieHandler.setDefault(new CookieManager());
 	}
 	
 	public interface OnNetworkResultListener<T> {
@@ -48,6 +56,7 @@ public class NetworkModel {
 			this.display = display;
 			this.start = start;
 			mListener = listener;
+			
 		}
 		@Override
 		protected NaverMovies doInBackground(Void... params) {
@@ -84,4 +93,51 @@ public class NetworkModel {
 			}
 		}
 	}
+	
+	public interface OnImageLoadListener {
+		public void onImageLoad(String url, Bitmap bitmap);
+	}
+	
+	public void getNetworkImage(String url, OnImageLoadListener listener) {
+		new Thread(new ImageDownloader(url,listener)).start();
+	}
+	
+	class ImageDownloader implements Runnable {
+		String mUrl;
+		OnImageLoadListener mListener;
+		public ImageDownloader(String url, OnImageLoadListener listener) {
+			this.mUrl = url;
+			this.mListener = listener;
+		}
+		
+		@Override
+		public void run() {
+			try {
+				URL url = new URL(mUrl);
+				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+				conn.setConnectTimeout(30000);
+				conn.setReadTimeout(30000);
+				int responseCode = conn.getResponseCode();
+				if (responseCode == HttpURLConnection.HTTP_OK) {
+					InputStream is = conn.getInputStream();
+					final Bitmap bm = BitmapFactory.decodeStream(is);
+					mHandler.post(new Runnable() {
+						
+						@Override
+						public void run() {
+							if (mListener != null) {
+								mListener.onImageLoad(mUrl, bm);
+							}
+						}
+					});
+				}
+			} catch (MalformedURLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}	
 }
