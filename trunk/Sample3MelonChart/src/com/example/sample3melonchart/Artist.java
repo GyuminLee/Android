@@ -1,6 +1,7 @@
 package com.example.sample3melonchart;
 
+
 public class Artist {
-	int artistId;
+	int artistId;	
 	String artistName;
 }

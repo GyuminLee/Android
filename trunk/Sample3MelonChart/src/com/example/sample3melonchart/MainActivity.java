@@ -67,7 +67,7 @@ public class MainActivity extends ActionBarActivity {
 				
 				@Override
 				public void onClick(View v) {
-					NetworkModel.getInstance().getMelon(10, 1, new NetworkModel.OnNetworkResultListener<Melon>() {
+					NetworkModel.getInstance().getMelon(getActivity(), 10, 1, new NetworkModel.OnNetworkResultListener<Melon>() {
 						
 						@Override
 						public void onResult(Melon result) {
