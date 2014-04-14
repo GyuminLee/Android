@@ -44,6 +44,10 @@ public class NetworkModel {
 		public void onResult(T result);
 	}
 	
+	public void cancelRequests(Context context) {
+		client.cancelRequests(context, false);
+	}
+	
 	public void getMelon(Context context, int count, int page, final OnNetworkResultListener<Melon> listener) {
 		String url = "http://apis.skplanetx.com/melon/charts/realtime";
 		RequestParams params = new RequestParams();

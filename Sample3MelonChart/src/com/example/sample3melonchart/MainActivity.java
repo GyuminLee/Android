@@ -44,6 +44,12 @@ public class MainActivity extends ActionBarActivity {
 		}
 		return super.onOptionsItemSelected(item);
 	}
+	
+	@Override
+	protected void onDestroy() {
+		NetworkModel.getInstance().cancelRequests(this);
+		super.onDestroy();
+	}
 
 	/**
 	 * A placeholder fragment containing a simple view.
