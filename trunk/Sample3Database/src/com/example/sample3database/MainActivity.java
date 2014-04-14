@@ -83,9 +83,6 @@ public class MainActivity extends ActionBarActivity {
 				
 				@Override
 				public boolean setViewValue(View view, Cursor c, int columnIndex) {
-					if (mAgeColumnIndex == NOT_FIXED) {
-						mAgeColumnIndex = c.getColumnIndex(PersonTable.AGE);
-					}
 					if (mAgeColumnIndex == columnIndex) {
 						TextView textView = (TextView)view;
 						int age = c.getInt(columnIndex);
@@ -116,6 +113,7 @@ public class MainActivity extends ActionBarActivity {
 			super.onResume();
 			
 			mCursor = DBManager.getInstance().getPersonCursor();
+			mAgeColumnIndex = mCursor.getColumnIndex(PersonTable.AGE);
 			mAdapter.swapCursor(mCursor);
 			// mAdapter.clear();
 			// ArrayList<Person> list = DBManager.getInstance().getPersonList();
