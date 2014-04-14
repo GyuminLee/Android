@@ -8,6 +8,8 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.sample3navermovie.NetworkModel.OnImageLoadListener2;
+
 public class ItemView extends FrameLayout {
 
 	public ItemView(Context context) {
@@ -27,21 +29,38 @@ public class ItemView extends FrameLayout {
 		directorView = (TextView) findViewById(R.id.directorView);
 	}
 
+	ImageRequest mRequest = null;
+	
 	public void setMovieItem(MovieItem item) {
 		mItem = item;
 		titleView.setText(Html.fromHtml(item.title));
 		directorView.setText(item.director);
-		iconView.setImageResource(R.drawable.ic_launcher);
+		iconView.setImageResource(R.drawable.ic_stub);
 		if (item.image != null) {
-			NetworkModel.getInstance().getNetworkImage(item.image,
-					new NetworkModel.OnImageLoadListener() {
-						@Override
-						public void onImageLoad(String url, Bitmap bitmap) {
-							if (mItem.image != null && mItem.image.equals(url)) {
-								iconView.setImageBitmap(bitmap);
-							}
-						}
-					});
+			if (mRequest != null) {
+				mRequest.cancel();
+				mRequest = null;
+			}
+			mRequest = new ImageRequest();
+			mRequest.url = item.image;
+			NetworkModel.getInstance().getImageBitmap(mRequest, new OnImageLoadListener2() {
+				
+				@Override
+				public void onImageLoaded(ImageRequest request, Bitmap bitmap) {
+					if (request == mRequest) {
+						iconView.setImageBitmap(bitmap);
+					}
+					mRequest = null;
+				}
+				
+				@Override
+				public void onImageLoadFail(ImageRequest request) {
+					iconView.setImageResource(R.drawable.ic_error);
+					mRequest = null;
+				}
+			});
+		} else {
+			iconView.setImageResource(R.drawable.ic_empty);
 		}
 	}
 
