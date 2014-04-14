@@ -1,19 +1,22 @@
 package com.example.sample3database;
 
-import java.util.ArrayList;
-
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SimpleCursorAdapter;
+import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
+
+import com.example.sample3database.DBConstant.PersonTable;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -57,18 +60,48 @@ public class MainActivity extends ActionBarActivity {
 		}
 
 		ListView listView;
-		ArrayAdapter<Person> mAdapter;
+		// ArrayAdapter<Person> mAdapter;
+		SimpleCursorAdapter mAdapter;
+
+		Cursor mCursor = null;
+		
+		public static final int NOT_FIXED = -1;
+		int mAgeColumnIndex = NOT_FIXED;
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_main, container,
 					false);
-			listView = (ListView)rootView.findViewById(R.id.listView1);
-			mAdapter = new ArrayAdapter<Person>(getActivity(), android.R.layout.simple_list_item_1, DBManager.getInstance().getPersonList());
-			listView.setAdapter(mAdapter);
-			Button btn = (Button)rootView.findViewById(R.id.btnAdd);
-			btn.setOnClickListener(new View.OnClickListener() {
+			listView = (ListView) rootView.findViewById(R.id.listView1);
+			String[] from = { DBConstant.PersonTable.NAME,
+					DBConstant.PersonTable.AGE };
+			int[] to = { R.id.txtName, R.id.txtAge };
+			mAdapter = new SimpleCursorAdapter(getActivity(),
+					R.layout.item_layout, null, from, to, 0);
+			mAdapter.setViewBinder(new ViewBinder() {
 				
+				@Override
+				public boolean setViewValue(View view, Cursor c, int columnIndex) {
+					if (mAgeColumnIndex == NOT_FIXED) {
+						mAgeColumnIndex = c.getColumnIndex(PersonTable.AGE);
+					}
+					if (mAgeColumnIndex == columnIndex) {
+						TextView textView = (TextView)view;
+						int age = c.getInt(columnIndex);
+						textView.setText("(" + age + ")");
+						return true;
+					}
+					return false;
+				}
+			});
+			// mAdapter = new ArrayAdapter<Person>(getActivity(),
+			// android.R.layout.simple_list_item_1,
+			// DBManager.getInstance().getPersonList());
+			listView.setAdapter(mAdapter);
+			Button btn = (Button) rootView.findViewById(R.id.btnAdd);
+			btn.setOnClickListener(new View.OnClickListener() {
+
 				@Override
 				public void onClick(View v) {
 					Intent i = new Intent(getActivity(), DBAddActivity.class);
@@ -77,15 +110,26 @@ public class MainActivity extends ActionBarActivity {
 			});
 			return rootView;
 		}
-		
+
 		@Override
 		public void onResume() {
 			super.onResume();
-			mAdapter.clear();
-			ArrayList<Person> list = DBManager.getInstance().getPersonList();
-			for(Person p : list) {
-				mAdapter.add(p);
+			
+			mCursor = DBManager.getInstance().getPersonCursor();
+			mAdapter.swapCursor(mCursor);
+			// mAdapter.clear();
+			// ArrayList<Person> list = DBManager.getInstance().getPersonList();
+			// for(Person p : list) {
+			// mAdapter.add(p);
+			// }
+		}
+		
+		@Override
+		public void onDestroyView() {
+			if (mCursor != null) {
+				mCursor.close();
 			}
+			super.onDestroyView();
 		}
 	}
 
