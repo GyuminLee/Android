@@ -2,9 +2,12 @@ package com.example.sample3mediaplayer;
 
 import java.io.IOException;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -17,6 +20,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.SeekBar;
 import android.widget.SeekBar.OnSeekBarChangeListener;
+import android.widget.TextView;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -72,6 +76,7 @@ public class MainActivity extends ActionBarActivity {
 		MediaPlayer mPlayer;
 		int mPlayerState = PLAYER_IDLE;
 		SeekBar progressView;
+		TextView titleView;
 		
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -161,6 +166,8 @@ public class MainActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_main, container,
 					false);
+			titleView = (TextView)rootView.findViewById(R.id.titleView);
+			titleView.setText("Default");
 			progressView = (SeekBar)rootView.findViewById(R.id.progressView);
 			if (mPlayerState == PLAYER_PREPARED) {
 				progressView.setMax(mPlayer.getDuration());
@@ -272,7 +279,51 @@ public class MainActivity extends ActionBarActivity {
 					}
 				}
 			});
+			
+			btn = (Button)rootView.findViewById(R.id.btnLoad);
+			btn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Intent i = new Intent(getActivity(),MusicListActivity.class);
+					startActivityForResult(i, 0);
+					
+				}
+			});
 			return rootView;
+		}
+		
+		@Override
+		public void onActivityResult(int requestCode, int resultCode,
+				Intent data) {
+			if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+				Uri playUri = data.getData();
+				String displayName = data.getStringExtra(MusicListActivity.PARAM_TITLE);
+				titleView.setText(displayName);
+				mPlayer.reset();
+				mPlayerState = PLAYER_IDLE;
+				try {
+					mPlayer.setDataSource(getActivity(), playUri);
+					mPlayerState = PLAYER_INITIALIZED;
+					mPlayer.prepare();
+					mPlayerState = PLAYER_PREPARED;
+					progressView.setMax(mPlayer.getDuration());
+					progressView.setProgress(0);
+				} catch (IllegalArgumentException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (SecurityException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IllegalStateException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			super.onActivityResult(requestCode, resultCode, data);
 		}
 	}
 
