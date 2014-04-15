@@ -2,8 +2,11 @@ package com.example.sample3mediaplayer;
 
 import java.io.IOException;
 
+import android.content.Context;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -12,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.SeekBar;
+import android.widget.SeekBar.OnSeekBarChangeListener;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -51,6 +56,7 @@ public class MainActivity extends ActionBarActivity {
 	 */
 	public static class PlaceholderFragment extends Fragment {
 
+		
 		public PlaceholderFragment() {
 		}
 		
@@ -65,7 +71,7 @@ public class MainActivity extends ActionBarActivity {
 		
 		MediaPlayer mPlayer;
 		int mPlayerState = PLAYER_IDLE;
-		
+		SeekBar progressView;
 		
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
@@ -79,15 +85,7 @@ public class MainActivity extends ActionBarActivity {
 					mPlayerState = PLAYER_COMPLETED;
 				}
 			});
-			
-			mPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-				
-				@Override
-				public void onPrepared(MediaPlayer mp) {
-					mPlayerState = PLAYER_PREPARED;
-				}
-			});
-			
+						
 			mPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
 				
 				@Override
@@ -96,6 +94,7 @@ public class MainActivity extends ActionBarActivity {
 					return false;
 				}
 			});
+			
 		}
 
 		@Override
@@ -122,17 +121,105 @@ public class MainActivity extends ActionBarActivity {
 			if (isPausedMusic) {
 				isPausedMusic = false;
 				if (mPlayerState == PLAYER_PAUSED) {
-					mPlayer.start();
-					mPlayerState = PLAYER_STARTED;
+					play();
 				}
 			}
 			super.onResume();
 		}
+		
+		public static final int INTERVAL_TIME = 200;
+		Handler mHandler = new Handler();
+		
+		Runnable updateProgress = new Runnable() {
+			
+			@Override
+			public void run() {
+				if (mPlayerState == PLAYER_STARTED) {
+					if (!isStartTracking) {
+						progressView.setProgress(mPlayer.getCurrentPosition());
+					}
+					mHandler.postDelayed(this, INTERVAL_TIME);
+				}
+			}
+		};
+		
+		boolean isStartTracking = false;
+		
+		
+		public void play() {
+			mPlayer.seekTo(progressView.getProgress());
+			mPlayer.start();
+			mPlayerState = PLAYER_STARTED;
+			mHandler.post(updateProgress);
+		}
+		
+		SeekBar volumeView;
+		AudioManager mAudioManager;
+		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_main, container,
 					false);
+			progressView = (SeekBar)rootView.findViewById(R.id.progressView);
+			if (mPlayerState == PLAYER_PREPARED) {
+				progressView.setMax(mPlayer.getDuration());
+				progressView.setProgress(0);
+			}
+			progressView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+				
+				int progress;
+				
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {
+					isStartTracking = false;
+					if (mPlayerState == PLAYER_STARTED) {
+						mPlayer.seekTo(progress);
+					}
+				}
+				
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {
+					
+					isStartTracking = true;
+				}
+				
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress,
+						boolean fromUser) {
+					if (fromUser) {
+						this.progress = progress;
+					}
+				}
+			});
+			volumeView = (SeekBar)rootView.findViewById(R.id.volumeView);
+			mAudioManager = (AudioManager)getActivity().getSystemService(Context.AUDIO_SERVICE);
+			int maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
+			volumeView.setMax(maxVolume);
+			int currentVolume = mAudioManager.getStreamVolume(AudioManager.STREAM_MUSIC);
+			volumeView.setProgress(currentVolume);
+			volumeView.setOnSeekBarChangeListener(new OnSeekBarChangeListener() {
+				
+				@Override
+				public void onStopTrackingTouch(SeekBar seekBar) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onStartTrackingTouch(SeekBar seekBar) {
+					// TODO Auto-generated method stub
+					
+				}
+				
+				@Override
+				public void onProgressChanged(SeekBar seekBar, int progress,
+						boolean fromUser) {
+					if (fromUser) {
+						mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+					}
+				}
+			});
 			Button btn = (Button)rootView.findViewById(R.id.btnStart);
 			btn.setOnClickListener(new View.OnClickListener() {
 				
@@ -155,8 +242,7 @@ public class MainActivity extends ActionBarActivity {
 					if (mPlayerState == PLAYER_PAUSED ||
 							mPlayerState == PLAYER_PREPARED ||
 							mPlayerState == PLAYER_COMPLETED) {
-						mPlayer.start();
-						mPlayerState = PLAYER_STARTED;
+						play();
 					}
 				}
 			});
