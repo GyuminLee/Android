@@ -33,6 +33,13 @@
             android:layout_height="wrap_content"
             android:text="Effect" />
 
+        <Button
+            android:id="@+id/btnTakePicture"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Take Picture" />
+
     </LinearLayout>
 
 </FrameLayout>

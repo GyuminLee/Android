@@ -1,11 +1,18 @@
 package com.example.sample3camera;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.List;
 
+import android.content.ContentValues;
 import android.hardware.Camera;
-import android.hardware.Camera.Size;
+import android.media.ExifInterface;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
 import android.view.LayoutInflater;
@@ -129,6 +136,58 @@ public class MainActivity extends ActionBarActivity {
 							currentEffect = 0;
 						}
 					}
+				}
+			});
+			
+			btn = (Button)rootView.findViewById(R.id.btnTakePicture);
+			btn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					mCamera.takePicture(null, null, new Camera.PictureCallback() {
+						
+						@Override
+						public void onPictureTaken(byte[] data, Camera camera) {
+							File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+							if (!dir.exists()) {
+								dir.mkdirs();
+							}
+							File file = new File(dir, "photo_" + (System.currentTimeMillis() % 1000000));
+							mCamera.startPreview();
+							try {
+								FileOutputStream fos = new FileOutputStream(file);
+								fos.write(data);
+								fos.flush();
+								fos.close();
+//								ExifInterface exif = new ExifInterface(file.getAbsolutePath());
+//								int orientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION,0);
+//								String lat = exif.getAttribute(ExifInterface.TAG_GPS_LATITUDE);
+//								String lng = exif.getAttribute(ExifInterface.TAG_GPS_LONGITUDE);
+//								int width = exif.getAttributeInt(ExifInterface.TAG_IMAGE_WIDTH, 0);
+//								byte[] thumbnail = exif.getThumbnail();
+//								ContentValues values = new ContentValues();
+//								values.put(MediaStore.Images.Media.DISPLAY_NAME, file.getName());
+//								values.put(MediaStore.Images.Media.LATITUDE, lat);
+//								values.put(MediaStore.Images.Media.LONGITUDE, lng);
+//								values.put(MediaStore.Images.Media.WIDTH, width);
+//								values.put(MediaStore.Images.Media.ORIENTATION, orientation);
+//								values.put(MediaStore.Images.Media.DATA, file.getAbsolutePath());
+//								values.put(MediaStore.Images.Media.DATE_ADDED, System.currentTimeMillis() / 1000);
+//								
+//								// ..
+//								Uri uri = getActivity().getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
+								MediaStore.Images.Media.insertImage(getActivity().getContentResolver(), file.getAbsolutePath(), "my photo", "photp description");
+							} catch (FileNotFoundException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							} catch (IOException e) {
+								// TODO Auto-generated catch block
+								e.printStackTrace();
+							}
+							
+							
+						}
+					});
 				}
 			});
 			return rootView;
