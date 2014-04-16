@@ -15,6 +15,7 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -59,11 +60,15 @@ public class MainActivity extends ActionBarActivity {
 		public PlaceholderFragment() {
 		}
 
+		int face = Camera.CameraInfo.CAMERA_FACING_BACK;
+		List<String> effectList;
+		int currentEffect = 0;
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
-			mCamera = Camera.open();
+			mCamera = Camera.open(face);
 			mCamera.setDisplayOrientation(90);
+			effectList = mCamera.getParameters().getSupportedColorEffects();
 		}
 		
 		@Override
@@ -84,6 +89,48 @@ public class MainActivity extends ActionBarActivity {
 			screen = (SurfaceView)rootView.findViewById(R.id.surfaceView1);
 			screen.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
 			screen.getHolder().addCallback(this);
+			Button btn = (Button)rootView.findViewById(R.id.btnSwitch);
+			btn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if (face == Camera.CameraInfo.CAMERA_FACING_BACK) {
+						face = Camera.CameraInfo.CAMERA_FACING_FRONT;
+					} else {
+						face = Camera.CameraInfo.CAMERA_FACING_BACK;
+					}
+					if (mCamera != null) {
+						mCamera.release();
+						mCamera = null;
+					}
+					mCamera = Camera.open(face);
+					mCamera.setDisplayOrientation(90);
+					try {
+						mCamera.setPreviewDisplay(screen.getHolder());
+						mCamera.startPreview();
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+				}
+			});
+			btn = (Button)rootView.findViewById(R.id.btnEffect);
+			btn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					if (effectList != null && effectList.size() > 0) {
+						String effect = effectList.get(currentEffect);
+						Camera.Parameters params = mCamera.getParameters();
+						params.setColorEffect(effect);
+						mCamera.setParameters(params);
+						currentEffect++;
+						if (currentEffect >= effectList.size()) {
+							currentEffect = 0;
+						}
+					}
+				}
+			});
 			return rootView;
 		}
 
