@@ -93,13 +93,14 @@ public class MainActivity extends ActionBarActivity {
 			View rootView = inflater.inflate(R.layout.fragment_main, container,
 					false);
 			screen = (SurfaceView)rootView.findViewById(R.id.surfaceView1);
-			mPlayer.setDisplay(screen.getHolder());
+//			mPlayer.setDisplay(screen.getHolder());
 			Button btn = (Button)rootView.findViewById(R.id.btnStart);
 			btn.setOnClickListener(new View.OnClickListener() {
 				
 				@Override
 				public void onClick(View v) {
 					if (mPlayerState == PLAYER_STATE_PAUSED) {
+						mPlayer.setDisplay(screen.getHolder());
 						mPlayer.start();
 						mPlayerState = PLAYER_STATE_STARTED;
 					}
@@ -138,7 +139,6 @@ public class MainActivity extends ActionBarActivity {
 				mPlayer.reset();
 				mPlayerState = PLAYER_STATE_IDLE;
 				try {
-					mPlayer.setDisplay(screen.getHolder());
 					mPlayer.setDataSource(getActivity(), uri);
 					mPlayer.prepare();
 					mPlayerState = PLAYER_STATE_PAUSED;
