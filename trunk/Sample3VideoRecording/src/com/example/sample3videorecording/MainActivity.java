@@ -5,6 +5,8 @@ import java.io.IOException;
 
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.net.Uri;
 import android.os.Bundle;
@@ -65,22 +67,35 @@ public class MainActivity extends ActionBarActivity {
 		public PlaceholderFragment() {
 		}
 
+		int degree;
 		@Override
 		public void onCreate(Bundle savedInstanceState) {
 			super.onCreate(savedInstanceState);
 			mRecorder = new MediaRecorder();
+			int orientation = getActivity().getResources().getConfiguration().orientation; 
+			if ( orientation == Configuration.ORIENTATION_LANDSCAPE) {
+				degree = 0;
+			} else if (orientation == Configuration.ORIENTATION_PORTRAIT) {
+				degree = 90;
+				
+			}
 		}
 		
 		@Override
 		public void onDestroy() {
 			mRecorder.release();
 			mRecorder = null;
+			if (mCamera != null) {
+				mCamera.release();
+				mCamera = null;
+			}
 			super.onDestroy();
 		}
 		
 		SurfaceView screen;
 		
 		String mOutputPath;
+		Camera mCamera;
 		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -95,6 +110,10 @@ public class MainActivity extends ActionBarActivity {
 				@Override
 				public void onClick(View v) {
 					mRecorder.reset();
+					mCamera = Camera.open();
+					mCamera.setDisplayOrientation(degree);
+					mCamera.unlock();
+					mRecorder.setCamera(mCamera);
 					mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 					mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 					mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
@@ -129,7 +148,8 @@ public class MainActivity extends ActionBarActivity {
 				@Override
 				public void onClick(View v) {
 					mRecorder.stop();
-					
+					mCamera.release();
+					mCamera = null;
 					ContentValues values = new ContentValues();
 					values.put(MediaStore.Video.Media.TITLE, "title");
 					values.put(MediaStore.Video.Media.DISPLAY_NAME, "my video");
