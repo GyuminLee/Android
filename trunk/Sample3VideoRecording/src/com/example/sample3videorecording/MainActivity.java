@@ -94,12 +94,16 @@ public class MainActivity extends ActionBarActivity {
 				
 				@Override
 				public void onClick(View v) {
+					mRecorder.reset();
 					mRecorder.setAudioSource(MediaRecorder.AudioSource.MIC);
 					mRecorder.setVideoSource(MediaRecorder.VideoSource.CAMERA);
 					mRecorder.setOutputFormat(MediaRecorder.OutputFormat.MPEG_4);
 					mRecorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
 					mRecorder.setVideoEncoder(MediaRecorder.VideoEncoder.MPEG_4_SP);
 					File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
+					if (!dir.exists()) {
+						dir.mkdirs();
+					}
 					File file = new File(dir, "video_" + (System.currentTimeMillis() % 1000000));
 					mOutputPath = file.getAbsolutePath();
 					mRecorder.setOutputFile(mOutputPath);
