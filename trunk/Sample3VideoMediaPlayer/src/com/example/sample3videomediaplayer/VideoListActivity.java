@@ -43,6 +43,7 @@ public class VideoListActivity extends ActionBarActivity implements LoaderCallba
 //				Bitmap bm = MediaStore.Video.Thumbnails.getThumbnail(getContentResolver(), id, Thumbnails.MICRO_KIND, null);				
 				result.setData(uri);
 				setResult(Activity.RESULT_OK, result);
+				finish();
 			}
 		});
 	    
