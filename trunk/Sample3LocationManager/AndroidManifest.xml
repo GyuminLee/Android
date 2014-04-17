@@ -9,6 +9,8 @@
         android:targetSdkVersion="19" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -25,6 +27,14 @@
             </intent-filter>
         </activity>
         <service android:name="MyService" android:exported="true"></service>
+        <service android:exported="true" android:name="ProximityAlertService"></service>
+        <activity android:name="NotifyActivity" android:exported="true"></activity>
+        <receiver android:name="BootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
+        <service android:name="SetupService"></service>
     </application>
 
 </manifest>
