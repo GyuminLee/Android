@@ -13,6 +13,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
@@ -108,9 +110,24 @@ public class MainActivity extends ActionBarActivity {
 						} catch (IOException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
-						}
-						
+						}	
 					}
+				}
+			});
+			
+			listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+				@Override
+				public void onItemClick(AdapterView<?> parent, View view,
+						int position, long id) {
+					Address address = (Address)listView.getItemAtPosition(position);
+					
+					long expired = System.currentTimeMillis() + 24 * 60 * 60 * 1000;
+					Intent intent = new Intent(getActivity(), ProximityAlertService.class);
+					intent.setData(Uri.parse("myscheme://com.example.sample3locationmanager/"+id));
+					intent.putExtra("address", address);
+					PendingIntent pi = PendingIntent.getService(getActivity(), 0, intent, 0);
+					mLM.addProximityAlert(address.getLatitude(), address.getLongitude(), 100, -1, pi);					
 				}
 			});
 			return rootView;
