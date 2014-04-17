@@ -2,6 +2,8 @@ package com.example.sample3tmap;
 
 import java.util.ArrayList;
 
+import org.w3c.dom.Document;
+
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.PointF;
@@ -19,10 +21,15 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
+import com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapData.TMapPathType;
 import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapPolyLine;
 import com.skp.Tmap.TMapView;
 
 public class MainActivity extends ActionBarActivity {
@@ -133,6 +140,7 @@ public class MainActivity extends ActionBarActivity {
 		}
 		
 		boolean isInitialzed = false;
+		EditText keywordView;
 		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -140,6 +148,7 @@ public class MainActivity extends ActionBarActivity {
 			View rootView = inflater.inflate(R.layout.fragment_main, container,
 					false);
 			mMapView = (TMapView)rootView.findViewById(R.id.tmap);
+			mMapView.setPadding(0, 0, 0, 0);
 			new AsyncTask<Void, Void, Void>() {
 				@Override
 				protected Void doInBackground(Void... params) {
@@ -174,10 +183,88 @@ public class MainActivity extends ActionBarActivity {
 					Bitmap right = ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_popup_reminder)).getBitmap();
 					item.setCalloutRightButtonImage(right);
 					item.setCanShowCallout(true);
-					mMapView.addMarkerItem("markerid", item);
+//					mMapView.addMarkerItem("markerid", item);
+					
+					MyTMapMarker marker = new MyTMapMarker();
+					marker.setIcon(bitmap);
+					marker.setPosition(0.5f, 0.5f);
+					marker.setTMapPoint(point);
+					mMapView.addMarkerItem2("markerid", marker);
 				}
 			});
 			
+			btn = (Button)rootView.findViewById(R.id.btnGeocoder);
+			btn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					TMapData data = new TMapData();
+					TMapPoint point = mMapView.getCenterPoint();
+					data.convertGpsToAddress(point.getLatitude(), point.getLongitude(), new TMapData.ConvertGPSToAddressListenerCallback() {
+						
+						@Override
+						public void onConvertToGPSToAddress(String address) {
+							Toast.makeText(getActivity(), "address : " + address, Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
+			});
+		
+			keywordView = (EditText)rootView.findViewById(R.id.editText1);
+			btn = (Button)rootView.findViewById(R.id.button1);
+			btn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					TMapData data = new TMapData();
+					data.findAddressPOI(keywordView.getText().toString(), new TMapData.FindAddressPOIListenerCallback() {
+						
+						@Override
+						public void onFindAddressPOI(ArrayList<TMapPOIItem> pois) {
+							for (TMapPOIItem poi : pois) {
+								TMapPoint pont = poi.getPOIPoint();
+							}
+						}
+					});
+					
+					data.findAllPOI(keywordView.getText().toString(), new TMapData.FindAllPOIListenerCallback() {
+						
+						@Override
+						public void onFindAllPOI(ArrayList<TMapPOIItem> pois) {
+							
+						}
+					});
+					
+					TMapPoint point = mMapView.getCenterPoint();
+					
+					data.findAroundKeywordPOI(point, keywordView.getText().toString(), 4, 10, new TMapData.FindAroundKeywordPOIListenerCallback() {
+						
+						@Override
+						public void onFindAroundKeywordPOI(ArrayList<TMapPOIItem> pois) {
+							
+							
+						}
+					});
+					
+//					data.findAroundNamePOI(point, "편의점", findAroundNamePoiListener)
+					data.findPathData(point, point, new TMapData.FindPathDataListenerCallback() {
+						
+						@Override
+						public void onFindPathData(TMapPolyLine path) {
+							mMapView.addTMapPath(path);
+							mMapView.setTMapPathIcon(null, null);
+						}
+					});
+					
+					data.findPathDataWithType(TMapPathType.PEDESTRIAN_PATH, point, point, new TMapData.FindPathDataListenerCallback() {
+						
+						@Override
+						public void onFindPathData(TMapPolyLine path) {
+							
+						}
+					});
+				}
+			});
 			mMapView.setOnClickListenerCallBack(new TMapView.OnClickListenerCallback() {
 				
 				@Override
