@@ -19,8 +19,11 @@ public class MyService extends Service {
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		Location location = intent
 				.getParcelableExtra(LocationManager.KEY_LOCATION_CHANGED);
-		Toast.makeText(this, "single update location " + location.toString(),
-				Toast.LENGTH_SHORT).show();
+		if (location != null) {
+			Toast.makeText(this,
+					"single update location " + location.toString(),
+					Toast.LENGTH_SHORT).show();
+		}
 		return Service.START_NOT_STICKY;
 	}
 
