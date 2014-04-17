@@ -218,7 +218,7 @@ public class MainActivity extends ActionBarActivity {
 			super.onStart();
 			// String provider = mLM.getBestProvider(mCriteria, true);
 			String provider = LocationManager.NETWORK_PROVIDER;
-			if (mLM.isProviderEnabled(provider)) {
+			if (!mLM.isProviderEnabled(provider)) {
 				if (isFirstExecute) {
 					isFirstExecute = false;
 					Intent i = new Intent(
