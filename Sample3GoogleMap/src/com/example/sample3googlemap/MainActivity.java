@@ -3,6 +3,7 @@ package com.example.sample3googlemap;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -15,14 +16,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -65,7 +71,8 @@ public class MainActivity extends ActionBarActivity {
 	 */
 	public static class PlaceholderFragment extends Fragment implements
 			GoogleMap.OnCameraChangeListener, GoogleMap.OnMapClickListener,
-			GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener {
+			GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener,
+			GoogleMap.OnInfoWindowClickListener {
 
 		public PlaceholderFragment() {
 		}
@@ -164,13 +171,44 @@ public class MainActivity extends ActionBarActivity {
 		private void setupMap() {
 			mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
 			// mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+			mMap.setMyLocationEnabled(true);
 			mMap.getUiSettings().setCompassEnabled(true);
 			mMap.setOnCameraChangeListener(this);
 			mMap.setOnMapClickListener(this);
 			mMap.setOnMarkerClickListener(this);
-
+			mMap.setOnInfoWindowClickListener(this);
+			mMap.setInfoWindowAdapter(new MyInfoWindow(getActivity()));
 		}
 
+		class MyInfoWindow implements InfoWindowAdapter {
+
+			View infoView;
+			TextView titleView;
+			TextView dataView;
+			ImageView iconView;
+			
+			public MyInfoWindow(Context context) {
+				View v = LayoutInflater.from(context).inflate(R.layout.info_window_layout, null);
+				titleView = (TextView)v.findViewById(R.id.textView1);
+				dataView = (TextView)v.findViewById(R.id.textView2);
+				iconView = (ImageView)v.findViewById(R.id.imageView1);
+				infoView = v;
+			}
+			
+			@Override
+			public View getInfoContents(Marker marker) {
+				String text = mDataResolver.get(marker);
+				titleView.setText(marker.getTitle());
+				dataView.setText(text);
+				return infoView;
+			}
+
+			@Override
+			public View getInfoWindow(Marker marker) {
+				return null;
+			}
+			
+		}
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
 				Bundle savedInstanceState) {
@@ -194,6 +232,23 @@ public class MainActivity extends ActionBarActivity {
 				public void onClick(View v) {
 					CameraUpdate update = CameraUpdateFactory.zoomOut();
 					mMap.animateCamera(update);
+				}
+			});
+			
+			btn = (Button)rootView.findViewById(R.id.btnAddCircle);
+			btn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					CameraPosition position = mMap.getCameraPosition();
+					LatLng latLng = position.target;
+					CircleOptions options = new CircleOptions();
+					options.center(latLng);
+					options.radius(100);
+					options.fillColor(Color.TRANSPARENT);
+					options.strokeColor(Color.RED);
+					options.strokeWidth(5);
+					Circle circle = mMap.addCircle(options);
 				}
 			});
 			return rootView;
@@ -235,6 +290,12 @@ public class MainActivity extends ActionBarActivity {
 			String text = mDataResolver.get(marker);
 			Toast.makeText(getActivity(), "data : " + text, Toast.LENGTH_SHORT).show();
 			return false;
+		}
+
+		@Override
+		public void onInfoWindowClick(Marker marker) {
+			
+			
 		}
 	}
 
