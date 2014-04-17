@@ -13,8 +13,11 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.location.LocationProvider;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBarActivity;
@@ -138,8 +141,17 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onStatusChanged(String provider, int status,
 					Bundle extras) {
-				// TODO Auto-generated method stub
-
+				switch(status) {
+				case LocationProvider.AVAILABLE :
+					Toast.makeText(getActivity(), "provider available", Toast.LENGTH_SHORT).show();
+					break;
+				case LocationProvider.OUT_OF_SERVICE :
+					Toast.makeText(getActivity(), "provider out of service", Toast.LENGTH_SHORT).show();
+					break;
+				case LocationProvider.TEMPORARILY_UNAVAILABLE :
+					Toast.makeText(getActivity(), "provider temporarily unavailable", Toast.LENGTH_SHORT).show();
+					break;
+				}
 			}
 
 			@Override
@@ -156,6 +168,7 @@ public class MainActivity extends ActionBarActivity {
 
 			@Override
 			public void onLocationChanged(Location location) {
+				mHandler.removeMessages(GPS_TIME_OUT_MESSAGE);
 				Toast.makeText(
 						getActivity(),
 						"lat : " + location.getLatitude() + ", lng : "
@@ -189,20 +202,25 @@ public class MainActivity extends ActionBarActivity {
 			@Override
 			public void onStatusChanged(String provider, int status,
 					Bundle extras) {
-				// TODO Auto-generated method stub
-
+				switch(status) {
+				case LocationProvider.AVAILABLE :
+					Toast.makeText(getActivity(), "provider available", Toast.LENGTH_SHORT).show();
+					break;
+				case LocationProvider.OUT_OF_SERVICE :
+					Toast.makeText(getActivity(), "provider out of service", Toast.LENGTH_SHORT).show();
+					break;
+				case LocationProvider.TEMPORARILY_UNAVAILABLE :
+					Toast.makeText(getActivity(), "provider temporarily unavailable", Toast.LENGTH_SHORT).show();
+					break;
+				}
 			}
 
 			@Override
 			public void onProviderEnabled(String provider) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
 			public void onProviderDisabled(String provider) {
-				// TODO Auto-generated method stub
-
 			}
 
 			@Override
@@ -213,6 +231,16 @@ public class MainActivity extends ActionBarActivity {
 		};
 		boolean isFirstExecute = true;
 
+		private static final int GPS_TIME_OUT_MESSAGE = 0;
+		private static final int GPS_TIME_OUT = 60000;
+		
+		Handler mHandler = new Handler() {
+			@Override
+			public void handleMessage(Message msg) {
+				Toast.makeText(getActivity(), "Timeout...", Toast.LENGTH_SHORT).show();
+			}
+		};
+		
 		@Override
 		public void onStart() {
 			super.onStart();
@@ -238,6 +266,7 @@ public class MainActivity extends ActionBarActivity {
 			}
 			mLM.requestLocationUpdates(provider, 2000, 5, mListener);
 
+			mHandler.sendMessageDelayed(mHandler.obtainMessage(GPS_TIME_OUT_MESSAGE), GPS_TIME_OUT);
 			Intent intent = new Intent(getActivity(), MyService.class);
 			PendingIntent pi = PendingIntent.getService(getActivity(), 0,
 					intent, 0);
