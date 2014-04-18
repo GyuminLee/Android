@@ -72,7 +72,7 @@ public class MainActivity extends ActionBarActivity {
 	public static class PlaceholderFragment extends Fragment implements
 			GoogleMap.OnCameraChangeListener, GoogleMap.OnMapClickListener,
 			GoogleMap.OnMapLongClickListener, GoogleMap.OnMarkerClickListener,
-			GoogleMap.OnInfoWindowClickListener {
+			GoogleMap.OnInfoWindowClickListener, GoogleMap.OnMarkerDragListener {
 
 		public PlaceholderFragment() {
 		}
@@ -178,6 +178,7 @@ public class MainActivity extends ActionBarActivity {
 			mMap.setOnMarkerClickListener(this);
 			mMap.setOnInfoWindowClickListener(this);
 			mMap.setInfoWindowAdapter(new MyInfoWindow(getActivity()));
+			mMap.setOnMarkerDragListener(this);
 		}
 
 		class MyInfoWindow implements InfoWindowAdapter {
@@ -295,6 +296,25 @@ public class MainActivity extends ActionBarActivity {
 		@Override
 		public void onInfoWindowClick(Marker marker) {
 			
+			
+		}
+
+		@Override
+		public void onMarkerDrag(Marker arg0) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void onMarkerDragEnd(Marker arg0) {
+			// TODO Auto-generated method stub
+			
+			
+		}
+
+		@Override
+		public void onMarkerDragStart(Marker arg0) {
+			// TODO Auto-generated method stub
 			
 		}
 	}
