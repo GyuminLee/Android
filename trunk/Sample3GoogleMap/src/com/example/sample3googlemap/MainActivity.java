@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -250,6 +251,45 @@ public class MainActivity extends ActionBarActivity {
 					options.strokeColor(Color.RED);
 					options.strokeWidth(5);
 					Circle circle = mMap.addCircle(options);
+				}
+			});
+			
+			btn = (Button)rootView.findViewById(R.id.btnSearch);
+			btn.setOnClickListener(new View.OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					NetworkModel.getInstance().getCarRouting(getActivity(),37.56468648536046 , 126.98217734415019, 35.17883196265564, 129.07579349764512, new NetworkModel.OnNetworkResult<CarRouteInfo>() {
+
+						@Override
+						public void onSuccess(CarRouteInfo result) {
+							CarFeature firstFeature = result.features.get(0);
+							int totaldistance = firstFeature.properties.totalDistance;
+							int totaltime = firstFeature.properties.totalTime;
+							PolylineOptions options = new PolylineOptions();
+							
+							for (CarFeature feature : result.features) {
+								if (feature.geometry.type.equals("LineString")) {
+									double[] coord = feature.geometry.coordinates;
+									for (int i = 0 ; i < coord.length; i+=2) {
+										options.add(new LatLng(coord[i+1],coord[i]));
+									}
+								}
+							}
+							
+							options.color(Color.RED);
+							options.width(10);
+							options.geodesic(false);
+							mMap.addPolyline(options);
+						}
+
+						@Override
+						public void onFail(int code) {
+							// TODO Auto-generated method stub
+							
+						}
+						
+					});
 				}
 			});
 			return rootView;
