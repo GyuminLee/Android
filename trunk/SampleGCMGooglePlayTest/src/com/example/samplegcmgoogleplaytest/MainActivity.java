@@ -26,6 +26,7 @@ public class MainActivity extends Activity {
     public static final String EXTRA_MESSAGE = "message";
     public static final String PROPERTY_REG_ID = "registration_id";
     private static final String PROPERTY_APP_VERSION = "appVersion";
+    private static final String PROPERTY_SAVE_SERVER = "save_server";
     String SENDER_ID = "972646024433";
     GoogleCloudMessaging gcm;
     AtomicInteger msgId = new AtomicInteger();
@@ -46,9 +47,22 @@ public class MainActivity extends Activity {
             gcm = GoogleCloudMessaging.getInstance(this);
             regid = getRegistrationId(context);
 
-            if (regid.isEmpty()) {
+            if (regid.equals("")) {
                 registerInBackground();
-            }
+            } 
+//            else {
+//            	if (!PropertyManager.getInstance().isRegisterServier()) {
+//            		String id = PropertyManager.getIsntance().getId();
+//            		if (!id.equals()) {
+//	            		NetworkModel.getInstance().register("id",regId, new OnListener() {
+//	            			public void onSuccess() {
+//	            				PeropertyManager.getInstance.setRegisgterServer(true);
+//	            				
+//	            			}
+//	            		});
+//            		}
+//            	}
+//            }
         } else {
             Log.i(TAG, "No valid Google Play Services APK found.");
         }
@@ -94,10 +108,10 @@ public class MainActivity extends Activity {
 	                if (gcm == null) {
 	                    gcm = GoogleCloudMessaging.getInstance(context);
 	                }
-	                regid = gcm.register(SENDER_ID);
+	                regid = gcm.register(CommonUtilities.SENDER_ID);
 	                msg = "Device registered, registration ID=" + regid;
 
-	                sendRegistrationIdToBackend();
+	                sendRegistrationIdToBackend(context,regid);
 
 	                storeRegistrationId(context, regid);
 	            } catch (IOException ex) {
@@ -116,7 +130,9 @@ public class MainActivity extends Activity {
 	    }.execute(null, null, null);
 	}	
 
-    private void sendRegistrationIdToBackend() {
+    private void sendRegistrationIdToBackend(Context context,String regId) {
+    	ServerUtilities.register(context, regId);
+    	setSavedServer(true);
 	}
     
     public void onClick(final View view) {
@@ -131,7 +147,7 @@ public class MainActivity extends Activity {
                             data.putString("my_action",
                                     "com.google.android.gcm.demo.app.ECHO_NOW");
                             String id = Integer.toString(msgId.incrementAndGet());
-                            gcm.send(SENDER_ID + "@gcm.googleapis.com", id, data);
+                            gcm.send(CommonUtilities.SENDER_ID + "@gcm.googleapis.com", id, data);
                             msg = "Sent message";
                     } catch (IOException ex) {
                         msg = "Error :" + ex.getMessage();
@@ -158,6 +174,19 @@ public class MainActivity extends Activity {
         editor.commit();
     }
 	
+    private void setSavedServer(boolean isSaved) {
+        final SharedPreferences prefs = getGCMPreferences(context);
+    	SharedPreferences.Editor editor = prefs.edit();
+    	editor.putBoolean(PROPERTY_SAVE_SERVER, isSaved);
+    	editor.commit();
+    }
+    
+    private boolean isSaveServer() {
+        final SharedPreferences prefs = getGCMPreferences(context);
+        boolean isSaved = prefs.getBoolean(PROPERTY_SAVE_SERVER, false);
+        return isSaved;
+    }
+    
 	@Override
 	protected void onResume() {
 	    super.onResume();
