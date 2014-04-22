@@ -18,7 +18,7 @@ public class MenuFragment extends Fragment {
 			
 			@Override
 			public void onClick(View v) {
-				
+				((MainActivity)getActivity()).switchMenuOne();
 			}
 		});
 		return v;

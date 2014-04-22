@@ -1,6 +1,7 @@
 package com.example.sample3slidingmenu;
 
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -25,7 +26,7 @@ public class MainActivity extends SlidingFragmentActivity {
 			getSupportFragmentManager().beginTransaction()
 					.replace(R.id.menu_container, new MenuFragment()).commit();
 		}
-		
+
 		SlidingMenu sm = getSlidingMenu();
 		sm.setSlidingEnabled(true);
 		sm.setShadowWidthRes(R.dimen.shadow_width);
@@ -36,6 +37,27 @@ public class MainActivity extends SlidingFragmentActivity {
 
 		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
+
+	public void switchMenuOne() {
+		Fragment f = new MenuOneFragment();
+		getSupportFragmentManager().beginTransaction()
+				.replace(R.id.container, f).commit();
+		hideSlidingMenu();
+	}
+	
+	
+	private void hideSlidingMenu() {
+		mHandler.postDelayed(hideMenu, 50);
+	}
+	Handler mHandler = new Handler();
+	
+	Runnable hideMenu = new Runnable() {
+		
+		@Override
+		public void run() {
+			getSlidingMenu().showContent();
+		}
+	};
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
