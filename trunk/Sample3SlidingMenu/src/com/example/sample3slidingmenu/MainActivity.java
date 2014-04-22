@@ -23,7 +23,7 @@ public class MainActivity extends SlidingFragmentActivity {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 			getSupportFragmentManager().beginTransaction()
-					.replace(R.id.menu_container, new MenuFragment());
+					.replace(R.id.menu_container, new MenuFragment()).commit();
 		}
 		
 		SlidingMenu sm = getSlidingMenu();
