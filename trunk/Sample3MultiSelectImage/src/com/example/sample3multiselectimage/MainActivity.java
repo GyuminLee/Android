@@ -135,6 +135,7 @@ public class MainActivity extends ActionBarActivity {
 
 		@Override
 		public void onLoadFinished(Loader<Cursor> arg0, Cursor c) {
+			mIdColumnIndex = c.getColumnIndex(MediaStore.Images.Media._ID);
 			mAdapter.swapCursor(c);
 
 		}
