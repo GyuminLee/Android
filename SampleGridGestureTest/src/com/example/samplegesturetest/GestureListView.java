@@ -1,12 +1,11 @@
 package com.example.samplegesturetest;
 
-import com.example.samplegesturetest.GestureGridView.OnSwipeListener;
-
 import android.content.Context;
 import android.util.AttributeSet;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 public class GestureListView extends ListView {
@@ -19,6 +18,16 @@ public class GestureListView extends ListView {
 
 	public interface OnSwipeListener {
 		public boolean onSwipe(View v, int orientation);
+	}
+	
+	public interface OnItemSwipeListener {
+		public boolean onItemSwipe(AdapterView parent, View v, int position, int orientation);
+	}
+	
+	OnItemSwipeListener mSwipeListener = null;
+	
+	public void setOnItemSwipeListener(OnItemSwipeListener listener) {
+		mSwipeListener = listener;
 	}
 
 	OnSwipeListener mListener = null;
@@ -49,6 +58,17 @@ public class GestureListView extends ListView {
 
 	GestureDetector mDetector;
 
+	private int getMatchPosition(MotionEvent e1, MotionEvent e2) {
+		int startMotionPosition = pointToPosition((int) e1.getX(),
+				(int) e1.getY());
+		int endMotionPosition = pointToPosition((int) e2.getX(),
+				(int) e2.getY());
+		if (startMotionPosition == endMotionPosition) {
+			return startMotionPosition;
+		}
+		return -1;
+	}
+	
 	private View getMatchChildView(MotionEvent e1, MotionEvent e2) {
 		int startMotionPosition = pointToPosition((int) e1.getX(),
 				(int) e1.getY());
@@ -78,15 +98,20 @@ public class GestureListView extends ListView {
 
 	private boolean performSwipe(MotionEvent e1, MotionEvent e2, int orientation) {
 		boolean bConsumed = false;
-		if (mListener != null) {
-			bConsumed = mListener.onSwipe(GestureListView.this, orientation);
+		GestureItemViewGroup v = castGestureItemViewGroup(getMatchChildView(
+				e1, e2));
+		if (v != null) {
+			bConsumed =  v.onSwipe(v, orientation);
 		}
-		if (!bConsumed) {
-			GestureItemViewGroup v = castGestureItemViewGroup(getMatchChildView(
-					e1, e2));
-			if (v != null) {
-				return v.onSwipe(v, orientation);
+		if (!bConsumed && mSwipeListener != null) {
+			int position = getMatchPosition(e1, e2);
+			if (position >= 0) {
+				View child = getChildAt(position - getFirstVisiblePosition()); 
+				bConsumed = mSwipeListener.onItemSwipe(this, child, position, orientation);
 			}
+		}
+		if (!bConsumed && mListener != null) {
+			bConsumed = mListener.onSwipe(GestureListView.this, orientation);
 		}
 		return bConsumed;
 	}

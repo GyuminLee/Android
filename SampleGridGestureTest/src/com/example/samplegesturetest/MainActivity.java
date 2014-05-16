@@ -8,11 +8,13 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
-import com.example.samplegesturetest.GestureGridView.OnSwipeListener;
+import com.example.samplegesturetest.GestureListView.OnItemSwipeListener;
+import com.example.samplegesturetest.GestureListView.OnSwipeListener;
+
 
 public class MainActivity extends Activity {
 
-	GestureGridView listView;
+	GestureListView listView;
 	String[] data = {"data0","data1","data2","data3","data4","data5","data6","data7","data8",
 			"data0","data1","data2","data3","data4","data5","data6","data7","data8",
 			"data0","data1","data2","data3","data4","data5","data6","data7","data8",
@@ -22,7 +24,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		listView = (GestureGridView)findViewById(R.id.listView1);
+		listView = (GestureListView)findViewById(R.id.listView1);
 //		ArrayAdapter<String> adapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1,data);
 		MyAdapter adapter = new MyAdapter(this, data);
 		listView.setAdapter(adapter);
@@ -38,6 +40,15 @@ public class MainActivity extends Activity {
 					Toast.makeText(MainActivity.this, "fling...", Toast.LENGTH_SHORT).show();
 				}
 				return true;
+			}
+		});
+		listView.setOnItemSwipeListener(new OnItemSwipeListener() {
+			
+			@Override
+			public boolean onItemSwipe(AdapterView parent, View v, int position,
+					int orientation) {
+				
+				return false;
 			}
 		});
 		listView.setOnItemClickListener(new OnItemClickListener() {
