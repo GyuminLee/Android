@@ -15,10 +15,13 @@ import com.kakao.APIErrorResult;
 import com.kakao.KakaoTalkHttpResponseHandler;
 import com.kakao.KakaoTalkProfile;
 import com.kakao.KakaoTalkService;
+import com.kakao.MeResponseCallback;
 import com.kakao.Session;
 import com.kakao.SessionCallback;
+import com.kakao.UserManagement;
 import com.kakao.UserProfile;
 import com.kakao.exception.KakaoException;
+import com.kakao.helper.Logger;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -66,9 +69,9 @@ public class MainActivity extends ActionBarActivity {
 				Bundle savedInstanceState) {
 			View rootView = inflater.inflate(R.layout.fragment_main, container,
 					false);
-			Button btn = (Button)rootView.findViewById(R.id.button1);
+			Button btn = (Button) rootView.findViewById(R.id.button1);
 			btn.setOnClickListener(new View.OnClickListener() {
-				
+
 				@Override
 				public void onClick(View v) {
 					Session.getCurrentSession().open(callback);
@@ -76,38 +79,74 @@ public class MainActivity extends ActionBarActivity {
 			});
 			return rootView;
 		}
-		
+
 		@Override
 		public void onResume() {
 			super.onResume();
 			if (Session.initializeSession(getActivity(), callback)) {
 				// Session opening
-			} else if (Session.getCurrentSession().isOpened()){
+			} else if (Session.getCurrentSession().isOpened()) {
 				onSessionOpened();
 			}
 		}
 
 		public void onSessionOpened() {
 			UserProfile userProfile = UserProfile.loadFromCache();
-			if (userProfile != null) {
-				Toast.makeText(getActivity(), "user id : " + String.valueOf(userProfile.getId()) + "\naccess_token : " + Session.getCurrentSession().getAccessToken(), Toast.LENGTH_SHORT).show();
+			if (userProfile != null && userProfile.getId() != Long.MIN_VALUE) {
+				Toast.makeText(
+						getActivity(),
+						"user id : " + String.valueOf(userProfile.getId())
+								+ "\naccess_token : "
+								+ Session.getCurrentSession().getAccessToken(),
+						Toast.LENGTH_SHORT).show();
+			} else {
+
+				UserManagement.requestMe(new MeResponseCallback() {
+
+					@Override
+					protected void onSuccess(final UserProfile userProfile) {
+						Logger.getInstance().d("UserProfile : " + userProfile);
+						userProfile.saveUserToCache();
+						Toast.makeText(
+								getActivity(),
+								"user id : " + String.valueOf(userProfile.getId())
+										+ "\naccess_token : "
+										+ Session.getCurrentSession().getAccessToken(),
+								Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					protected void onNotSignedUp() {
+					}
+
+					@Override
+					protected void onSessionClosedFailure(
+							final APIErrorResult errorResult) {
+					}
+
+					@Override
+					protected void onFailure(final APIErrorResult errorResult) {
+						String message = "failed to get user info. msg="
+								+ errorResult;
+						Logger.getInstance().d(message);
+					}
+				});
 			}
 		}
-		
+
 		SessionCallback callback = new SessionCallback() {
-			
+
 			@Override
 			public void onSessionOpened() {
 				PlaceholderFragment.this.onSessionOpened();
 			}
-			
+
 			@Override
 			public void onSessionClosed(KakaoException exception) {
 				// Session closed
 			}
 		};
-		
+
 	}
 
-	
 }
