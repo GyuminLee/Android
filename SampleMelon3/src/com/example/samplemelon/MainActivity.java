@@ -1,11 +1,16 @@
 package com.example.samplemelon;
 
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+
+import org.apache.http.Header;
+import org.apache.http.message.BasicHeader;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -19,8 +24,13 @@ import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.google.gson.Gson;
+import com.loopj.android.http.AsyncHttpClient;
+import com.loopj.android.http.PersistentCookieStore;
+import com.loopj.android.http.RequestParams;
+import com.loopj.android.http.TextHttpResponseHandler;
 
 public class MainActivity extends ActionBarActivity {
 
@@ -63,7 +73,16 @@ public class MainActivity extends ActionBarActivity {
 		public PlaceholderFragment() {
 		}
 
+		AsyncHttpClient client;
 		ListView listView;
+		
+		@Override
+		public void onCreate(Bundle savedInstanceState) {
+			super.onCreate(savedInstanceState);
+			client = new AsyncHttpClient();
+			client.setCookieStore(new PersistentCookieStore(getActivity()));
+			client.setTimeout(30000);
+		}
 		
 		@Override
 		public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -77,7 +96,33 @@ public class MainActivity extends ActionBarActivity {
 				
 				@Override
 				public void onClick(View v) {
-					new MyTask().execute();
+//					new MyTask().execute();
+					String url = "http://apis.skplanetx.com/melon/charts/realtime";
+					RequestParams params = new RequestParams();
+					params.put("version", "1");
+					params.put("count", "10");
+					params.put("page", "1");
+					Header[] headers = new Header[2];
+					headers[0] = new BasicHeader("Accept", "application/json");
+					headers[1] = new BasicHeader("appKey", "458a10f5-c07e-34b5-b2bd-4a891e024c2a");
+					client.get(getActivity(), url, headers, params, new TextHttpResponseHandler() {
+						
+						@Override
+						public void onSuccess(int statusCode, Header[] headers,
+								String responseString) {
+							Gson gson = new Gson();
+							MelonResult mr = gson.fromJson(responseString, MelonResult.class);
+							ArrayAdapter<Song> adapter = new ArrayAdapter<Song>(getActivity(), android.R.layout.simple_list_item_1, mr.melon.songs.song);
+							listView.setAdapter(adapter);
+						}
+						
+						@Override
+						public void onFailure(int statusCode, Header[] headers,
+								String responseString, Throwable throwable) {
+							
+							
+						}
+					});
 				}
 			});
 			return rootView;
@@ -123,6 +168,7 @@ public class MainActivity extends ActionBarActivity {
 			protected void onPostExecute(MelonResult result) {
 				super.onPostExecute(result);
 				if (result != null) {
+					Toast.makeText(getActivity(), "hour : " + result.melon.hour, Toast.LENGTH_SHORT).show();
 					ArrayAdapter<Song> adapter = new ArrayAdapter<Song>(getActivity(), android.R.layout.simple_list_item_1, result.melon.songs.song);
 					listView.setAdapter(adapter);
 //					Toast.makeText(getActivity(), "result : " + result, Toast.LENGTH_SHORT).show();
