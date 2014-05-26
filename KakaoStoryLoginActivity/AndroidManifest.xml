@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" android:versionCode="1" android:versionName="1.0.22" package="com.kakao.sample.kakaostory">
+
+    <uses-sdk android:minSdkVersion="10" android:targetSdkVersion="18"/>
+
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    <application android:icon="@drawable/kakaostory_sample_icon" android:label="@string/app_name" android:name="com.kakao.GlobalApplication" android:theme="@android:style/Theme.NoTitleBar">
+        <activity android:name=".KakaoStoryLoginActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name=".KakaoStorySignupActivity"/>
+
+        <activity android:name=".KakaoStoryMainActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <category android:name="android.intent.category.BROWSABLE"/>
+                <data android:host="@string/kakaostory_host" android:scheme="@string/kakao_scheme"/>
+            </intent-filter>
+        </activity>
+
+        <activity android:name="com.kakao.LoginActivity"/>
+
+        <meta-data android:name="com.kakao.sdk.AppKey" android:value="@string/kakao_app_key"/>
+
+    </application>
+
+</manifest>
