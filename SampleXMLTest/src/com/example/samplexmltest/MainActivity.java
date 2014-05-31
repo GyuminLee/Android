@@ -28,6 +28,7 @@ public class MainActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		
 		list = (ListView)findViewById(R.id.listView1);
 		keyword = (EditText)findViewById(R.id.editText1);
 		Button btn = (Button)findViewById(R.id.button1);
