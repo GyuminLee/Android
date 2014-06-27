@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">첫번째앱</string>
+    <string name="hello_world">안녕 안드로이드!</string>
+
+</resources>
