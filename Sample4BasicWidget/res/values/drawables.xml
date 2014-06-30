@@ -2,5 +2,6 @@
 <resources>
     <drawable name="button_normal">#00FF00</drawable>
     <drawable name="button_press">#0000FF</drawable>
+    <drawable name="button_selected">#00FFFF</drawable>
     
 </resources>
