@@ -2,6 +2,7 @@ package com.example.sample4basicwidget;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -49,9 +50,11 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 				if (checkBox.isChecked()) {
-					Toast.makeText(MainActivity.this, "checked true", Toast.LENGTH_SHORT).show();
+					String message = getResources().getString(R.string.check_true_message);
+					Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();
 				} else {
-					Toast.makeText(MainActivity.this, "checked false", Toast.LENGTH_SHORT).show();					
+					String message = getResources().getString(R.string.check_false_message);
+					Toast.makeText(MainActivity.this, message, Toast.LENGTH_SHORT).show();					
 				}
 				
 			}
@@ -87,6 +90,9 @@ public class MainActivity extends Activity {
 				}
 			}
 		});
+		
+		String html_message = "Android <font color=\"red\">Text</font> test";
+		textView.setText(Html.fromHtml(html_message));
 	}
 	
 	private void changeVisible(int checkedId) {
