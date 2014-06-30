@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import com.annotation.Enemy;
@@ -11,9 +12,9 @@ import com.annotation.Friend;
 import com.drawable.Drawable;
 
 public class Game {
-	ArrayList<Drawable> friendDrawable = new ArrayList<Drawable>();
-	ArrayList<Drawable> enemyDrawable = new ArrayList<Drawable>();
-	ArrayList<Drawable> allDrawable = new ArrayList<Drawable>();
+	List<Drawable> friendDrawable = new ArrayList<Drawable>();
+	List<Drawable> enemyDrawable = new ArrayList<Drawable>();
+	List<Drawable> allDrawable = new ArrayList<Drawable>();
 	Random sR = new Random();
 	DrawRunnable drawRunnable;
 
