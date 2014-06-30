@@ -26,4 +26,56 @@
         android:background="@drawable/button_selector"
         android:text="Button" />
 
+    <CheckBox
+        android:id="@+id/checkBox1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show or Hide" />
+
+    <Button
+        android:id="@+id/button2"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="isChecked" />
+
+    <RadioGroup
+        android:id="@+id/radioGroup1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal" >
+
+        <RadioButton
+            android:id="@+id/radio_visible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:text="VISIBLE" />
+
+        <RadioButton
+            android:id="@+id/radio_invisible"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="INVISIBLE" />
+
+        <RadioButton
+            android:id="@+id/radio_gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="GONE" />
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/check_radio"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Show Radio" />
+
+    <ToggleButton
+        android:id="@+id/toggleButton1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="ToggleButton" />
+
 </LinearLayout>

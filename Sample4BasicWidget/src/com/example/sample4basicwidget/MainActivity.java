@@ -4,9 +4,17 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
+import android.widget.RadioGroup;
+import android.widget.TextView;
+import android.widget.Toast;
 
 public class MainActivity extends Activity {
 	Button selectButton;
+	CheckBox checkBox;
+	TextView textView;
+	RadioGroup group;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -21,5 +29,77 @@ public class MainActivity extends Activity {
 				btn.setSelected(!btn.isSelected());
 			}
 		});
+		checkBox = (CheckBox)findViewById(R.id.checkBox1);
+		textView = (TextView)findViewById(R.id.textView1);
+		checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				if (isChecked) {
+					textView.setVisibility(View.VISIBLE);
+				} else {
+					textView.setVisibility(View.GONE);
+				}
+			}
+		});
+		
+		Button btn = (Button)findViewById(R.id.button2);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (checkBox.isChecked()) {
+					Toast.makeText(MainActivity.this, "checked true", Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(MainActivity.this, "checked false", Toast.LENGTH_SHORT).show();					
+				}
+				
+			}
+		});
+		
+		if (checkBox.isChecked()) {
+			textView.setVisibility(View.VISIBLE);
+		} else {
+			textView.setVisibility(View.INVISIBLE);
+		}
+		
+		group = (RadioGroup)findViewById(R.id.radioGroup1);
+		group.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+			
+			@Override
+			public void onCheckedChanged(RadioGroup group, int checkedId) {
+				changeVisible(checkedId);
+			}
+		});
+		
+		changeVisible(group.getCheckedRadioButtonId());
+		
+		btn = (Button)findViewById(R.id.check_radio);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				int id = group.getCheckedRadioButtonId();
+				switch(id) {
+				case R.id.radio_visible:
+				case R.id.radio_invisible :
+				case R.id.radio_gone :
+				}
+			}
+		});
 	}
-}
+	
+	private void changeVisible(int checkedId) {
+		switch(checkedId) {
+		case R.id.radio_visible :
+			textView.setVisibility(View.VISIBLE);
+			break;
+		case R.id.radio_invisible :
+			textView.setVisibility(View.INVISIBLE);
+			break;
+		case R.id.radio_gone :
+			textView.setVisibility(View.GONE);
+			break;
+		}
+	}
+} 
