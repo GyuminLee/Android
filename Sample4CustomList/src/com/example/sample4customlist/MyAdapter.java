@@ -7,7 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 
-public class MyAdapter extends BaseAdapter {
+public class MyAdapter extends BaseAdapter implements ItemView.OnItemDataClickListener {
 
 	ArrayList<MyData> items = new ArrayList<MyData>();
 	Context mContext;
@@ -48,9 +48,34 @@ public class MyAdapter extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		ItemView v = new ItemView(mContext);
+		ItemView v;
+		
+		if (convertView == null) {
+			v = new ItemView(mContext);
+			v.setOnItemDataClickListener(this);
+		} else {
+			v = (ItemView)convertView;
+		}
+		
 		v.setMyData(items.get(position));
 		return v;
+	}
+
+	public interface OnAdapterItemClickListener {
+		public void onItemLikeClick(View v , MyData data);
+	}
+	
+	OnAdapterItemClickListener mAdapterListener;
+	
+	public void setOnAdapterItemClickListener(OnAdapterItemClickListener listener) {
+		mAdapterListener = listener;
+	}
+	
+	@Override
+	public void onLikeClick(View v, MyData data) {
+		if (mAdapterListener != null) {
+			mAdapterListener.onItemLikeClick(v, data);
+		}
 	}
 
 }
