@@ -18,4 +18,10 @@ public class F1Fragment extends Fragment {
 		tv = (TextView)v.findViewById(R.id.textView1);
 		return v;
 	}
+	
+	@Override
+	public void onResume() {
+		getActivity().setTitle("F1Fragment");
+		super.onResume();
+	}
 }
