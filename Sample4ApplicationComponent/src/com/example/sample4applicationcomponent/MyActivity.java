@@ -15,6 +15,7 @@ public class MyActivity extends Activity {
 	
 	public final static String PARAM_NAME = "name";
 	public final static String PARAM_AGE = "age";
+	public final static String PARAM_PERSON = "person";
 	public final static String PARAM_RESULT = "result";
 	
 	String name;
@@ -28,8 +29,11 @@ public class MyActivity extends Activity {
 	    message = (TextView)findViewById(R.id.textView1);
 	    editView = (EditText)findViewById(R.id.editText1);
 	    Intent i = getIntent();
-	    name = i.getStringExtra(PARAM_NAME);
-	    age = i.getIntExtra(PARAM_AGE, 0);
+	    Person p = i.getParcelableExtra(PARAM_PERSON);
+	    name = p.name;
+	    age = p.age;
+//	    name = i.getStringExtra(PARAM_NAME);
+//	    age = i.getIntExtra(PARAM_AGE, 0);
 	    message.setText("name : "+name);
 	    Button btn = (Button)findViewById(R.id.button1);
 	    btn.setOnClickListener(new View.OnClickListener() {

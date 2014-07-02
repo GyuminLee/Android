@@ -37,8 +37,12 @@ public class MainActivity extends Activity {
 //				startActivity(i);
 				
 				Intent i = new Intent(MainActivity.this, MyActivity.class);
-				i.putExtra(MyActivity.PARAM_NAME, keyword.getText().toString());
-				i.putExtra(MyActivity.PARAM_AGE, Integer.parseInt(ageView.getText().toString()));
+				Person p = new Person();
+				p.name = keyword.getText().toString();
+				p.age = Integer.parseInt(ageView.getText().toString());
+				i.putExtra(MyActivity.PARAM_PERSON, p);
+//				i.putExtra(MyActivity.PARAM_NAME, keyword.getText().toString());
+//				i.putExtra(MyActivity.PARAM_AGE, Integer.parseInt(ageView.getText().toString()));
 				startActivityForResult(i, REQUEST_CODE_RESULT_AGE);
 			}
 		});		
