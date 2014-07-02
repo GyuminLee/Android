@@ -2,6 +2,7 @@ package com.example.sample4applicationcomponent;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -41,6 +42,16 @@ public class MainActivity extends Activity {
 				startActivityForResult(i, REQUEST_CODE_RESULT_AGE);
 			}
 		});		
+		
+		btn = (Button)findViewById(R.id.button2);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.google.com"));
+				startActivity(i);
+			}
+		});
 	}
 	
 	@Override
