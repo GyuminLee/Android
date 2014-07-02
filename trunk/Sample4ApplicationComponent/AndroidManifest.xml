@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
         <activity android:name="MyActivity"></activity>
-        <activity android:name="BrowserActivity">
+        <activity android:name="BrowserActivity" android:launchMode="singleTop">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW"/>
                 <data android:scheme="http" android:host="www.google.com"/>
