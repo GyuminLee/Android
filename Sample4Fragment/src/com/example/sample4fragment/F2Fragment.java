@@ -30,4 +30,10 @@ public class F2Fragment extends Fragment {
 		});
 		return v;
 	}
+	
+	@Override
+	public void onResume() {
+		getActivity().setTitle("F2Fragment");
+		super.onResume();
+	}
 }
