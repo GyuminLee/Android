@@ -7,9 +7,11 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTransaction;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 public class MainActivity extends FragmentActivity {
-	Fragment f1, f2;
+	F1Fragment f1;
+	F2Fragment f2;
 	public static final String F1_TAG = "f1";
 	public static final String F2_TAG = "f2";
 
@@ -61,8 +63,19 @@ public class MainActivity extends FragmentActivity {
 		});
 		f1 = new F1Fragment();
 		f2 = new F2Fragment();
+		f2.setOnReceiveMessageListener(new F2Fragment.OnReceiveMessageListener() {
+			
+			@Override
+			public void onReceiveMessage(String message) {
+				Toast.makeText(MainActivity.this, "message : " + message, Toast.LENGTH_SHORT).show();
+			}
+		});
+		Bundle b = new Bundle();
+		b.putString(F2Fragment.PARAM_MESSAGE, "test");
+		f2.setArguments(b);
 
 		getSupportFragmentManager().beginTransaction()
 				.replace(R.id.container, f1, F1_TAG).commit();
 	}
+	
 }
