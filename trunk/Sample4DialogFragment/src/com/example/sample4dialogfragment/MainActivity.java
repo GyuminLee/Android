@@ -1,5 +1,6 @@
 package com.example.sample4dialogfragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.View;
@@ -28,6 +29,16 @@ public class MainActivity extends FragmentActivity {
 			public void onClick(View v) {
 				MyCustomDialogFragment f = new MyCustomDialogFragment();
 				f.show(getSupportFragmentManager(), "dialog");
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_activity);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainActivity.this, DialogActivity.class);
+				startActivity(i);
 			}
 		});
 	}
