@@ -24,4 +24,10 @@ public class Tab3Fragment extends Fragment {
 		Toast.makeText(getActivity(), "Tab3 onCreateView", Toast.LENGTH_SHORT).show();
 		return v;
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		getActivity().setTitle("Tab3Fragment");
+	}
 }

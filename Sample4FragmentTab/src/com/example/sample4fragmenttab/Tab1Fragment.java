@@ -24,4 +24,10 @@ public class Tab1Fragment extends Fragment {
 		Toast.makeText(getActivity(), "Tab1 onCreateView", Toast.LENGTH_SHORT).show();
 		return v;
 	}
+	
+	@Override
+	public void onResume() {
+		super.onResume();
+		getActivity().setTitle("Tab1Fragment");
+	}
 }
