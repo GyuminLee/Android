@@ -25,4 +25,11 @@
         android:layout_height="wrap_content"
         android:text="custom" />
 
+    <Button
+        android:id="@+id/btn_activity"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="activity" />
+
 </LinearLayout>
