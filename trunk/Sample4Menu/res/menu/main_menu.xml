@@ -1,13 +1,34 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android" >
-    <item android:id="@+id/menu_setting" android:title="Settings" android:orderInCategory="100"></item>
-    <item android:id="@+id/menu_profile" android:title="Profile" android:orderInCategory="101"></item>
-    <item android:id="@+id/menu_has_sub" android:title="Sub Menu" android:orderInCategory="102">
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+
+    <item
+        android:id="@+id/menu_setting"
+        android:icon="@android:drawable/ic_search_category_default"
+        android:orderInCategory="100"
+        android:title="Settings"
+        app:actionViewClass="android.support.v7.widget.SearchView"
+        app:showAsAction="ifRoom|collapseActionView">
+    </item>
+    <item
+        android:id="@+id/menu_profile"
+        android:orderInCategory="101"
+        android:title="Profile">
+    </item>
+    <item
+        android:id="@+id/menu_has_sub"
+        android:orderInCategory="102"
+        android:title="Sub Menu">
         <menu>
-            <item android:id="@+id/sub_menu_one" android:orderInCategory="200" android:title="Sub 1"/>
-            <item android:id="@+id/sub_menu_two" android:orderInCategory="201" android:title="sub 2"/>
+            <item
+                android:id="@+id/sub_menu_one"
+                android:orderInCategory="200"
+                android:title="Sub 1"/>
+            <item
+                android:id="@+id/sub_menu_two"
+                android:orderInCategory="201"
+                android:title="sub 2"/>
         </menu>
     </item>
-    
 
 </menu>
