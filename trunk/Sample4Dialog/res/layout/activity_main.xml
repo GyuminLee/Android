@@ -32,4 +32,11 @@
         android:layout_height="wrap_content"
         android:text="multi choice" />
 
+    <Button
+        android:id="@+id/btn_progress_indeterminate"
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Progress" />
+
 </LinearLayout>

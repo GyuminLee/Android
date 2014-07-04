@@ -2,6 +2,7 @@ package com.example.sample4dialog;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.view.View;
@@ -114,6 +115,23 @@ public class MainActivity extends Activity {
 					}
 				});
 				builder.create().show();
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_progress_indeterminate);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				ProgressDialog dialog = new ProgressDialog(MainActivity.this);
+				dialog.setIcon(R.drawable.ic_launcher);
+				dialog.setTitle("Progress...");
+				dialog.setMessage("downloading...");
+				dialog.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+				dialog.setMax(100);
+				dialog.setProgress(50);
+				dialog.setSecondaryProgress(70);
+				dialog.show();
 			}
 		});
 	}
