@@ -1,18 +1,23 @@
 package com.example.sample4menu;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v4.view.MenuItemCompat;
+import android.support.v7.app.ActionBar;
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.widget.SearchView;
+import android.support.v7.widget.SearchView.OnQueryTextListener;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.TextView;
 import android.widget.Toast;
 
-public class MainActivity extends Activity {
+public class MainActivity extends ActionBarActivity {
 
 	TextView tv;
+	ActionBar actionBar;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -20,6 +25,10 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		tv = (TextView)findViewById(R.id.message_view);
 		registerForContextMenu(tv);
+//		actionBar = getSupportActionBar();
+//		actionBar.setTitle("title");
+//		actionBar.setDisplayHomeAsUpEnabled(true);
+//		actionBar.setHomeButtonEnabled(true);
 	}
 	
 	@Override
@@ -49,6 +58,22 @@ public class MainActivity extends Activity {
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.main_menu, menu);
+		MenuItem item = menu.findItem(R.id.menu_setting);
+		SearchView view = (SearchView)MenuItemCompat.getActionView(item);
+		view.setOnQueryTextListener(new OnQueryTextListener() {
+			
+			@Override
+			public boolean onQueryTextSubmit(String arg0) {
+				Toast.makeText(MainActivity.this, "keyword : " + arg0, Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			
+			@Override
+			public boolean onQueryTextChange(String arg0) {
+				// TODO Auto-generated method stub
+				return false;
+			}
+		});
 		return true;
 	}
 	
@@ -66,6 +91,9 @@ public class MainActivity extends Activity {
 			break;
 		case R.id.sub_menu_two :
 			Toast.makeText(this, "sub two", Toast.LENGTH_SHORT).show();
+			break;
+		case android.R.id.home :
+			Toast.makeText(this, "home click", Toast.LENGTH_SHORT).show();
 			break;
 		}
 		return true;
