@@ -1,11 +1,11 @@
 package com.example.sample4tabpager;
 
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBarActivity;
 import android.widget.TabHost;
 
-public class MainActivity extends FragmentActivity {
+public class MainActivity extends ActionBarActivity {
 
 	ViewPager pager;
 	TabHost tabHost;
@@ -26,15 +26,17 @@ public class MainActivity extends FragmentActivity {
 		mAdapter.addTab(tabHost.newTabSpec("tab3").setIndicator("TAB3"),Tab3Fragment.class , null);
 		
 		if (savedInstanceState != null) {
-			tabHost.setCurrentTabByTag(savedInstanceState.getString(PARAM_CURRENT_TAB));
 			mAdapter.onRestoreInstanceState(savedInstanceState);
+			tabHost.setCurrentTabByTag(savedInstanceState.getString(PARAM_CURRENT_TAB));
 		}
+		
+		getSupportActionBar().setDisplayShowHomeEnabled(false);
 	}
 	
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
-		outState.putString(PARAM_CURRENT_TAB, tabHost.getCurrentTabTag());
 		mAdapter.onSaveInstanceState(outState);
+		outState.putString(PARAM_CURRENT_TAB, tabHost.getCurrentTabTag());
 	}
 }

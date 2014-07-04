@@ -4,6 +4,8 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
@@ -15,6 +17,7 @@ public class Tab3Fragment extends PagerFragment {
 		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		Toast.makeText(getActivity(), "Tab3 onCreate", Toast.LENGTH_SHORT).show();
+		setHasOptionsMenu(true);
 	}
 	
 	@Override
@@ -25,6 +28,11 @@ public class Tab3Fragment extends PagerFragment {
 		return v;
 	}
 	
+	@Override
+	public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+		super.onCreateOptionsMenu(menu, inflater);
+		inflater.inflate(R.menu.tab3_menu, menu);
+	}
 	@Override
 	public void onPageCurrent() {
 		super.onPageCurrent();
