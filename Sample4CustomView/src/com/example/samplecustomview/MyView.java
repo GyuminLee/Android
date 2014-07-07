@@ -5,6 +5,7 @@ import java.io.InputStream;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Camera;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Matrix;
@@ -23,6 +24,8 @@ public class MyView extends View {
 	Path mPath;
 	Bitmap mBitmap;
 	Matrix mMatrix;
+	Camera mCamera;
+	float[] meshPoints;
 	
 	public MyView(Context context) {
 		super(context);
@@ -52,13 +55,30 @@ public class MyView extends View {
 		mBitmap.recycle();
 		mBitmap = bm;
 		mMatrix = new Matrix();
+		mCamera = new Camera();
+		
+		meshPoints = new float[]{ 100, 100, 150, 150, 200, 150, 250, 100 ,
+				       100, 200, 150, 250, 200, 250, 250, 200 };
+		
 	}
 	
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
-		canvas.drawBitmap(mBitmap, 0, 0,mPaint);
+		canvas.drawBitmapMesh(mBitmap, 3, 1, meshPoints, 0, null, 0, mPaint);		
+	}
+	
+	private void draw3DBitmap(Canvas canvas) {
+		mCamera.save();
+		mCamera.rotateY(30);
+		mCamera.getMatrix(mMatrix);
+		mCamera.restore();
+		
+		mMatrix.preTranslate(-mBitmap.getWidth()/2, -mBitmap.getHeight()/2);
+		mMatrix.postTranslate(mBitmap.getWidth()/2, mBitmap.getHeight()/2);
+		mMatrix.postTranslate(100, 100);
+		canvas.drawBitmap(mBitmap, mMatrix,mPaint);
 	}
 
 	private void drawBitmap(Canvas canvas) {
