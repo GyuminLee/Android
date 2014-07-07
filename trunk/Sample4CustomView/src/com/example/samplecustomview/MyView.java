@@ -21,6 +21,7 @@ import android.graphics.PathEffect;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
+import android.util.AttributeSet;
 import android.view.View;
 
 public class MyView extends View {
@@ -39,13 +40,55 @@ public class MyView extends View {
 	Path mArrow;
 	Shader mShader;
 	ColorFilter mColorFilter;
-	
-	
+
 	public MyView(Context context) {
 		super(context);
 		init();
 	}
-	
+
+	public MyView(Context context, AttributeSet attrs, int defStyleAttr) {
+		super(context, attrs, defStyleAttr);
+		init();
+	}
+
+	public MyView(Context context, AttributeSet attrs) {
+		super(context, attrs);
+		init();
+	}
+
+	@Override
+	protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+		int width = getPaddingLeft() + getPaddingRight();
+		int height = getPaddingTop() + getPaddingBottom();
+		if (mBitmap != null) {
+			width += mBitmap.getWidth();
+			height += mBitmap.getHeight();
+		}
+
+		setMeasuredDimension(resolveSize(width, widthMeasureSpec),
+				resolveSize(height, heightMeasureSpec));
+	}
+
+	@Override
+	protected void onLayout(boolean changed, int left, int top, int right,
+			int bottom) {
+		super.onLayout(changed, left, top, right, bottom);
+		int width = right - left - getPaddingLeft() - getPaddingRight();
+		int height = bottom - top - getPaddingBottom() - getPaddingTop();
+		if (mBitmap != null
+				&& (mBitmap.getWidth() != width || mBitmap.getHeight() != height)) {
+			Bitmap bm = Bitmap
+					.createScaledBitmap(mBitmap, width, height, false);
+			mBitmap.recycle();
+			mBitmap = bm;
+		}
+	}
+
+	public void setBitmap(Bitmap bm) {
+		mBitmap = bm;
+		requestLayout();
+	}
+
 	private void init() {
 		mPaint = new Paint();
 		int counts = MAX / DELTA + 1;
@@ -56,13 +99,14 @@ public class MyView extends View {
 			points[i * 4 + 2] = 100 + MAX - i * DELTA;
 			points[i * 4 + 3] = 100;
 		}
-		
+
 		mPath = new Path();
 		mPath.moveTo(200, 200);
 		mPath.lineTo(300, 300);
 		mPath.lineTo(200, 300);
-		
-//		mBitmap = BitmapFactory.decodeResource(getResources(), R.raw.gallery_photo_1);
+
+		// mBitmap = BitmapFactory.decodeResource(getResources(),
+		// R.raw.gallery_photo_1);
 		InputStream is = getResources().openRawResource(R.raw.gallery_photo_1);
 		mBitmap = BitmapFactory.decodeStream(is);
 		Bitmap bm = Bitmap.createScaledBitmap(mBitmap, 300, 300, false);
@@ -70,15 +114,15 @@ public class MyView extends View {
 		mBitmap = bm;
 		mMatrix = new Matrix();
 		mCamera = new Camera();
-		
-		meshPoints = new float[]{ 100, 100, 150, 150, 200, 150, 250, 100 ,
-				       100, 200, 150, 250, 200, 250, 250, 200 };
+
+		meshPoints = new float[] { 100, 100, 150, 150, 200, 150, 250, 100, 100,
+				200, 150, 250, 200, 250, 250, 200 };
 		mTextPath = new Path();
 		mTextPath.addCircle(300, 300, 200, Path.Direction.CW);
-		
+
 		float[] intervals = { 20, 10, 10, 5 };
 		mPathEffect = new DashPathEffect(intervals, 10);
-		
+
 		mArrow = new Path();
 		mArrow.moveTo(0, 0);
 		mArrow.lineTo(-5, 5);
@@ -86,17 +130,18 @@ public class MyView extends View {
 		mArrow.lineTo(5, 0);
 		mArrow.lineTo(0, -5);
 		mArrow.lineTo(-5, -5);
-		mPathEffect = new PathDashPathEffect(mArrow, 20, 0, PathDashPathEffect.Style.ROTATE);
-	
+		mPathEffect = new PathDashPathEffect(mArrow, 20, 0,
+				PathDashPathEffect.Style.ROTATE);
+
 	}
-	
+
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		canvas.drawColor(Color.WHITE);
-		
+		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
 	}
-	
+
 	private void drawColorFilter(Canvas canvas) {
 		ColorMatrix cm = new ColorMatrix();
 		cm.setSaturation(0);
@@ -104,77 +149,83 @@ public class MyView extends View {
 		mb.setScale(1, 0.95f, 0.82f, 1);
 		cm.setConcat(mb, cm);
 		mColorFilter = new ColorMatrixColorFilter(cm);
-		
+
 		mPaint.setColorFilter(mColorFilter);
-		canvas.drawBitmap(mBitmap, 0, 0, mPaint);		
+		canvas.drawBitmap(mBitmap, 0, 0, mPaint);
 	}
+
 	private void drawShader(Canvas canvas) {
-		int[] colors = {Color.RED, Color.BLUE, Color.RED};
-		float[] position = {0, 0.3f, 1};
-//		mShader = new LinearGradient(200, 200, 300, 300, colors, position, Shader.TileMode.REPEAT);
-//		mShader = new RadialGradient(300, 300, 200, Color.RED, Color.BLUE, Shader.TileMode.CLAMP);
-//		mShader = new SweepGradient(300, 300, colors, null);
-		mShader = new BitmapShader(mBitmap, Shader.TileMode.REPEAT, Shader.TileMode.REPEAT);
+		int[] colors = { Color.RED, Color.BLUE, Color.RED };
+		float[] position = { 0, 0.3f, 1 };
+		// mShader = new LinearGradient(200, 200, 300, 300, colors, position,
+		// Shader.TileMode.REPEAT);
+		// mShader = new RadialGradient(300, 300, 200, Color.RED, Color.BLUE,
+		// Shader.TileMode.CLAMP);
+		// mShader = new SweepGradient(300, 300, colors, null);
+		mShader = new BitmapShader(mBitmap, Shader.TileMode.REPEAT,
+				Shader.TileMode.REPEAT);
 
 		mPaint.setShader(mShader);
-//		canvas.drawRect(100, 100, 400, 400, mPaint);
+		// canvas.drawRect(100, 100, 400, 400, mPaint);
 		canvas.drawCircle(150, 150, 150, mPaint);
-		
+
 	}
-	
+
 	private void drawPathEffect(Canvas canvas) {
 		mPaint.setColor(Color.DKGRAY);
 		mPaint.setStyle(Paint.Style.STROKE);
 		mPaint.setStrokeWidth(10);
 		mPaint.setPathEffect(mPathEffect);
-//		canvas.drawRect(100, 100, 400, 400, mPaint);
+		// canvas.drawRect(100, 100, 400, 400, mPaint);
 		canvas.drawCircle(300, 300, 200, mPaint);
 	}
-	
+
 	private void drawTextOnPath(Canvas canvas) {
 		String message = "Hello Android!";
 		mPaint.setColor(Color.BLACK);
 		mPaint.setTextSize(40);
-		canvas.drawTextOnPath(message, mTextPath, 0, (int)(Math.PI * 200/ 2), mPaint);
+		canvas.drawTextOnPath(message, mTextPath, 0, (int) (Math.PI * 200 / 2),
+				mPaint);
 	}
-	
+
 	private void drawBitmapMesh(Canvas canvas) {
-		canvas.drawBitmapMesh(mBitmap, 3, 1, meshPoints, 0, null, 0, mPaint);		
+		canvas.drawBitmapMesh(mBitmap, 3, 1, meshPoints, 0, null, 0, mPaint);
 	}
-	
+
 	private void draw3DBitmap(Canvas canvas) {
 		mCamera.save();
 		mCamera.rotateY(30);
 		mCamera.getMatrix(mMatrix);
 		mCamera.restore();
-		
-		mMatrix.preTranslate(-mBitmap.getWidth()/2, -mBitmap.getHeight()/2);
-		mMatrix.postTranslate(mBitmap.getWidth()/2, mBitmap.getHeight()/2);
+
+		mMatrix.preTranslate(-mBitmap.getWidth() / 2, -mBitmap.getHeight() / 2);
+		mMatrix.postTranslate(mBitmap.getWidth() / 2, mBitmap.getHeight() / 2);
 		mMatrix.postTranslate(100, 100);
-		canvas.drawBitmap(mBitmap, mMatrix,mPaint);
+		canvas.drawBitmap(mBitmap, mMatrix, mPaint);
 	}
 
 	private void drawBitmap(Canvas canvas) {
 		mMatrix.setScale(2, 2, 0, 0);
 		mMatrix.postTranslate(100, 100);
 		canvas.drawBitmap(mBitmap, mMatrix, mPaint);
-		
+
 		mMatrix.setScale(-2, 2, 0, 0);
 		mMatrix.postTranslate(400, 400);
 		canvas.drawBitmap(mBitmap, mMatrix, mPaint);
 
-		mMatrix.setRotate(45,mBitmap.getWidth()/2, mBitmap.getHeight()/2);
+		mMatrix.setRotate(45, mBitmap.getWidth() / 2, mBitmap.getHeight() / 2);
 		mMatrix.postTranslate(100, 600);
 		canvas.drawBitmap(mBitmap, mMatrix, mPaint);
-		
+
 		mMatrix.setSkew(-1, 0);
 		mMatrix.postTranslate(100, 500);
 		canvas.drawBitmap(mBitmap, mMatrix, mPaint);
 	}
+
 	private void drawShape(Canvas canvas) {
 		mPaint.setColor(Color.YELLOW);
 		canvas.drawCircle(250, 250, 250, mPaint);
-		
+
 		mPaint.setColor(Color.GRAY);
 		RectF roundRect = new RectF();
 		roundRect.left = 50;
@@ -182,8 +233,7 @@ public class MyView extends View {
 		roundRect.top = 50;
 		roundRect.bottom = 450;
 		canvas.drawRoundRect(roundRect, 50, 50, mPaint);
-		
-		
+
 		mPaint.setColor(Color.DKGRAY);
 		Rect rect = new Rect();
 		rect.left = 100;
@@ -196,22 +246,22 @@ public class MyView extends View {
 		mPaint.setColor(Color.BLUE);
 		mPaint.setStrokeWidth(5);
 		canvas.drawPoints(points, mPaint);
-		
+
 		mPaint.setColor(Color.CYAN);
-		RectF oval = new RectF(200,150,300,350);
+		RectF oval = new RectF(200, 150, 300, 350);
 		canvas.drawOval(oval, mPaint);
-		
+
 		mPaint.setColor(Color.BLACK);
 		canvas.drawArc(oval, 30, 90, true, mPaint);
-		
+
 		mPaint.setColor(Color.MAGENTA);
 		canvas.drawPath(mPath, mPaint);
-		
+
 		String message = "Hello, World!";
 		mPaint.setColor(Color.BLACK);
 		mPaint.setTextSize(40);
 		mPaint.setTextSkewX(-1);
-		
+
 		canvas.drawText(message, 100, 40, mPaint);
 	}
 }
