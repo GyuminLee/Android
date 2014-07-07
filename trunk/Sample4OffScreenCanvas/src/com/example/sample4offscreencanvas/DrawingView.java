@@ -3,6 +3,7 @@ package com.example.sample4offscreencanvas;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
@@ -65,6 +66,7 @@ public class DrawingView extends View {
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
 		if (offScreenBitmap != null) {
+			canvas.drawColor(Color.WHITE);
 			canvas.drawBitmap(offScreenBitmap, 0, 0, mPaint);
 		}
 	}
@@ -76,6 +78,7 @@ public class DrawingView extends View {
 	
 	public void undo() {
 		if (undoBitmap != null) {
+			offScreenCanvas.drawColor(Color.WHITE);
 			offScreenCanvas.drawBitmap(undoBitmap, 0, 0, mPaint);
 			undoBitmap.recycle();
 			undoBitmap = null;
