@@ -22,10 +22,18 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.Shader;
 import android.util.AttributeSet;
+import android.util.Log;
+import android.view.GestureDetector;
+import android.view.KeyEvent;
+import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Toast;
 
 public class MyView extends View {
 
+	private static final String TAG = "MyVIew";
+	
 	Paint mPaint;
 	private final static int MAX = 300;
 	private final static int DELTA = 30;
@@ -40,6 +48,8 @@ public class MyView extends View {
 	Path mArrow;
 	Shader mShader;
 	ColorFilter mColorFilter;
+	GestureDetector mDetector;
+//	ScaleGestureDetector mScaleDetector;
 
 	public MyView(Context context) {
 		super(context);
@@ -133,8 +143,45 @@ public class MyView extends View {
 		mPathEffect = new PathDashPathEffect(mArrow, 20, 0,
 				PathDashPathEffect.Style.ROTATE);
 
+		mDetector = new GestureDetector(getContext(), new GestureDetector.SimpleOnGestureListener(){
+			@Override
+			public boolean onDown(MotionEvent e) {
+				return true;
+			}
+			
+			@Override
+			public boolean onFling(MotionEvent e1, MotionEvent e2,
+					float velocityX, float velocityY) {
+				Toast.makeText(getContext(), "fling...", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			
+			@Override
+			public boolean onSingleTapUp(MotionEvent e) {
+				Toast.makeText(getContext(), "tap up", Toast.LENGTH_SHORT).show();
+				return true;
+			}
+			
+			@Override
+			public boolean onScroll(MotionEvent e1, MotionEvent e2,
+					float distanceX, float distanceY) {
+				// TODO Auto-generated method stub
+				return super.onScroll(e1, e2, distanceX, distanceY);
+			}
+		});
 	}
 
+	float oldX, oldY;
+	
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		boolean isUsed = mDetector.onTouchEvent(event);
+		if (!isUsed) {
+			isUsed = super.onTouchEvent(event);
+		}
+		return isUsed;
+	}
+		
 	@Override
 	protected void onDraw(Canvas canvas) {
 		super.onDraw(canvas);
