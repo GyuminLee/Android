@@ -29,6 +29,7 @@ public class MainActivity extends FragmentActivity {
 				if (f == null) {
 					FragmentTransaction ft = getSupportFragmentManager()
 							.beginTransaction();
+					ft.setCustomAnimations(R.anim.view_set, R.anim.view_translate);
 					ft.replace(R.id.container, f1, F1_TAG);
 
 					ft.commit();
@@ -46,6 +47,7 @@ public class MainActivity extends FragmentActivity {
 				if (f == null) {
 					FragmentTransaction ft = getSupportFragmentManager()
 							.beginTransaction();
+					ft.setCustomAnimations(R.anim.view_set, R.anim.view_translate);
 					ft.replace(R.id.container, f2, F2_TAG);
 					ft.commit();
 				}
