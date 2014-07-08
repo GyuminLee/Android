@@ -94,5 +94,27 @@ public class MainActivity extends Activity {
 				imageView.startAnimation(anim);
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.button7);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				MyAnimation anim = new MyAnimation();
+				anim.setDuration(2000);
+				imageView.startAnimation(anim);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.button8);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				My3DAnimation anim = new My3DAnimation();
+				anim.setDuration(2000);
+				imageView.startAnimation(anim);
+			}
+		});
 	}
 }
