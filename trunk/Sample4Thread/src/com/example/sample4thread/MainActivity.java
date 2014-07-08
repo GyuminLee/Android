@@ -47,7 +47,22 @@ public class MainActivity extends Activity {
 			@Override
 			public void onClick(View v) {
 
-				new MyTask().execute();
+				progressView.setMax(100);
+				new Downloader().start("...", mHandler, new Downloader.OnProgressListener() {
+					
+					@Override
+					public void onProgress(int progress) {
+						messageView.setText("progress : " + progress);
+						progressView.setProgress(progress);
+					}
+					
+					@Override
+					public void onEnd() {
+						messageView.setText("progress done");
+						progressView.setProgress(100);
+					}
+				});
+//				new MyTask().execute();
 				
 //				progressView.setMax(100);
 				
