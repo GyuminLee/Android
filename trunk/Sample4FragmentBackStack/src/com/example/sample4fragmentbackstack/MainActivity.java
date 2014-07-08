@@ -28,6 +28,7 @@ public class MainActivity extends FragmentActivity {
 				int count = getSupportFragmentManager().getBackStackEntryCount();
 				if (count < fragmentList.length) {
 					FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+					ft.setCustomAnimations(R.anim.view_set, R.anim.view_translate, R.anim.abc_fade_in, R.anim.abc_fade_out);
 					ft.replace(R.id.container, fragmentList[count]);
 					ft.addToBackStack("backstack"+count);
 					ft.commit();
