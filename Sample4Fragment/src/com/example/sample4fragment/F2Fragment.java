@@ -70,7 +70,7 @@ public class F2Fragment extends Fragment {
 	
 	@Override
 	public void onDestroyView() {
-		editValue = editView.getText().toString();
+//		editValue = editView.getText().toString();
 		super.onDestroyView();
 	}
 	
