@@ -15,10 +15,12 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.sample4networkmelon.entity.Melon;
 import com.example.sample4networkmelon.entity.MelonResult;
 import com.example.sample4networkmelon.entity.Song;
+import com.example.sample4networkmelon.model.NetworkManager;
 import com.google.gson.Gson;
 
 public class MainActivity extends Activity {
@@ -39,46 +41,61 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				new MelonTask().execute("http://apis.skplanetx.com/melon/charts/realtime?count=10&page=1&version=1");
+				NetworkManager.getInstance().getMelon("http://apis.skplanetx.com/melon/charts/realtime?count=10&page=1&version=1", new NetworkManager.OnResultListener<Melon>() {
+
+					@Override
+					public void onSuccess(Melon result) {
+						for (Song s : result.songs.song) {
+							mAdapter.add(s);
+						}
+						
+					}
+
+					@Override
+					public void onFail(int code) {
+						Toast.makeText(MainActivity.this, "Fail", Toast.LENGTH_SHORT).show();
+					}
+				});
+//				new MelonTask().execute("http://apis.skplanetx.com/melon/charts/realtime?count=10&page=1&version=1");
 			}
 		});
 	}
 	
-	class MelonTask extends AsyncTask<String, Integer, Melon> {
-		@Override
-		protected Melon doInBackground(String... params) {
-			String urlString = params[0];
-			try {
-				URL url = new URL(urlString);
-				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-//				conn.setRequestMethod("GET");
-				conn.setRequestProperty("Accept", "application/json");
-				conn.setRequestProperty("appKey", "458a10f5-c07e-34b5-b2bd-4a891e024c2a");
-				int responseCode = conn.getResponseCode();
-				if (responseCode == HttpURLConnection.HTTP_OK) {
-					InputStream is = conn.getInputStream();
-					Gson gson = new Gson();
-					MelonResult mr = gson.fromJson(new InputStreamReader(is), MelonResult.class);
-					return mr.melon;
-				}
-			} catch (MalformedURLException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return null;
-		}
-		
-		@Override
-		protected void onPostExecute(Melon result) {
-			super.onPostExecute(result);
-			if (result != null) {
-				for (Song s : result.songs.song) {
-					mAdapter.add(s);
-				}
-			}
-		}
-	}
+//	class MelonTask extends AsyncTask<String, Integer, Melon> {
+//		@Override
+//		protected Melon doInBackground(String... params) {
+//			String urlString = params[0];
+//			try {
+//				URL url = new URL(urlString);
+//				HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+////				conn.setRequestMethod("GET");
+//				conn.setRequestProperty("Accept", "application/json");
+//				conn.setRequestProperty("appKey", "458a10f5-c07e-34b5-b2bd-4a891e024c2a");
+//				int responseCode = conn.getResponseCode();
+//				if (responseCode == HttpURLConnection.HTTP_OK) {
+//					InputStream is = conn.getInputStream();
+//					Gson gson = new Gson();
+//					MelonResult mr = gson.fromJson(new InputStreamReader(is), MelonResult.class);
+//					return mr.melon;
+//				}
+//			} catch (MalformedURLException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			} catch (IOException e) {
+//				// TODO Auto-generated catch block
+//				e.printStackTrace();
+//			}
+//			return null;
+//		}
+//		
+//		@Override
+//		protected void onPostExecute(Melon result) {
+//			super.onPostExecute(result);
+//			if (result != null) {
+//				for (Song s : result.songs.song) {
+//					mAdapter.add(s);
+//				}
+//			}
+//		}
+//	}
 }
