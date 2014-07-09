@@ -37,7 +37,7 @@ public class MainActivity extends Activity {
 			public void onClick(View v) {
 				mAdapter = new ArrayAdapter<Song>(MainActivity.this, android.R.layout.simple_list_item_1, new ArrayList<Song>());
 				listView.setAdapter(mAdapter);
-				NetworkManager.getInstance().getMelon("http://apis.skplanetx.com/melon/charts/realtime?count=10&page=1&version=1", new NetworkManager.OnResultListener<Melon>() {
+				NetworkManager.getInstance().getMelonData(MainActivity.this, 10, 1 , new NetworkManager.OnResultListener<Melon>() {
 
 					@Override
 					public void onSuccess(Melon result) {
@@ -65,7 +65,7 @@ public class MainActivity extends Activity {
 				listView.setAdapter(mMovieAdapter);
 				String keyword = keywordView.getText().toString();
 				if (keyword != null && !keyword.equals("")) {
-					NetworkManager.getInstance().getNaverMovie(keyword, new NetworkManager.OnResultListener<NaverMovie>() {
+					NetworkManager.getInstance().getNaverMovieData(MainActivity.this, keyword, 10, 1, new NetworkManager.OnResultListener<NaverMovie>() {
 
 						@Override
 						public void onSuccess(NaverMovie result) {
