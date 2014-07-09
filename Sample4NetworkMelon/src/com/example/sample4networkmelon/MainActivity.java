@@ -1,29 +1,39 @@
 package com.example.sample4networkmelon;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import android.app.Activity;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.TextView;
+import android.widget.ListView;
+
+import com.example.sample4networkmelon.entity.Melon;
+import com.example.sample4networkmelon.entity.MelonResult;
+import com.example.sample4networkmelon.entity.Song;
+import com.google.gson.Gson;
 
 public class MainActivity extends Activity {
 
-	TextView messageView;
+
+	ListView listView;
+	ArrayAdapter<Song> mAdapter;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		messageView = (TextView)findViewById(R.id.message_view);
+		listView = (ListView)findViewById(R.id.listView1);
+		mAdapter = new ArrayAdapter<Song>(this, android.R.layout.simple_list_item_1, new ArrayList<Song>());
+		listView.setAdapter(mAdapter);
 		Button btn = (Button)findViewById(R.id.btn_melon);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
@@ -34,9 +44,9 @@ public class MainActivity extends Activity {
 		});
 	}
 	
-	class MelonTask extends AsyncTask<String, Integer, String> {
+	class MelonTask extends AsyncTask<String, Integer, Melon> {
 		@Override
-		protected String doInBackground(String... params) {
+		protected Melon doInBackground(String... params) {
 			String urlString = params[0];
 			try {
 				URL url = new URL(urlString);
@@ -47,13 +57,9 @@ public class MainActivity extends Activity {
 				int responseCode = conn.getResponseCode();
 				if (responseCode == HttpURLConnection.HTTP_OK) {
 					InputStream is = conn.getInputStream();
-					BufferedReader br = new BufferedReader(new InputStreamReader(is));
-					StringBuilder sb = new StringBuilder();
-					String line;
-					while((line=br.readLine()) != null) {
-						sb.append(line + "\n\r");
-					}
-					return sb.toString();
+					Gson gson = new Gson();
+					MelonResult mr = gson.fromJson(new InputStreamReader(is), MelonResult.class);
+					return mr.melon;
 				}
 			} catch (MalformedURLException e) {
 				// TODO Auto-generated catch block
@@ -66,10 +72,12 @@ public class MainActivity extends Activity {
 		}
 		
 		@Override
-		protected void onPostExecute(String result) {
+		protected void onPostExecute(Melon result) {
 			super.onPostExecute(result);
 			if (result != null) {
-				messageView.setText(result);
+				for (Song s : result.songs.song) {
+					mAdapter.add(s);
+				}
 			}
 		}
 	}
