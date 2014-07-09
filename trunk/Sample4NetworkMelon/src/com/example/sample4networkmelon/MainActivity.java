@@ -1,46 +1,42 @@
 package com.example.sample4networkmelon;
 
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 
 import android.app.Activity;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.sample4networkmelon.entity.Melon;
-import com.example.sample4networkmelon.entity.MelonResult;
+import com.example.sample4networkmelon.entity.NaverMovie;
 import com.example.sample4networkmelon.entity.Song;
 import com.example.sample4networkmelon.model.NetworkManager;
-import com.google.gson.Gson;
+import com.example.sample4networkmelon.naver.NaverMovieAdapter;
 
 public class MainActivity extends Activity {
 
 
 	ListView listView;
 	ArrayAdapter<Song> mAdapter;
-	
+	EditText keywordView;
+	NaverMovieAdapter mMovieAdapter;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		keywordView = (EditText)findViewById(R.id.keyword_view);
 		listView = (ListView)findViewById(R.id.listView1);
-		mAdapter = new ArrayAdapter<Song>(this, android.R.layout.simple_list_item_1, new ArrayList<Song>());
-		listView.setAdapter(mAdapter);
 		Button btn = (Button)findViewById(R.id.btn_melon);
 		btn.setOnClickListener(new View.OnClickListener() {
 			
 			@Override
 			public void onClick(View v) {
+				mAdapter = new ArrayAdapter<Song>(MainActivity.this, android.R.layout.simple_list_item_1, new ArrayList<Song>());
+				listView.setAdapter(mAdapter);
 				NetworkManager.getInstance().getMelon("http://apis.skplanetx.com/melon/charts/realtime?count=10&page=1&version=1", new NetworkManager.OnResultListener<Melon>() {
 
 					@Override
@@ -57,6 +53,31 @@ public class MainActivity extends Activity {
 					}
 				});
 //				new MelonTask().execute("http://apis.skplanetx.com/melon/charts/realtime?count=10&page=1&version=1");
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mMovieAdapter = new NaverMovieAdapter(MainActivity.this);
+				listView.setAdapter(mMovieAdapter);
+				String keyword = keywordView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					NetworkManager.getInstance().getNaverMovie(keyword, new NetworkManager.OnResultListener<NaverMovie>() {
+
+						@Override
+						public void onSuccess(NaverMovie result) {
+							mMovieAdapter.addAll(result.item);
+						}
+
+						@Override
+						public void onFail(int code) {
+							Toast.makeText(MainActivity.this, "fail", Toast.LENGTH_SHORT).show();
+						}
+					});
+				}
 			}
 		});
 	}
