@@ -1,5 +1,7 @@
 package com.example.sample4tabpager;
 
+import com.viewpagerindicator.UnderlinePageIndicator;
+
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
@@ -19,7 +21,8 @@ public class MainActivity extends ActionBarActivity {
 		tabHost = (TabHost)findViewById(R.id.tabhost);
 		pager = (ViewPager)findViewById(R.id.pager);
 		tabHost.setup();
-		mAdapter = new TabsAdapter(this, getSupportFragmentManager(), tabHost, pager);
+		UnderlinePageIndicator indicator = (UnderlinePageIndicator)findViewById(R.id.indicator);
+		mAdapter = new TabsAdapter(this, getSupportFragmentManager(), tabHost, pager,indicator);
 		
 		mAdapter.addTab(tabHost.newTabSpec("tab1").setIndicator("TAB1"),Tab1Fragment.class , null);
 		mAdapter.addTab(tabHost.newTabSpec("tab2").setIndicator("TAB2"),Tab2Fragment.class , null);

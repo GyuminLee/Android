@@ -27,18 +27,23 @@
                 android:layout_height="wrap_content" >
             </TabWidget>
 
+            <com.viewpagerindicator.UnderlinePageIndicator
+                android:id="@+id/indicator"
+                android:layout_width="fill_parent"
+                android:layout_height="2dp" />
+
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_weight="0" >
             </FrameLayout>
-            
+
             <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:id="@+id/pager" />
+                android:layout_weight="1" />
         </LinearLayout>
     </TabHost>
 
