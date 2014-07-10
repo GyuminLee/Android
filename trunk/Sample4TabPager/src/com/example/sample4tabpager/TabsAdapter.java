@@ -2,6 +2,8 @@ package com.example.sample4tabpager;
 
 import java.util.ArrayList;
 
+import com.viewpagerindicator.UnderlinePageIndicator;
+
 import android.content.Context;
 import android.os.Bundle;
 import android.os.Handler;
@@ -26,6 +28,7 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	private final FragmentManager mFragmentManager;
 	private final ArrayList<TabInfo> mTabs = new ArrayList<TabInfo>();
 	private final static String FIELD_KEY_PREFIX = "tabinfo";
+	private UnderlinePageIndicator mIndicator;
 
 	private final static int MESSAGE_PAGE_CURRENT = 1;
 	
@@ -80,6 +83,10 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 	}
 	
 	public TabsAdapter(Context context,FragmentManager fragmentManager, TabHost tabHost, ViewPager pager) {
+		this(context,fragmentManager, tabHost, pager, null);
+	}
+	
+	public TabsAdapter(Context context, FragmentManager fragmentManager, TabHost tabHost, ViewPager pager, UnderlinePageIndicator indicator) {
 		super(fragmentManager);
 		mContext = context;
 		mFragmentManager = fragmentManager;
@@ -88,6 +95,12 @@ public class TabsAdapter extends FragmentPagerAdapter implements
 		mTabHost.setOnTabChangedListener(this);
 		mViewPager.setAdapter(this);
 		mViewPager.setOnPageChangeListener(this);
+		if (indicator != null) {
+			mIndicator = indicator;
+	        indicator.setViewPager(pager);
+	        indicator.setFades(false);
+	        indicator.setOnPageChangeListener(this);
+		}
 	}
 
 	public void onRestoreInstanceState(Bundle savedInstanceState) {
