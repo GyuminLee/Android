@@ -7,6 +7,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
 import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
@@ -24,6 +25,7 @@ public class BrowserActivity extends ActionBarActivity {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 	    super.onCreate(savedInstanceState);
+	    supportRequestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
 	    setContentView(R.layout.browser_activity);
 	    actionBar = getSupportActionBar();
 	    webView = (WebView)findViewById(R.id.webView1);
@@ -37,6 +39,7 @@ public class BrowserActivity extends ActionBarActivity {
 	    		} else if (url.startsWith("market://")) {
 	    			Intent i = new Intent(Intent.ACTION_VIEW,Uri.parse(url));
 	    			startActivity(i);
+	    			return true;
 	    		}
 	    		return super.shouldOverrideUrlLoading(view, url);
 	    	}
@@ -47,7 +50,14 @@ public class BrowserActivity extends ActionBarActivity {
 	    	@Override
 	    	public void onProgressChanged(WebView view, int newProgress) {
 	    		super.onProgressChanged(view, newProgress);
+//	    		setSupportProgressBarVisibility(true);
+	    		setSupportProgressBarIndeterminateVisibility(true);
 	    		Log.i(TAG,"progress : " + newProgress);
+//	    		setSupportProgress(newProgress * 100);
+	    		if (newProgress == 100) {
+//	    			setSupportProgressBarVisibility(false);
+	    			setSupportProgressBarIndeterminateVisibility(false);
+	    		}
 	    	}
 	    });
 	    
