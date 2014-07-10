@@ -14,10 +14,10 @@ public class DBOpenHelper extends SQLiteOpenHelper {
 	
 	@Override
 	public void onCreate(SQLiteDatabase db) {
-		String sql = "CREATE TABLE persontbl(" +
-					"_id integer PRIMARY KEY autoincrement, " +
-				    "name text," +
-					"age integer);";
+		String sql = "CREATE TABLE "+DBConstant.PersonTable.TABLE_NAME+"(" +
+					DBConstant.PersonTable._ID+" integer PRIMARY KEY autoincrement, " +
+				    DBConstant.PersonTable.FIELD_NAME+" text," +
+					DBConstant.PersonTable.FIELD_AGE+" integer);";
 		db.execSQL(sql);
 	}
 	
