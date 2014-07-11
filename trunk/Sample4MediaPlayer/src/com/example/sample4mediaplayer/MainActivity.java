@@ -4,8 +4,10 @@ import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.view.View;
@@ -180,8 +182,57 @@ public class MainActivity extends Activity {
 				mHandler.post(volumeUpRunnable);
 			}
 		});
+		
+		btn = (Button)findViewById(R.id.btn_load);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Intent i = new Intent(MainActivity.this, MusicListActivity.class);
+				startActivityForResult(i, 0);
+			}
+		});
 	}
-	
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		if (mState == STATE_STARTED) {
+			mPlayer.pause();
+			mState = STATE_PAUSED;
+		}
+	}
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		if (requestCode == 0 && resultCode == Activity.RESULT_OK) {
+			Uri uri = data.getData();
+			String display = data.getStringExtra(MusicListActivity.PARAM_DISPLAY_NAME);
+			setTitle(display);
+			mPlayer.reset();
+			mState = STATE_IDLE;
+			try {
+				mPlayer.setDataSource(this, uri);
+				mState = STATE_INITIALIZED;
+				mPlayer.prepare();
+				mState = STATE_PREPARED;
+				progressView.setMax(mPlayer.getDuration());
+				progressView.setProgress(0);
+			} catch (IllegalArgumentException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (SecurityException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IllegalStateException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+	}
 	float volume = 1.0f;
 	
 	Runnable muteRunnable = new Runnable() {
