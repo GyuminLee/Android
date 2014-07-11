@@ -1,5 +1,7 @@
 package com.example.sample4imagelist;
 
+import java.util.ArrayList;
+
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
@@ -10,9 +12,12 @@ import android.support.v4.content.Loader;
 import android.support.v4.widget.SimpleCursorAdapter;
 import android.support.v4.widget.SimpleCursorAdapter.ViewBinder;
 import android.support.v7.app.ActionBarActivity;
+import android.util.SparseBooleanArray;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 public class MainActivity extends ActionBarActivity implements LoaderCallbacks<Cursor>{
 
@@ -28,7 +33,7 @@ public class MainActivity extends ActionBarActivity implements LoaderCallbacks<C
 		gridView = (GridView)findViewById(R.id.gridView1);
 		String[] from = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME };
 		int[] to = { R.id.imageView1, R.id.textView1 };
-		mAdapter = new SimpleCursorAdapter(this, R.layout.item_view, null, from, to, 0);
+		mAdapter = new SimpleCursorAdapter(this, R.layout.check_item, null, from, to, 0);
 		mAdapter.setViewBinder(new ViewBinder() {
 			
 			@Override
@@ -46,11 +51,33 @@ public class MainActivity extends ActionBarActivity implements LoaderCallbacks<C
 			}
 		});
 		gridView.setAdapter(mAdapter);
+		gridView.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
 		
 		getSupportLoaderManager().initLoader(0, null, this);
+		Button btn = (Button)findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (gridView.getChoiceMode() == GridView.CHOICE_MODE_MULTIPLE) {
+					SparseBooleanArray array = gridView.getCheckedItemPositions();
+					ArrayList<String> imagePathList = new ArrayList<String>();
+					for (int i = 0; i < array.size(); i++) {
+						int position = array.keyAt(i);
+						if (array.get(position)) {
+							Cursor c = (Cursor)gridView.getItemAtPosition(position);
+							String path = c.getString(c.getColumnIndex(MediaStore.Images.Media.DATA));
+							imagePathList.add(path);
+						}
+					}
+					
+					Toast.makeText(MainActivity.this, "path : " + imagePathList.toString(), Toast.LENGTH_SHORT).show();
+				}
+			}
+		});
 	}
 
-	String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME};
+	String[] projection = { MediaStore.Images.Media._ID, MediaStore.Images.Media.DISPLAY_NAME, MediaStore.Images.Media.DATA};
 	
 	@Override
 	public Loader<Cursor> onCreateLoader(int code, Bundle b) {	
