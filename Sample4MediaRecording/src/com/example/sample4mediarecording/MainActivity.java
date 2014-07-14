@@ -2,16 +2,22 @@ package com.example.sample4mediarecording;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
+import android.hardware.Camera;
 import android.media.MediaRecorder;
 import android.media.MediaRecorder.AudioEncoder;
 import android.media.MediaRecorder.AudioSource;
 import android.media.MediaRecorder.OutputFormat;
 import android.media.MediaRecorder.VideoEncoder;
 import android.media.MediaRecorder.VideoSource;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -27,6 +33,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 	MediaRecorder mRecorder;
 	File mSavedFile;
 	boolean isRecording = false;
+	Camera mCamera;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,24 +41,34 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 		setContentView(R.layout.activity_main);
 		surfaceView = (SurfaceView) findViewById(R.id.surfaceView1);
 		mRecorder = new MediaRecorder();
+		mCamera = Camera.open();
+		if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+			mCamera.setDisplayOrientation(90);
+		}
 		Button btn = (Button) findViewById(R.id.button1);
 		btn.setOnClickListener(new View.OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
 				mRecorder.reset();
+				mCamera.unlock();
+				mRecorder.setCamera(mCamera);
 				mRecorder.setAudioSource(AudioSource.MIC);
 				mRecorder.setVideoSource(VideoSource.CAMERA);
 				mRecorder.setOutputFormat(OutputFormat.MPEG_4);
 				mRecorder.setAudioEncoder(AudioEncoder.AMR_NB);
 				mRecorder.setVideoEncoder(VideoEncoder.MPEG_4_SP);
 				long time = System.currentTimeMillis() % 1000;
+				SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMDDHHmm");
+				String filename = "myvideo_"
+						+ sdf.format(new Date(System.currentTimeMillis()))
+						+ ".mp4";
 				File dir = Environment
 						.getExternalStoragePublicDirectory(Environment.DIRECTORY_MOVIES);
 				if (!dir.exists()) {
 					dir.mkdirs();
 				}
-				mSavedFile = new File(dir, "myvideo" + time + ".mp4");
+				mSavedFile = new File(dir, filename);
 				mRecorder.setOutputFile(mSavedFile.getAbsolutePath());
 				mRecorder.setPreviewDisplay(surfaceView.getHolder()
 						.getSurface());
@@ -90,16 +107,28 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback {
 			isRecording = false;
 		}
 	}
-	
+
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
-		if (mRecorder != null) {
-			mRecorder.release();
+		try {
+			if (mRecorder != null) {
+				mRecorder.release();
+			}
+		} catch (Exception e) {
+		}
+
+		try {
+			if (mCamera != null) {
+				mCamera.release();
+			}
+		} catch (Exception e) {
 		}
 	}
 
 	private void addToVideo() {
+		Bitmap bm = ThumbnailUtils.createVideoThumbnail(
+				mSavedFile.getAbsolutePath(), Video.Thumbnails.MINI_KIND);
 		ContentValues values = new ContentValues();
 		values.put(Video.Media.DISPLAY_NAME, "my video");
 		values.put(Video.Media.TITLE, "my video");
