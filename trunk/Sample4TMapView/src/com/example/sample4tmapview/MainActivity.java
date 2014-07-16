@@ -3,7 +3,9 @@ package com.example.sample4tmapview;
 import java.util.ArrayList;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.PointF;
@@ -13,6 +15,7 @@ import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -83,7 +86,7 @@ public class MainActivity extends Activity {
 			
 			@Override
 			public void onClick(View v) {
-				findAroundPOI();
+				findAllPOI();
 			}
 		});
 		
@@ -133,6 +136,26 @@ public class MainActivity extends Activity {
 			}
 		});
 		
+		btn = (Button)findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+				builder.setIcon(R.drawable.ic_launcher);
+				builder.setTitle("test");
+				String[] list = {"1","2","3"};
+				builder.setSingleChoiceItems(list, 0, new DialogInterface.OnClickListener() {
+					
+					@Override
+					public void onClick(DialogInterface dialog, int which) {
+						Toast.makeText(MainActivity.this, "test", Toast.LENGTH_SHORT).show();
+						dialog.dismiss();
+					}
+				});
+				builder.create().show();
+			}
+		});
 		new RegisterTask().execute();
 	}
 	
@@ -168,6 +191,50 @@ public class MainActivity extends Activity {
 			});
 		}
 	}
+	ArrayList<TMapPOIItem> mPOIs;
+	
+	private void showList() {
+
+		if (mPOIs == null) return;
+		
+//		mapView.addTMapPOIItem(mPOIs);
+//		if (mPOIs.size() > 0) {
+//			TMapPoint pt = mPOIs.get(0).getPOIPoint();
+//			mapView.setCenterPoint(pt.getLongitude(), pt.getLatitude());
+//		}
+		AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+		
+		builder.setIcon(R.drawable.ic_launcher);
+		builder.setTitle("Select POI...");
+		String[] list = new String[mPOIs.size()];
+		for (int i = 0; i < mPOIs.size(); i++) {
+			TMapPOIItem poi = mPOIs.get(i);
+			list[i] = poi.getPOIName() + "(" + poi.getPOIAddress() + ")";
+		}
+		builder.setSingleChoiceItems(list, 0, new DialogInterface.OnClickListener() {
+			
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				TMapPOIItem poi = mPOIs.get(which);
+				TMapMarkerItem item = new TMapMarkerItem();
+				item.setTMapPoint(poi.getPOIPoint());
+				item.setName(poi.getPOIName());
+				item.setCalloutTitle(poi.getPOIName());
+				item.setCalloutSubTitle(poi.getPOIContent());
+				item.setCanShowCallout(true);
+				item.setIcon(((BitmapDrawable)getResources().getDrawable(android.R.drawable.arrow_up_float)).getBitmap());
+				item.setPosition(0.5f, 1.0f);
+				mapView.addMarkerItem(poi.getPOIID(), item);
+				mapView.setCenterPoint(poi.getPOIPoint().getLongitude(), poi.getPOIPoint().getLatitude());
+				mPOIs = null;
+				dialog.dismiss();
+			}
+		});
+		builder.create().show();
+	}
+	
+	Handler mHandler = new Handler();
+	
 	private void findAllPOI() {
 		TMapData data = new TMapData();
 		String keyword = keywordView.getText().toString();
@@ -175,39 +242,15 @@ public class MainActivity extends Activity {
 			data.findAllPOI(keyword, new FindAllPOIListenerCallback() {
 				
 				@Override
-				public void onFindAllPOI(final ArrayList<TMapPOIItem> pois) {
-					mapView.addTMapPOIItem(pois);
-					if (pois.size() > 0) {
-						TMapPoint pt = pois.get(0).getPOIPoint();
-						mapView.setCenterPoint(pt.getLongitude(), pt.getLatitude());
-					}
-//					AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-					
-//					builder.setIcon(R.drawable.ic_launcher);
-//					builder.setTitle("Select POI...");
-//					String[] list = new String[pois.size()];
-//					for (int i = 0; i < pois.size(); i++) {
-//						TMapPOIItem poi = pois.get(i);
-//						list[i] = poi.getPOIName() + "(" + poi.getPOIAddress() + ")";
-//					}
-//					builder.setSingleChoiceItems(list, 0, new DialogInterface.OnClickListener() {
-//						
-//						@Override
-//						public void onClick(DialogInterface dialog, int which) {
-//							TMapPOIItem poi = pois.get(which);
-//							TMapMarkerItem item = new TMapMarkerItem();
-//							item.setTMapPoint(poi.getPOIPoint());
-//							item.setName(poi.getPOIName());
-//							item.setCalloutTitle(poi.getPOIName());
-//							item.setCalloutSubTitle(poi.getPOIContent());
-//							item.setIcon(((BitmapDrawable)getResources().getDrawable(android.R.drawable.arrow_up_float)).getBitmap());
-//							item.setPosition(0.5f, 1.0f);
-//							mapView.addMarkerItem(poi.getPOIID(), item);
-//							mapView.setCenterPoint(poi.getPOIPoint().getLongitude(), poi.getPOIPoint().getLatitude());
-//							dialog.dismiss();
-//						}
-//					});
-//					builder.create().show();
+				public void onFindAllPOI(final ArrayList<TMapPOIItem> pois) {					
+					mPOIs = pois;
+					mHandler.post(new Runnable() {
+						
+						@Override
+						public void run() {
+							showList();
+						}
+					});
 				}
 			});
 		}
