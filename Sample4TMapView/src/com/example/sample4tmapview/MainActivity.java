@@ -1,15 +1,29 @@
 package com.example.sample4tmapview;
 
+import java.util.ArrayList;
+
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Color;
+import android.graphics.PointF;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.View;
+import android.widget.Button;
+import android.widget.Toast;
 
+import com.skp.Tmap.TMapCircle;
+import com.skp.Tmap.TMapMarkerItem;
+import com.skp.Tmap.TMapPOIItem;
+import com.skp.Tmap.TMapPoint;
 import com.skp.Tmap.TMapView;
+import com.skp.Tmap.TMapView.OnCalloutRightButtonClickCallback;
+import com.skp.Tmap.TMapView.OnClickListenerCallback;
 
 public class MainActivity extends Activity {
 
@@ -24,9 +38,40 @@ public class MainActivity extends Activity {
 		setContentView(R.layout.activity_main);
 		mapView = (TMapView)findViewById(R.id.mapView);
 		mLM = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
+		
+		Button btn = (Button)findViewById(R.id.btn_add_marker);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				TMapPoint point = mapView.getCenterPoint();
+//				TMapPoint mp = new TMapPoint(point.getLatitude(), point.getLongitude());
+				TMapMarkerItem item = new TMapMarkerItem();
+				Bitmap bitmap = ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap();
+				item.setName("ysi");
+				item.setIcon(bitmap);
+				item.setTMapPoint(point);
+				item.setPosition(0.5f, 0.5f);
+				item.setCalloutTitle("Icon");
+				item.setCalloutSubTitle("sub title");
+				item.setCalloutRightButtonImage(bitmap);
+				item.setCanShowCallout(true);
+				mapView.addMarkerItem("id1", item);
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_remove_marker);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				mapView.removeMarkerItem("id1");
+			}
+		});
+		
 		new RegisterTask().execute();
 	}
-	
+	int id = 1;
 	class RegisterTask extends AsyncTask<Void, Void, Boolean> {
 		@Override
 		protected Boolean doInBackground(Void... params) {
@@ -52,6 +97,36 @@ public class MainActivity extends Activity {
 //		mapView.setTrackingMode(true);
 		mapView.setIcon(((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap());
 		mapView.setIconVisibility(true);
+		mapView.setOnCalloutRightButtonClickListener(new OnCalloutRightButtonClickCallback() {
+			
+			@Override
+			public void onCalloutRightButton(TMapMarkerItem item) {
+				Toast.makeText(MainActivity.this, "marker : " + item.getName(), Toast.LENGTH_SHORT).show();
+			}
+		});
+		
+		mapView.setOnClickListenerCallBack(new OnClickListenerCallback() {
+			
+			@Override
+			public boolean onPressUpEvent(ArrayList<TMapMarkerItem> arg0,
+					ArrayList<TMapPOIItem> arg1, TMapPoint arg2, PointF arg3) {
+				mapView.removeTMapCircle("circle1");
+				return false;
+			}
+			
+			@Override
+			public boolean onPressEvent(ArrayList<TMapMarkerItem> arg0,
+					ArrayList<TMapPOIItem> arg1, TMapPoint point, PointF arg3) {
+				TMapCircle circle = new TMapCircle();
+				circle.setCenterPoint(point);
+				circle.setRadius(100);
+				circle.setLineColor(Color.RED);
+				circle.setAreaColor(Color.DKGRAY);
+				circle.setAreaAlpha(80);
+				mapView.addTMapCircle("circle1", circle);
+				return false;
+			}
+		});
 		if (cacheLocation != null) {
 			moveMap(cacheLocation);
 			setMyLocation(cacheLocation);
