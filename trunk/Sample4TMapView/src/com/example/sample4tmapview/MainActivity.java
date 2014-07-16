@@ -15,12 +15,18 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
 
 import com.skp.Tmap.TMapCircle;
+import com.skp.Tmap.TMapData;
+import com.skp.Tmap.TMapData.FindAllPOIListenerCallback;
+import com.skp.Tmap.TMapData.FindAroundNamePOIListenerCallback;
+import com.skp.Tmap.TMapData.FindPathDataListenerCallback;
 import com.skp.Tmap.TMapMarkerItem;
 import com.skp.Tmap.TMapPOIItem;
 import com.skp.Tmap.TMapPoint;
+import com.skp.Tmap.TMapPolyLine;
 import com.skp.Tmap.TMapView;
 import com.skp.Tmap.TMapView.OnCalloutRightButtonClickCallback;
 import com.skp.Tmap.TMapView.OnClickListenerCallback;
@@ -31,11 +37,14 @@ public class MainActivity extends Activity {
 	private static final String APP_KEY = "458a10f5-c07e-34b5-b2bd-4a891e024c2a";
 	LocationManager mLM;
 	boolean isInitialized = false;
+	EditText keywordView;
+	Button btnStart, btnEnd;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		keywordView = (EditText)findViewById(R.id.editText1);
 		mapView = (TMapView)findViewById(R.id.mapView);
 		mLM = (LocationManager)getSystemService(Context.LOCATION_SERVICE);
 		
@@ -51,7 +60,7 @@ public class MainActivity extends Activity {
 				item.setName("ysi");
 				item.setIcon(bitmap);
 				item.setTMapPoint(point);
-				item.setPosition(0.5f, 0.5f);
+				item.setPosition(0.5f, 2.0f);
 				item.setCalloutTitle("Icon");
 				item.setCalloutSubTitle("sub title");
 				item.setCalloutRightButtonImage(bitmap);
@@ -69,7 +78,139 @@ public class MainActivity extends Activity {
 			}
 		});
 		
+		btn = (Button)findViewById(R.id.btn_search);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				findAroundPOI();
+			}
+		});
+		
+		btnStart = (Button)findViewById(R.id.btn_start);
+		btnStart.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				startPoint = mapView.getCenterPoint();
+				btnStart.setText("set start");
+				
+			}
+		});
+		
+		btnEnd = (Button)findViewById(R.id.btn_end);
+		btnEnd.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				endPoint = mapView.getCenterPoint();
+				btnEnd.setText("set end");
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_routing);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (startPoint != null && endPoint != null) {
+					TMapData data = new TMapData();
+					data.findPathData(startPoint, endPoint, new FindPathDataListenerCallback() {
+						
+						@Override
+						public void onFindPathData(TMapPolyLine path) {
+							mapView.addTMapPath(path);
+							mapView.setCenterPoint(startPoint.getLongitude(), startPoint.getLatitude());
+							Bitmap bm = ((BitmapDrawable)getResources().getDrawable(R.drawable.ic_launcher)).getBitmap();
+							mapView.setTMapPathIcon(bm, bm);
+							startPoint = null;
+							endPoint = null;
+							btnStart.setText("start");
+							btnEnd.setText("end");
+						}
+					});
+				}
+			}
+		});
+		
 		new RegisterTask().execute();
+	}
+	
+	TMapPoint startPoint = null;
+	TMapPoint endPoint = null;
+
+	private void findAroundPOI() {
+		TMapData data = new TMapData();
+		String keyword = keywordView.getText().toString();
+		if (keyword != null && !keyword.equals("")) {
+			TMapPoint point = mapView.getCenterPoint();
+//			data.findAroundKeywordPOI(point, keyword, 33, 10, new FindAroundKeywordPOIListenerCallback() {
+//				
+//				@Override
+//				public void onFindAroundKeywordPOI(ArrayList<TMapPOIItem> arg0) {
+//					mapView.addTMapPOIItem(arg0);
+//					if (arg0.size() > 0) {
+//						TMapPoint pt = arg0.get(0).getPOIPoint();
+//						mapView.setCenterPoint(pt.getLongitude(), pt.getLatitude());
+//					}
+//				}
+//			});
+			data.findAroundNamePOI(point, keyword, new FindAroundNamePOIListenerCallback() {
+				
+				@Override
+				public void onFindAroundNamePOI(ArrayList<TMapPOIItem> arg0) {
+					mapView.addTMapPOIItem(arg0);
+					if (arg0.size() > 0) {
+						TMapPoint pt = arg0.get(0).getPOIPoint();
+						mapView.setCenterPoint(pt.getLongitude(), pt.getLatitude());
+					}
+				}
+			});
+		}
+	}
+	private void findAllPOI() {
+		TMapData data = new TMapData();
+		String keyword = keywordView.getText().toString();
+		if (keyword != null && !keyword.equals("")) {
+			data.findAllPOI(keyword, new FindAllPOIListenerCallback() {
+				
+				@Override
+				public void onFindAllPOI(final ArrayList<TMapPOIItem> pois) {
+					mapView.addTMapPOIItem(pois);
+					if (pois.size() > 0) {
+						TMapPoint pt = pois.get(0).getPOIPoint();
+						mapView.setCenterPoint(pt.getLongitude(), pt.getLatitude());
+					}
+//					AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+					
+//					builder.setIcon(R.drawable.ic_launcher);
+//					builder.setTitle("Select POI...");
+//					String[] list = new String[pois.size()];
+//					for (int i = 0; i < pois.size(); i++) {
+//						TMapPOIItem poi = pois.get(i);
+//						list[i] = poi.getPOIName() + "(" + poi.getPOIAddress() + ")";
+//					}
+//					builder.setSingleChoiceItems(list, 0, new DialogInterface.OnClickListener() {
+//						
+//						@Override
+//						public void onClick(DialogInterface dialog, int which) {
+//							TMapPOIItem poi = pois.get(which);
+//							TMapMarkerItem item = new TMapMarkerItem();
+//							item.setTMapPoint(poi.getPOIPoint());
+//							item.setName(poi.getPOIName());
+//							item.setCalloutTitle(poi.getPOIName());
+//							item.setCalloutSubTitle(poi.getPOIContent());
+//							item.setIcon(((BitmapDrawable)getResources().getDrawable(android.R.drawable.arrow_up_float)).getBitmap());
+//							item.setPosition(0.5f, 1.0f);
+//							mapView.addMarkerItem(poi.getPOIID(), item);
+//							mapView.setCenterPoint(poi.getPOIPoint().getLongitude(), poi.getPOIPoint().getLatitude());
+//							dialog.dismiss();
+//						}
+//					});
+//					builder.create().show();
+				}
+			});
+		}
 	}
 	int id = 1;
 	class RegisterTask extends AsyncTask<Void, Void, Boolean> {
