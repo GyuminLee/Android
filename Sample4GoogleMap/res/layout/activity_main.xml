@@ -11,6 +11,28 @@
         android:layout_height="wrap_content"
         android:text="@string/hello_world" />
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <EditText
+            android:id="@+id/editText2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:ems="10"
+            android:text="서울대학교" />
+
+        <Button
+            android:id="@+id/button1"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Button" />
+
+    </LinearLayout>
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent" >
@@ -34,7 +56,6 @@
 
                 <requestFocus />
             </EditText>
-
         </FrameLayout>
 
         <ListView
@@ -42,9 +63,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left" >
-
         </ListView>
-
     </FrameLayout>
 
 </LinearLayout>
