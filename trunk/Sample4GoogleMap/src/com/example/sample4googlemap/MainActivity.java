@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -14,6 +15,7 @@ import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ListView;
@@ -26,13 +28,17 @@ import com.google.android.gms.maps.GoogleMap.CancelableCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 public class MainActivity extends ActionBarActivity implements 
 	GoogleMap.OnMapClickListener,
-	GoogleMap.OnMarkerClickListener {
+	GoogleMap.OnMapLongClickListener, 
+	GoogleMap.OnMarkerClickListener,
+	GoogleMap.OnInfoWindowClickListener {
 
 	SupportMapFragment smf;
 	GoogleMap mMap;
@@ -73,6 +79,16 @@ public class MainActivity extends ActionBarActivity implements
 					}
 				});
 				
+			}
+		});
+		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+
+			@Override
+			public boolean onItemLongClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				Marker marker = markerResolver.get((MyData)listView.getItemAtPosition(position));
+				marker.remove();
+				return true;
 			}
 		});
 		setupMapIfNeeded();
@@ -118,6 +134,7 @@ public class MainActivity extends ActionBarActivity implements
 //			mMap.moveCamera(update);
 			mMap.moveCamera(update);
 			mLM.removeUpdates(this);
+			
 		}
 	};
 
@@ -160,6 +177,9 @@ public class MainActivity extends ActionBarActivity implements
 //		mMap.getUiSettings().setZoomControlsEnabled(false);	
 		mMap.setOnMapClickListener(this);
 		mMap.setOnMarkerClickListener(this);
+		mMap.setOnMapLongClickListener(this);
+		mMap.setOnInfoWindowClickListener(this);
+		mMap.setInfoWindowAdapter(new MyInfoWindow(this, dataResolver));
 	}
 
 	int mCount = 0;
@@ -178,6 +198,7 @@ public class MainActivity extends ActionBarActivity implements
 		MyData data = new MyData();
 		data.title = "icon"+mCount;
 		data.description = "content" + mCount;
+		data.resId = R.drawable.ic_launcher;
 		mCount++;
 		options.title(data.title);
 		options.snippet(data.description);
@@ -211,5 +232,31 @@ public class MainActivity extends ActionBarActivity implements
 			}
 		});
 		return true;
+	}
+
+	Circle circle = null;
+	@Override
+	public void onMapLongClick(LatLng latLng) {
+		CircleOptions options = new CircleOptions();
+		options.center(latLng);
+		options.radius(100);
+		options.strokeColor(Color.RED);
+		options.strokeWidth(5);
+		options.fillColor(0x80808080);
+		circle = mMap.addCircle(options);
+		mHandler.postDelayed(new Runnable() {
+			
+			@Override
+			public void run() {
+				circle.remove();
+			}
+		}, 2000);
+	}
+
+	@Override
+	public void onInfoWindowClick(Marker marker) {
+		MyData data = dataResolver.get(marker);
+		Toast.makeText(this, "title : " + data.title, Toast.LENGTH_SHORT).show();
+		marker.hideInfoWindow();
 	}
 }
