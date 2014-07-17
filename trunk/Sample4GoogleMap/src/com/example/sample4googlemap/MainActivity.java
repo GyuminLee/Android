@@ -16,12 +16,15 @@ import android.view.View;
 import android.view.animation.BounceInterpolator;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.Toast;
 
+import com.example.sample4googlemap.model.NetworkModel;
+import com.example.sample4googlemap.model.POI;
+import com.example.sample4googlemap.model.SearchPOIInfo;
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -50,8 +53,11 @@ public class MainActivity extends ActionBarActivity implements
 	HashMap<Marker,MyData> dataResolver = new HashMap<Marker,MyData>();
 	HashMap<MyData,Marker> markerResolver = new HashMap<MyData,Marker>();
 	ListView listView;
-	ArrayAdapter<MyData> mAdapter;
+	ArrayAdapter<POI> mAdapter;
+	HashMap<Marker,POI> poiResolver = new HashMap<Marker,POI>();
+	HashMap<POI,Marker> markerPoiResolver = new HashMap<POI,Marker>();
 	InfoBitmap infoBitmap;
+	EditText searchView;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,14 +66,14 @@ public class MainActivity extends ActionBarActivity implements
 		infoBitmap = new InfoBitmap(this);
 		keywordView = (EditText)findViewById(R.id.editText1);
 		listView = (ListView)findViewById(R.id.listView1);
-		mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<MyData>());
+		mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<POI>());
 		listView.setAdapter(mAdapter);
 		listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
 			public void onItemClick(AdapterView<?> parent, View view,
 					int position, long id) {
-				final Marker marker = markerResolver.get((MyData)listView.getItemAtPosition(position));
+				final Marker marker = markerPoiResolver.get((POI)listView.getItemAtPosition(position));
 				CameraUpdate update = CameraUpdateFactory.newLatLng(marker.getPosition());
 				mMap.animateCamera(update,new CancelableCallback() {
 					
@@ -84,14 +90,50 @@ public class MainActivity extends ActionBarActivity implements
 				
 			}
 		});
-		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
-
+//		listView.setOnItemLongClickListener(new OnItemLongClickListener() {
+//
+//			@Override
+//			public boolean onItemLongClick(AdapterView<?> parent, View view,
+//					int position, long id) {
+//				Marker marker = markerResolver.get((MyData)listView.getItemAtPosition(position));
+//				marker.remove();
+//				return true;
+//			}
+//		});
+		searchView = (EditText)findViewById(R.id.editText2);
+		Button btn = (Button)findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
 			@Override
-			public boolean onItemLongClick(AdapterView<?> parent, View view,
-					int position, long id) {
-				Marker marker = markerResolver.get((MyData)listView.getItemAtPosition(position));
-				marker.remove();
-				return true;
+			public void onClick(View v) {
+				String keyword = searchView.getText().toString();
+				if (keyword != null && !keyword.equals("")) {
+					NetworkModel.getInstnace().getPOI(MainActivity.this, keyword, new NetworkModel.OnResultListener<SearchPOIInfo>() {
+
+						@Override
+						public void onSuccess(SearchPOIInfo data) {
+							for (POI poi : data.pois.poi) {
+								MarkerOptions options = new MarkerOptions();
+								options.position(new LatLng(poi.getCenterLatitude(), poi.getCenterLongitude()));
+								options.anchor(0.5f, 1);
+								options.icon(BitmapDescriptorFactory.defaultMarker());
+								options.title(poi.name);
+								options.snippet(poi.lowerAddrName);
+								Marker marker = mMap.addMarker(options);
+								poiResolver.put(marker, poi);
+								markerPoiResolver.put(poi, marker);
+								mAdapter.add(poi);
+							}
+						}
+
+						@Override
+						public void onFail(int code) {
+							
+							
+						}
+					});
+				}
+				
 			}
 		});
 		setupMapIfNeeded();
@@ -182,7 +224,7 @@ public class MainActivity extends ActionBarActivity implements
 		mMap.setOnMarkerClickListener(this);
 		mMap.setOnMapLongClickListener(this);
 		mMap.setOnInfoWindowClickListener(this);
-		mMap.setInfoWindowAdapter(new MyInfoWindow(this, dataResolver));
+//		mMap.setInfoWindowAdapter(new MyInfoWindow(this, dataResolver));
 	}
 
 	int mCount = 0;
@@ -210,7 +252,7 @@ public class MainActivity extends ActionBarActivity implements
 		Marker marker = mMap.addMarker(options);
 		markerResolver.put(data, marker);
 		dataResolver.put(marker, data);
-		mAdapter.add(data);
+//		mAdapter.add(data);
 	}
 
 	Handler mHandler = new Handler();
