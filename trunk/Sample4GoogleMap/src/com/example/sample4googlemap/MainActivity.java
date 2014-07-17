@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
@@ -50,11 +51,13 @@ public class MainActivity extends ActionBarActivity implements
 	HashMap<MyData,Marker> markerResolver = new HashMap<MyData,Marker>();
 	ListView listView;
 	ArrayAdapter<MyData> mAdapter;
+	InfoBitmap infoBitmap;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		infoBitmap = new InfoBitmap(this);
 		keywordView = (EditText)findViewById(R.id.editText1);
 		listView = (ListView)findViewById(R.id.listView1);
 		mAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, new ArrayList<MyData>());
@@ -194,11 +197,13 @@ public class MainActivity extends ActionBarActivity implements
 		MarkerOptions options = new MarkerOptions();
 		options.position(latLng);
 		options.anchor(0.5f, 1.0f);
-		options.icon(BitmapDescriptorFactory.defaultMarker());
+//		options.icon(BitmapDescriptorFactory.defaultMarker());
 		MyData data = new MyData();
 		data.title = "icon"+mCount;
 		data.description = "content" + mCount;
 		data.resId = R.drawable.ic_launcher;
+		Bitmap bm = infoBitmap.getInfoBitmap(data);
+		options.icon(BitmapDescriptorFactory.fromBitmap(bm));
 		mCount++;
 		options.title(data.title);
 		options.snippet(data.description);

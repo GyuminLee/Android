@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.maps.GoogleMap.InfoWindowAdapter;
 import com.google.android.gms.maps.model.Marker;
@@ -22,6 +23,13 @@ public class MyInfoWindow implements InfoWindowAdapter {
 	public MyInfoWindow(Context context, HashMap<Marker,MyData> dataResolver) {
 		infoView = LayoutInflater.from(context).inflate(R.layout.info_window_layout, null);
 		iconView = (ImageView)infoView.findViewById(R.id.icon_view);
+		iconView.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Toast.makeText(v.getContext(), "test", Toast.LENGTH_SHORT).show();
+			}
+		});
 		titleView = (TextView)infoView.findViewById(R.id.title_view);
 		descView = (TextView)infoView.findViewById(R.id.description_view);
 		this.dataResolver = dataResolver;
