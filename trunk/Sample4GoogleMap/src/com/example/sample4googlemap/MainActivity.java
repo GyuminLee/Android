@@ -20,9 +20,13 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.RadioGroup;
 import android.widget.Toast;
 
+import com.example.sample4googlemap.model.CarFeature;
+import com.example.sample4googlemap.model.CarRouteInfo;
 import com.example.sample4googlemap.model.NetworkModel;
+import com.example.sample4googlemap.model.NetworkModel.OnResultListener;
 import com.example.sample4googlemap.model.POI;
 import com.example.sample4googlemap.model.SearchPOIInfo;
 import com.google.android.gms.maps.CameraUpdate;
@@ -37,6 +41,8 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.Polyline;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 public class MainActivity extends ActionBarActivity implements 
 	GoogleMap.OnMapClickListener,
@@ -58,11 +64,14 @@ public class MainActivity extends ActionBarActivity implements
 	HashMap<POI,Marker> markerPoiResolver = new HashMap<POI,Marker>();
 	InfoBitmap infoBitmap;
 	EditText searchView;
+	RadioGroup group;
+	double startLat, startLng, endLat, endLng;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		group = (RadioGroup)findViewById(R.id.radioGroup1);
 		infoBitmap = new InfoBitmap(this);
 		keywordView = (EditText)findViewById(R.id.editText1);
 		listView = (ListView)findViewById(R.id.listView1);
@@ -134,6 +143,56 @@ public class MainActivity extends ActionBarActivity implements
 					});
 				}
 				
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_route);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				if (startLat != 0 && endLat != 0) {
+					NetworkModel.getInstnace().getRouting(MainActivity.this, startLat, startLng, endLat, endLng, new OnResultListener<CarRouteInfo>() {
+						
+						@Override
+						public void onSuccess(CarRouteInfo data) {
+							if (data != null && data.features != null && data.features.size() > 0) {
+								CarFeature firstFeature = data.features.get(0);
+								int totalDistance = firstFeature.properties.totalDistance;
+								int totalTime = firstFeature.properties.totalTime;
+								int totalFare = firstFeature.properties.totalFare;
+								PolylineOptions options = new PolylineOptions();
+								for (CarFeature f : data.features) {
+									if (f.geometry.type.equals("LineString")) {
+										for (int i = 0; i < f.geometry.coordinates.length; i+=2) {
+											double lng = f.geometry.coordinates[i];
+											double lat = f.geometry.coordinates[i+1];
+											LatLng latLng = new LatLng(lat,lng);
+											options.add(latLng);
+										}
+									}
+								}
+								
+								options.color(Color.RED);
+								options.width(10);
+								Polyline line = mMap.addPolyline(options);
+								CameraUpdate update = CameraUpdateFactory.newLatLng(new LatLng(startLat, startLng));
+								mMap.animateCamera(update);
+								startLat = 0;
+								startLng = 0;
+								endLat = 0;
+								endLng = 0;
+							}
+						}
+						
+						@Override
+						public void onFail(int code) {
+							
+						}
+					});
+				} else {
+					Toast.makeText(MainActivity.this, "set start or end", Toast.LENGTH_SHORT).show();
+				}
 			}
 		});
 		setupMapIfNeeded();
@@ -259,8 +318,8 @@ public class MainActivity extends ActionBarActivity implements
 	long startTime;
 	@Override
 	public boolean onMarkerClick(final Marker marker) {
-		MyData data = dataResolver.get(marker);
-		Toast.makeText(this, "title : " + data.title, Toast.LENGTH_SHORT).show();
+//		MyData data = dataResolver.get(marker);
+//		Toast.makeText(this, "title : " + data.title, Toast.LENGTH_SHORT).show();
 		startTime = System.currentTimeMillis();
 		mHandler.post(new Runnable() {
 			
@@ -302,8 +361,18 @@ public class MainActivity extends ActionBarActivity implements
 
 	@Override
 	public void onInfoWindowClick(Marker marker) {
-		MyData data = dataResolver.get(marker);
-		Toast.makeText(this, "title : " + data.title, Toast.LENGTH_SHORT).show();
+//		MyData data = dataResolver.get(marker);
+//		Toast.makeText(this, "title : " + data.title, Toast.LENGTH_SHORT).show();
+		switch(group.getCheckedRadioButtonId()) {
+		case R.id.radio_start :
+			startLat = marker.getPosition().latitude;
+			startLng = marker.getPosition().longitude;
+			break;
+		case R.id.radio_end :
+			endLat = marker.getPosition().latitude;
+			endLng = marker.getPosition().longitude;
+			break;
+		}
 		marker.hideInfoWindow();
 	}
 }

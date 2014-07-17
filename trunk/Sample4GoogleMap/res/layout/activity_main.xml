@@ -30,6 +30,38 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:text="Button" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" >
+
+        <RadioGroup
+            android:id="@+id/radioGroup1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal" >
+
+            <RadioButton
+                android:id="@+id/radio_start"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:checked="true"
+                android:text="start" />
+
+            <RadioButton
+                android:id="@+id/radio_end"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="end" />
+        </RadioGroup>
+
+        <Button
+            android:id="@+id/btn_route"
+            style="?android:attr/buttonStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Route" />
 
     </LinearLayout>
 
@@ -60,7 +92,7 @@
 
         <ListView
             android:id="@+id/listView1"
-            android:layout_width="wrap_content"
+            android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|left" >
         </ListView>
