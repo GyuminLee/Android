@@ -14,6 +14,8 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.facebook.FacebookRequestError;
+import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Request.Callback;
 import com.facebook.Request.GraphUserCallback;
@@ -30,6 +32,8 @@ public class MainActivity extends Activity {
 	public static final List<String> PERMISSIONS = Arrays
 			.asList("publish_actions");
 
+	public static final List<String> READ_PERMISSIONS = Arrays.asList("read_stream");
+	
 	private boolean isSubsetOf(Collection<String> subset,
 			Collection<String> superset) {
 		for (String string : subset) {
@@ -45,7 +49,7 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		authButton = (LoginButton)findViewById(R.id.btn_auth);
-		authButton.setReadPermissions("user_likes", "user_status", "email");
+		authButton.setReadPermissions("user_likes", "user_status", "email","read_stream");
 		authButton.setSessionStatusCallback(new StatusCallback() {
 			
 			@Override
@@ -113,6 +117,11 @@ public class MainActivity extends Activity {
 								
 								@Override
 								public void onCompleted(Response response) {
+									if (response.getGraphObject() == null) {
+										FacebookRequestError error = response.getError();
+										Toast.makeText(MainActivity.this, "error : " + error.getErrorMessage(), Toast.LENGTH_SHORT).show();
+										return;
+									}
 									JSONObject obj = response.getGraphObject().getInnerJSONObject();
 									try {
 										String id = obj.getString("id");
@@ -125,6 +134,105 @@ public class MainActivity extends Activity {
 								}
 							}).executeAsync();
 						}
+					}
+				});
+			}
+		});
+		
+		btn = (Button)findViewById(R.id.btn_post2);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Session.openActiveSession(MainActivity.this, true, new StatusCallback() {
+					
+					@Override
+					public void call(Session session, SessionState state, Exception exception) {
+						if (session.isOpened()) {
+							List<String> permission = session
+									.getPermissions();
+							if (!isSubsetOf(PERMISSIONS, permission)) {
+								session.requestNewPublishPermissions(new Session.NewPermissionsRequest(
+										MainActivity.this,
+										PERMISSIONS));
+								return;
+							}
+							
+							Bundle postParams = new Bundle();
+							postParams.putString("message",
+									"facebook test message");
+							postParams.putString("name",
+									"Education Test for Android");
+							postParams.putString("caption",
+									"Test facebook capture.");
+							postParams
+									.putString(
+											"description",
+											"The Facebook SDK for Android makes it easier and faster to develop Facebook integrated Android apps.");
+							postParams
+									.putString("link",
+											"https://developers.facebook.com/android");
+							postParams
+									.putString("picture",
+											"https://raw.github.com/fbsamples/ios-3.x-howtos/master/Images/iossdk_logo.png");
+							Request request = new Request(session, "me/feed", postParams, HttpMethod.POST, new Request.Callback() {
+								
+								@Override
+								public void onCompleted(Response response) {
+									if (response.getGraphObject() != null) {
+										JSONObject obj = response.getGraphObject().getInnerJSONObject();
+										try {
+											String id = obj.getString("id");
+											Toast.makeText(MainActivity.this, "id : " + id, Toast.LENGTH_SHORT).show();
+										} catch (JSONException e) {
+											e.printStackTrace();
+										}
+									} else {
+										FacebookRequestError error = response.getError();
+										Toast.makeText(MainActivity.this, "error : " + error.getErrorMessage(), Toast.LENGTH_SHORT).show();
+									}
+									
+								}
+							});
+							request.executeAsync();
+						}
+					}
+				});
+			}
+		});
+		btn = (Button)findViewById(R.id.button1);
+		btn.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				Session.openActiveSession(MainActivity.this, true, new Session.StatusCallback() {
+					
+					@Override
+					public void call(Session session, SessionState state, Exception exception) {
+						if (session.isOpened()) {
+							List<String> permission = session
+									.getPermissions();
+							if (!isSubsetOf(READ_PERMISSIONS, permission)) {
+								session.requestNewReadPermissions(new Session.NewPermissionsRequest(
+										MainActivity.this,
+										READ_PERMISSIONS));
+								return;
+							}
+							Request request = new Request(session, "me/feed", null, HttpMethod.GET, new Callback() {
+								
+								@Override
+								public void onCompleted(Response response) {
+									if (response.getGraphObject() != null) {
+										JSONObject obj = response.getGraphObject().getInnerJSONObject();
+										Toast.makeText(MainActivity.this, "obj : " + obj.toString(), Toast.LENGTH_SHORT).show();
+									} else {
+										// error
+									}
+								}
+							});
+							request.executeAsync();
+						}
+						
 					}
 				});
 			}
