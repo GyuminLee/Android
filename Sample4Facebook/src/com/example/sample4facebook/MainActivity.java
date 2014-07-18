@@ -19,6 +19,7 @@ import com.facebook.HttpMethod;
 import com.facebook.Request;
 import com.facebook.Request.Callback;
 import com.facebook.Request.GraphUserCallback;
+import com.facebook.Request.GraphUserListCallback;
 import com.facebook.Response;
 import com.facebook.Session;
 import com.facebook.Session.StatusCallback;
@@ -55,16 +56,28 @@ public class MainActivity extends Activity {
 			@Override
 			public void call(Session session, SessionState state, Exception exception) {
 				if (session.isOpened()) {
+					final String accessToken = session.getAccessToken();
 					Request.newMeRequest(session, new GraphUserCallback() {
 						
 						@Override
 						public void onCompleted(GraphUser user, Response response) {
 							if (user != null) {
 								Toast.makeText(MainActivity.this, "user : " + user.getId(), Toast.LENGTH_SHORT).show();
+								// send accessToken, user.getId() to Server
 							}
 							
 						}
 					}).executeAsync();
+					Request.newMyFriendsRequest(session, new GraphUserListCallback() {
+						
+						@Override
+						public void onCompleted(List<GraphUser> users, Response response) {
+							
+							
+						}
+					}).executeAsync();
+//					Request.newUploadPhotoRequest(session, image, callback)
+//					Request.newUploadVideoRequest(session, file, callback)
 				}
 			}
 		});
