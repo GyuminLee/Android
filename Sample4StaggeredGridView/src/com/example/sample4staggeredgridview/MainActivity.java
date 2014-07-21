@@ -1,11 +1,10 @@
 package com.example.sample4staggeredgridview;
 
-import com.etsy.android.grid.StaggeredGridView;
-
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
-import android.view.MenuItem;
+import android.view.View;
+
+import com.etsy.android.grid.StaggeredGridView;
 
 public class MainActivity extends Activity {
 
@@ -46,6 +45,8 @@ public class MainActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		gridView = (StaggeredGridView)findViewById(R.id.gridView);
+		View v = getLayoutInflater().inflate(R.layout.header_view, null);
+		gridView.addHeaderView(v);
 		mAdapter = new MyAdapter(this,urls);
 		gridView.setAdapter(mAdapter);
 		
