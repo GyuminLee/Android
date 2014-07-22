@@ -21,6 +21,11 @@ import com.example.sample4networkmelon.entity.NaverMovie;
 import com.example.sample4networkmelon.entity.Song;
 import com.example.sample4networkmelon.model.NetworkManager;
 import com.example.sample4networkmelon.naver.NaverMovieAdapter;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.Mode;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnPullEventListener;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.State;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 public class MainActivity extends Activity {
 
@@ -28,13 +33,49 @@ public class MainActivity extends Activity {
 	ArrayAdapter<Song> mAdapter;
 	EditText keywordView;
 	NaverMovieAdapter mMovieAdapter;
+	PullToRefreshListView pullView;
+	String mKeyword = null;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		setTitle("NaverMovie");
 		keywordView = (EditText) findViewById(R.id.keyword_view);
-		listView = (ListView) findViewById(R.id.listView1);
+		pullView = (PullToRefreshListView)findViewById(R.id.listView1);
+		pullView.setOnPullEventListener(new OnPullEventListener<ListView>() {
+
+			@Override
+			public void onPullEvent(PullToRefreshBase<ListView> refreshView,
+					State state, Mode direction) {
+				if (mKeyword != null && mMovieAdapter != null) {
+					int start = mMovieAdapter.getStart();
+					if (start != NaverMovieAdapter.NO_MORE) {
+						NetworkManager.getInstance().getNaverMovieData(MainActivity.this, mKeyword, 10, start,new NetworkManager.OnResultListener<NaverMovie>() {
+
+							@Override
+							public void onSuccess(NaverMovie result) {
+								mMovieAdapter.addAll(result.item);
+								mMovieAdapter.setTotal(result.total);
+								pullView.onRefreshComplete();
+							}
+
+							@Override
+							public void onFail(int code) {
+								Toast.makeText(MainActivity.this, "fail",
+										Toast.LENGTH_SHORT).show();
+								pullView.onRefreshComplete();
+							}
+						} );
+					} else {
+						Toast.makeText(MainActivity.this, "no more", Toast.LENGTH_SHORT).show();
+						pullView.onRefreshComplete();
+					}
+				}
+				
+			}
+		});
+		listView = pullView.getRefreshableView();
 		Button btn = (Button) findViewById(R.id.btn_melon);
 		btn.setOnClickListener(new View.OnClickListener() {
 
@@ -91,13 +132,17 @@ public class MainActivity extends Activity {
 				});
 				String keyword = keywordView.getText().toString();
 				if (keyword != null && !keyword.equals("")) {
-					NetworkManager.getInstance().getNaverMovieData(
-							MainActivity.this, keyword, 10, 1,
+					int start = mMovieAdapter.getStart();
+					if (start != NaverMovieAdapter.NO_MORE) {
+						mKeyword = keyword;
+						NetworkManager.getInstance().getNaverMovieData(
+							MainActivity.this, keyword, 10, start,
 							new NetworkManager.OnResultListener<NaverMovie>() {
 
 								@Override
 								public void onSuccess(NaverMovie result) {
 									mMovieAdapter.addAll(result.item);
+									mMovieAdapter.setTotal(result.total);
 								}
 
 								@Override
@@ -106,6 +151,7 @@ public class MainActivity extends Activity {
 											Toast.LENGTH_SHORT).show();
 								}
 							});
+					}
 				}
 			}
 		});
