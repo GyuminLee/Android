@@ -14,8 +14,26 @@ public class NaverMovieAdapter extends BaseAdapter {
 
 	ArrayList<MovieItem> items = new ArrayList<MovieItem>();
 	Context mContext;
+	private static final int NOT_INIT = -1;
+	public static final int NO_MORE = -1;
+	int total = NOT_INIT;
 	public NaverMovieAdapter(Context context) {
 		mContext = context;
+	}
+	
+	public void setTotal(int total) {
+		this.total = total;
+	}
+	
+	public int getTotal() {
+		return total;
+	}
+	
+	public int getStart() {
+		if (total != NOT_INIT && total <= items.size()) {
+			return NO_MORE;
+		}
+		return items.size() + 1;
 	}
 	
 	public void add(MovieItem item) {
