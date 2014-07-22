@@ -15,11 +15,13 @@ public class GestureGridView extends GridView {
 	public static final int SWIPE_LEFT_TO_RIGHT = 3;
 	public static final int SWIPE_RIGHT_TO_LEFT = 4;
 
-	public interface OnSwipeListener {
-		public boolean onSwipe(View v, int orientation);
-	}
-
 	OnSwipeListener mListener = null;
+	OnItemSwipeListener mSwipeListener = null;
+	
+	public void setOnItemSwipeListener(OnItemSwipeListener listener) {
+		mSwipeListener = listener;
+	}
+	
 
 	public void setOnSwipeListener(OnSwipeListener listener) {
 		mListener = listener;
@@ -73,17 +75,33 @@ public class GestureGridView extends GridView {
 		return null;
 	}
 
+	private int getMatchPosition(MotionEvent e1, MotionEvent e2) {
+		int startMotionPosition = pointToPosition((int) e1.getX(),
+				(int) e1.getY());
+		int endMotionPosition = pointToPosition((int) e2.getX(),
+				(int) e2.getY());
+		if (startMotionPosition == endMotionPosition) {
+			return startMotionPosition;
+		}
+		return -1;
+	}
+	
 	private boolean performSwipe(MotionEvent e1, MotionEvent e2, int orientation) {
 		boolean bConsumed = false;
-		if (mListener != null) {
-			bConsumed = mListener.onSwipe(GestureGridView.this, orientation);
+		GestureItemViewGroup v = castGestureItemViewGroup(getMatchChildView(
+				e1, e2));
+		if (v != null) {
+			bConsumed =  v.onSwipe(v, orientation);
 		}
-		if (!bConsumed) {
-			GestureItemViewGroup v = castGestureItemViewGroup(getMatchChildView(
-					e1, e2));
-			if (v != null) {
-				return v.onSwipe(v, orientation);
+		if (!bConsumed && mSwipeListener != null) {
+			int position = getMatchPosition(e1, e2);
+			if (position >= 0) {
+				View child = getChildAt(position - getFirstVisiblePosition()); 
+				bConsumed = mSwipeListener.onItemSwipe(this, child, position, orientation);
 			}
+		}
+		if (!bConsumed && mListener != null) {
+			bConsumed = mListener.onSwipe(this, orientation);
 		}
 		return bConsumed;
 	}

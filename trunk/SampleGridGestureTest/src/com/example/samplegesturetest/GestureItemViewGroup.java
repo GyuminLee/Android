@@ -12,7 +12,7 @@ import android.widget.FrameLayout;
 
 public class GestureItemViewGroup extends FrameLayout implements
 		GestureDetector.OnGestureListener, GestureDetector.OnDoubleTapListener,
-		GestureGridView.OnSwipeListener {
+		OnSwipeListener {
 
 	ArrayList<View> mClickView = new ArrayList<View>();
 
