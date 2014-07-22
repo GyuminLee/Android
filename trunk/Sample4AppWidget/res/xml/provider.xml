@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<appwidget-provider xmlns:android="http://schemas.android.com/apk/res/android" android:minHeight="72dp" android:minWidth="144dp" android:updatePeriodMillis="1800000" android:initialLayout="@layout/appwidget_layout" android:previewImage="@drawable/ic_launcher" android:widgetCategory="home_screen|keyguard">
+    
+
+</appwidget-provider>
