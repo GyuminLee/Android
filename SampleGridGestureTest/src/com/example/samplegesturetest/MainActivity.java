@@ -4,12 +4,11 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
-
-import com.example.samplegesturetest.GestureListView.OnItemSwipeListener;
-import com.example.samplegesturetest.GestureListView.OnSwipeListener;
 
 
 public class MainActivity extends Activity {
@@ -37,7 +36,7 @@ public class MainActivity extends Activity {
 				case GestureGridView.SWIPE_UP_TO_BOTTOM :
 				case GestureGridView.SWIPE_LEFT_TO_RIGHT :
 				case GestureGridView.SWIPE_RIGHT_TO_LEFT :
-					Toast.makeText(MainActivity.this, "fling...", Toast.LENGTH_SHORT).show();
+//					Toast.makeText(MainActivity.this, "fling...", Toast.LENGTH_SHORT).show();
 				}
 				return true;
 			}
@@ -57,6 +56,13 @@ public class MainActivity extends Activity {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				Toast.makeText(MainActivity.this, "onItemClick", Toast.LENGTH_SHORT).show();
+			}
+		});
+		listView.setOnScrollDirectionChangeListener(new OnScrollDirectionChangeListener() {
+			
+			@Override
+			public void onScrollDirectionChanged(View view, int direction) {
+				Toast.makeText(MainActivity.this, "direction : " + direction, Toast.LENGTH_SHORT).show();
 			}
 		});
 	}

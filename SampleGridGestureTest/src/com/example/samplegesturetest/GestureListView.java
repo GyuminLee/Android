@@ -16,14 +16,6 @@ public class GestureListView extends ListView {
 	public static final int SWIPE_LEFT_TO_RIGHT = 3;
 	public static final int SWIPE_RIGHT_TO_LEFT = 4;
 
-	public interface OnSwipeListener {
-		public boolean onSwipe(View v, int orientation);
-	}
-	
-	public interface OnItemSwipeListener {
-		public boolean onItemSwipe(AdapterView parent, View v, int position, int orientation);
-	}
-	
 	OnItemSwipeListener mSwipeListener = null;
 	
 	public void setOnItemSwipeListener(OnItemSwipeListener listener) {
@@ -35,7 +27,14 @@ public class GestureListView extends ListView {
 	public void setOnSwipeListener(OnSwipeListener listener) {
 		mListener = listener;
 	}
-
+	
+	OnScrollDirectionChangeListener mScrollChangedListener;
+	
+	public void setOnScrollDirectionChangeListener(OnScrollDirectionChangeListener listener) {
+		mScrollChangedListener = listener;
+	}
+	
+	int scrollDirection = OnScrollDirectionChangeListener.DIRECTION_NONE;
 	
 	public GestureListView(Context context) {
 		super(context);
@@ -111,7 +110,7 @@ public class GestureListView extends ListView {
 			}
 		}
 		if (!bConsumed && mListener != null) {
-			bConsumed = mListener.onSwipe(GestureListView.this, orientation);
+			bConsumed = mListener.onSwipe(this, orientation);
 		}
 		return bConsumed;
 	}
@@ -197,6 +196,16 @@ public class GestureListView extends ListView {
 					@Override
 					public boolean onScroll(MotionEvent e1, MotionEvent e2,
 							float distanceX, float distanceY) {
+						int currentDirection;
+						if (e1.getY() - e2.getY() > 0) {
+							currentDirection = OnScrollDirectionChangeListener.DIRECTION_BOTTOM_UP;
+						} else {
+							currentDirection = OnScrollDirectionChangeListener.DIRECTION_TOP_DOWN;
+						}
+						if (scrollDirection != currentDirection && mScrollChangedListener != null) {
+							scrollDirection = currentDirection;
+							mScrollChangedListener.onScrollDirectionChanged(GestureListView.this, scrollDirection);
+						}
 						GestureItemViewGroup v = castGestureItemViewGroup(getMatchChildView(
 								e1, e2));
 						if (v != null) {
