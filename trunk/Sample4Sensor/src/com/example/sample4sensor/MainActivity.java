@@ -24,8 +24,8 @@ public class MainActivity extends Activity {
 		mAccSensor = mSM.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
 		mMagSensor = mSM.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD);
 		mHandlerThread = new HandlerThread("sensorHandler");
-		mHandlerThreadHandler = new Handler(mHandlerThread.getLooper());
 		mHandlerThread.start();
+		mHandlerThreadHandler = new Handler(mHandlerThread.getLooper());
 	}
 	Handler mHandler = new Handler();
 	HandlerThread mHandlerThread;
