@@ -26,12 +26,13 @@ public class MainActivity extends Activity {
 				params.height = WindowManager.LayoutParams.WRAP_CONTENT;
 				params.width = WindowManager.LayoutParams.WRAP_CONTENT;
 				params.format = PixelFormat.TRANSLUCENT;
-				params.type = WindowManager.LayoutParams.TYPE_TOAST;
+				params.type = WindowManager.LayoutParams.TYPE_PHONE;
 				params.setTitle("Test");
-				params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
+				params.flags = WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+						| WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH;
 				Context context = getApplicationContext();
 				final WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-				TextView tv = new TextView(MainActivity.this);
+				TextView tv = new TextView(context);
 				tv.setText("Toast Window Test");
 				tv.setOnClickListener(new View.OnClickListener() {
 					
@@ -61,7 +62,7 @@ public class MainActivity extends Activity {
 				params.flags = WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON;
 				Context context = getApplicationContext();
 				final WindowManager wm = (WindowManager)context.getSystemService(Context.WINDOW_SERVICE);
-				TextView tv = new TextView(MainActivity.this);
+				TextView tv = new TextView(context);
 				tv.setText("System Overlay Window Test");
 				tv.setOnClickListener(new View.OnClickListener() {
 					
