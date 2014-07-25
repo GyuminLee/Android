@@ -1,0 +1,28 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/LinearLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context="${relativePackage}.${activityClass}" >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/hello_world" />
+
+    <com.jesusm.holocircleseekbar.HoloCircleSeekBar
+        android:id="@+id/picker"
+        android:layout_width="285dp"
+        android:layout_height="290dp"
+        app:max="100"
+        app:pointer_color="#0174DF"
+        app:pointer_halo_color="#88252525"
+        app:pointer_size="34"
+        app:text_color="#FF0000"
+        app:text_size="65"
+        app:wheel_active_color="#00BFFF"
+        app:wheel_unactive_color="#FFCCCCCC" />
+
+</LinearLayout>
